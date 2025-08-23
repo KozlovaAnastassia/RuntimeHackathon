@@ -44,7 +44,7 @@ struct ClubsListView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.orange)
+                .background(Color.black)
                 .foregroundColor(.white)
                 .cornerRadius(12)
                 .padding()
