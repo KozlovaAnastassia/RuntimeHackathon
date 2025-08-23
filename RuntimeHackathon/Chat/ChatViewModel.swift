@@ -21,12 +21,11 @@ class ChatViewModel: ObservableObject {
   init(chatService: ChatService = ChatService(), currentUserId: String = "current_user_id") {
     self.chatService = chatService
     self.currentUserId = currentUserId
-    loadMessages()
   }
 
-  func loadMessages() {
+  func loadMessages(for chatId: String) {
     isLoading = true
-    chatService.getMessages()
+    chatService.getMessages(for: chatId)
       .receive(on: DispatchQueue.main)
       .sink(
         receiveCompletion: { [weak self] completion in
@@ -42,7 +41,7 @@ class ChatViewModel: ObservableObject {
       .store(in: &cancellables)
   }
 
-  func sendMessage() {
+  func sendMessage(for chatId: String) {
     guard !newMessageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
 
     let message = Message(
@@ -53,7 +52,7 @@ class ChatViewModel: ObservableObject {
       isCurrentUser: true
     )
 
-    chatService.sendMessage(message)
+    chatService.sendMessage(message, for: chatId)
       .sink(
         receiveCompletion: { completion in
           if case .failure(let error) = completion {

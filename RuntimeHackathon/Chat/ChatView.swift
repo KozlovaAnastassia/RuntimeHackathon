@@ -10,6 +10,13 @@ import SwiftUI
 struct ChatView: View {
   @StateObject private var viewModel = ChatViewModel()
   @FocusState private var isTextFieldFocused: Bool
+  @State private var summarizeCliked = false
+
+  let chatId: String
+
+  init(chatId: String) {
+    self.chatId = chatId
+  }
 
   var body: some View {
     VStack(spacing: 0) {
@@ -23,12 +30,27 @@ struct ChatView: View {
       messageInputView
     }
     .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .navigationBarTrailing) {
+        Button(action: {
+          summarizeCliked = true
+        }) {
+          Image(systemName: "plus")
+        }
+      }
+    }
     .alert("Ошибка", isPresented: .constant(viewModel.errorMessage != nil)) {
       Button("OK") {
         viewModel.errorMessage = nil
       }
     } message: {
       Text(viewModel.errorMessage ?? "")
+    }
+    .sheet(isPresented: $summarizeCliked) {
+      ChatSummaryView(messages: viewModel.messages)
+    }
+    .onAppear {
+      viewModel.loadMessages(for: chatId)
     }
   }
 
@@ -84,7 +106,7 @@ struct ChatView: View {
         .lineLimit(3...6)
 
       Button(action: {
-        viewModel.sendMessage()
+        viewModel.sendMessage(for: chatId)
         isTextFieldFocused = true
       }) {
         Image(systemName: "paperplane.fill")
@@ -139,9 +161,4 @@ struct MessageView: View {
   }
 
   @ObservedObject private var viewModel = ChatViewModel()
-}
-
-
-#Preview {
-
 }
