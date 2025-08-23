@@ -7,33 +7,73 @@
 
 import SwiftUI
 
+// MARK: - Обновленный ViewModel
 class ClubViewModel: ObservableObject {
     @Published var events: [ClubEvent] = []
+    @Published var newsItems: [NewsItem] = []
+    private let clubId: UUID
     
-    init() {
+    init(clubId: UUID) {
+        self.clubId = clubId
         loadEvents()
+        loadNews()
     }
     
     func createEvent(title: String, date: Date, location: String, description: String) {
         let newEvent = ClubEvent(title: title, date: date, location: location, description: description)
         events.append(newEvent)
         saveEvents()
-        
-        // Отладка
-        print("Создано событие: \(title) на дату: \(date)")
-        print("Всего событий: \(events.count)")
+    }
+    
+    func createNews(title: String, description: String, imagesData: [Data]) {
+        let newNews = NewsItem(
+            title: title,
+            description: description,
+            imagesData: imagesData
+        )
+        newsItems.append(newNews)
+        saveNews()
+    }
+    
+    func deleteNews(id: UUID) {
+        newsItems.removeAll { $0.id == id }
+        saveNews()
     }
     
     private func saveEvents() {
+        let key = "ClubEvents_\(clubId.uuidString)"
         if let encoded = try? JSONEncoder().encode(events) {
-            UserDefaults.standard.set(encoded, forKey: "ClubEvents")
+            UserDefaults.standard.set(encoded, forKey: key)
         }
     }
     
     private func loadEvents() {
-        if let data = UserDefaults.standard.data(forKey: "ClubEvents"),
+        let key = "ClubEvents_\(clubId.uuidString)"
+        if let data = UserDefaults.standard.data(forKey: key),
            let decoded = try? JSONDecoder().decode([ClubEvent].self, from: data) {
             events = decoded
+        }
+    }
+    
+    private func saveNews() {
+        let key = "ClubNews_\(clubId.uuidString)"
+        do {
+            let newsData = try JSONEncoder().encode(newsItems)
+            UserDefaults.standard.set(newsData, forKey: key)
+        } catch {
+            print("Ошибка сохранения новостей: \(error)")
+        }
+    }
+    
+    private func loadNews() {
+        let key = "ClubNews_\(clubId.uuidString)"
+        do {
+            if let data = UserDefaults.standard.data(forKey: key) {
+                let decoded = try JSONDecoder().decode([NewsItem].self, from: data)
+                newsItems = decoded
+            }
+        } catch {
+            print("Ошибка загрузки новостей: \(error)")
         }
     }
 }

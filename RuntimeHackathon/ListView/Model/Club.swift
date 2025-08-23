@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct Club: Identifiable, Codable {
     let id: UUID
     let name: String

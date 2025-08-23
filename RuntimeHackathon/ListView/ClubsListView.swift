@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ClubsListView: View {
     @ObservedObject var viewModel: ClubsListViewModel
+    @State private var selectedClub: Club?
     
     init(viewModel: ClubsListViewModel) {
         self.viewModel = viewModel
@@ -28,6 +29,9 @@ struct ClubsListView: View {
                             onJoin: { withAnimation(.spring()) { viewModel.joinClub(club) } },
                             onLeave: { withAnimation(.spring()) { viewModel.leaveClub(club) } }
                         )
+                        .onTapGesture {
+                            selectedClub = club
+                        }
                     }
                 }
                 .padding(.top)
@@ -48,6 +52,9 @@ struct ClubsListView: View {
         }
         .sheet(isPresented: $viewModel.showAddClubForm) {
             AddClubView(viewModel: viewModel)
+        }
+        .sheet(item: $selectedClub) { club in
+            ClubDetailView(club: club)
         }
     }
     

@@ -7,11 +7,22 @@
 
 import SwiftUI
 
-// MARK: - Модель данных для новостей
-struct NewsItem: Identifiable {
+// MARK: - Модель новости
+struct NewsItem: Identifiable, Codable {
     let id = UUID()
-    let image: String
     let title: String
-    let date: String
     let description: String
+    let imagesData: [Data]
+    let createdAt: Date
+    
+    init(title: String, description: String, imagesData: [Data]) {
+        self.title = title
+        self.description = description
+        self.imagesData = imagesData
+        self.createdAt = Date()
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, title, description, imagesData, createdAt
+    }
 }
