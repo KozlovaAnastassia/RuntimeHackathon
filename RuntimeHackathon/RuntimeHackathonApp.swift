@@ -11,7 +11,7 @@ import SwiftUI
 struct RuntimeHackathonApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          MainTabBar()
         }
     }
 }
