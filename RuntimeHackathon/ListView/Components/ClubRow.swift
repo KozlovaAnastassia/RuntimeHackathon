@@ -61,7 +61,7 @@ struct ClubRow: View {
                             .foregroundColor(.white)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 6)
-                            .background(Color.green)
+                            .background(Color.orange)
                             .cornerRadius(12)
                             .transition(.scale.combined(with: .opacity))
                         
@@ -98,7 +98,7 @@ struct ClubRow: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(club.isJoined ? Color.green.opacity(0.2) : Color.gray.opacity(0.15))
+        .background(club.isJoined ? Color.orange.opacity(0.2) : Color.gray.opacity(0.15))
         .cornerRadius(12)
         .padding(.horizontal)
         .animation(.spring(), value: club.isJoined)

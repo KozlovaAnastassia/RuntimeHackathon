@@ -10,8 +10,8 @@ import PhotosUI
 
 struct ClubDetailView: View {
     let club: Club // Принимаем модель Club
-    @StateObject private var clubViewModel: ClubViewModel // ViewModel для конкретного клуба
-    @State private var isCreator = false // Можно определить по логике приложения
+    @StateObject private var clubViewModel: ClubViewModel
+    @State private var isCreator: Bool
     @State private var showingCreateEvent = false
     @State private var showingCreateNews = false
     @State private var calendarReloadTrigger = UUID()
@@ -21,7 +21,9 @@ struct ClubDetailView: View {
     init(club: Club) {
         self.club = club
         // Создаем ViewModel для конкретного клуба
-        self._clubViewModel = StateObject(wrappedValue: ClubViewModel(clubId: club.id))
+      self._clubViewModel = StateObject(wrappedValue: ClubViewModel(clubId: club.id, isCreator: club.isCreator))
+        // Инициализируем isCreator значением из модели клуба
+        self._isCreator = State(initialValue: club.isCreator)
     }
     
     var body: some View {
@@ -46,6 +48,7 @@ struct ClubDetailView: View {
                     clubEvents: clubViewModel.events,
                     reloadTrigger: calendarReloadTrigger
                 )
+                .environmentObject(ClubEventsService.shared)
                 
                 // Фильтр новостей
                 DateFilterSection(selectedFilter: $selectedDateFilter)
@@ -82,8 +85,6 @@ struct ClubDetailView: View {
     }
 }
 
-// Остальные компоненты остаются без изменений...
-
 // MARK: - Секция заголовка клуба с данными из модели Club
 struct ClubHeaderSection: View {
     let club: Club
@@ -106,7 +107,7 @@ struct ClubHeaderSection: View {
                         .font(.largeTitle)
                         .foregroundColor(.white)
                         .frame(width: 80, height: 80)
-                        .background(Color.blue)
+                        .background(Color.orange) // Оранжевый цвет
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 
@@ -120,15 +121,15 @@ struct ClubHeaderSection: View {
                         HStack {
                             if club.isJoined {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(.orange)
                                 Text("Вы участник")
-                                    .foregroundColor(.green)
+                                .foregroundColor(.orange)
                                     .font(.caption)
                             } else {
                                 Image(systemName: "person.fill.badge.plus")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.orange) // Оранжевый цвет
                                 Text("Присоединиться")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.orange) // Оранжевый цвет
                                     .font(.caption)
                             }
                         }
@@ -158,15 +159,12 @@ struct ClubHeaderSection: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(club.isJoined ? Color.red : Color.blue)
+                    .background(club.isJoined ? Color.gray : Color.orange) // Оранжевый цвет
                     .cornerRadius(12)
             }
         }
     }
 }
-
-
-// MARK: - Секция заголовка клуба с данными из модели Club
 
 // MARK: - Фильтр по дате
 enum DateFilter: String, CaseIterable {
@@ -215,7 +213,7 @@ struct DateFilterSection: View {
                         Text(filter.rawValue)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
-                            .background(selectedFilter == filter ? Color.blue : Color.gray.opacity(0.2))
+                            .background(selectedFilter == filter ? Color.orange : Color.gray.opacity(0.2)) // Оранжевый цвет
                             .foregroundColor(selectedFilter == filter ? .white : .primary)
                             .cornerRadius(20)
                     }
@@ -241,15 +239,15 @@ struct CreatorSection: View {
                     VStack(spacing: 8) {
                         Image(systemName: "calendar.badge.plus")
                             .font(.title2)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.orange) // Оранжевый цвет
                         
                         Text("Создать событие")
                             .font(.headline)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.orange) // Оранжевый цвет
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color(.systemBlue).opacity(0.1))
+                    .background(Color(.systemOrange).opacity(0.1)) // Оранжевый цвет
                     .cornerRadius(12)
                 }
                 
@@ -259,15 +257,15 @@ struct CreatorSection: View {
                     VStack(spacing: 8) {
                         Image(systemName: "newspaper")
                             .font(.title2)
-                            .foregroundColor(.green)
+                            .foregroundColor(.orange) // Оранжевый цвет
                         
                         Text("Создать новость")
                             .font(.headline)
-                            .foregroundColor(.green)
+                            .foregroundColor(.orange) // Оранжевый цвет
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color(.systemGreen).opacity(0.1))
+                    .background(Color(.systemOrange).opacity(0.1)) // Оранжевый цвет
                     .cornerRadius(12)
                 }
             }
@@ -417,7 +415,7 @@ struct ImageCarouselView: View {
                     HStack(spacing: 8) {
                         ForEach(images.indices, id: \.self) { index in
                             Circle()
-                                .fill(currentIndex == index ? Color.blue : Color.gray)
+                                .fill(currentIndex == index ? Color.orange : Color.gray) // Оранжевый цвет
                                 .frame(width: 8, height: 8)
                         }
                     }
@@ -553,10 +551,10 @@ struct NewsCardView: View {
                     switch item.type {
                     case .event:
                         Image(systemName: "calendar.badge.plus")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.orange) // Оранжевый цвет
                     case .news:
                         Image(systemName: "newspaper")
-                            .foregroundColor(.green)
+                            .foregroundColor(.orange) // Оранжевый цвет
                     }
                     
                     Text(item.title)
@@ -572,7 +570,7 @@ struct NewsCardView: View {
                         showingDeleteAlert = true
                     }) {
                         Image(systemName: "trash")
-                            .foregroundColor(.red)
+                        .foregroundColor(.gray)
                     }
                     .alert("Удалить новость?", isPresented: $showingDeleteAlert) {
                         Button("Отмена", role: .cancel) { }
@@ -593,7 +591,7 @@ struct NewsCardView: View {
                         .foregroundColor(.secondary)
                     Text("Событие: \(formatEventDate(item.date))")
                         .font(.caption)
-                        .foregroundColor(.blue)
+                        .foregroundColor(.orange) // Оранжевый цвет
                 case .news:
                     // Для новостей показываем дату публикации
                     Text("Опубликовано: \(formatDate(item.date))")
@@ -673,6 +671,7 @@ struct ClubInfoSection: View {
 struct CalendarSection: View {
     let clubEvents: [ClubEvent]
     let reloadTrigger: UUID
+    @EnvironmentObject var clubEventsService: ClubEventsService
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -680,7 +679,7 @@ struct CalendarSection: View {
                 .font(.title2)
                 .fontWeight(.bold)
             
-            CalendarView(clubEvents: clubEvents)
+            CalendarView()
                 .frame(height: 400)
                 .cornerRadius(12)
                 .overlay(

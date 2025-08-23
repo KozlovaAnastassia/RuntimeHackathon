@@ -8,14 +8,16 @@ struct CalendarEvent: Identifiable, Codable {
     let description: String
     let createdAt: Date
     let color: Color
+    let clubName: String? // Название клуба, если событие из клуба
     
-    init(id: UUID, title: String, date: Date, location: String, description: String, color: Color = .blue) {
+    init(id: UUID, title: String, date: Date, location: String, description: String, color: Color = .blue, clubName: String? = nil) {
         self.title = title
         self.date = date
         self.location = location
         self.description = description
         self.createdAt = Date()
         self.color = color
+        self.clubName = clubName
     }
     
     // Вычисляемые свойства для совместимости с существующим кодом
@@ -38,7 +40,7 @@ struct CalendarEvent: Identifiable, Codable {
     
     // Кодирование/декодирование для Color
     enum CodingKeys: String, CodingKey {
-        case id, title, date, location, description, createdAt, colorHex
+        case id, title, date, location, description, createdAt, colorHex, clubName
     }
     
     init(from decoder: Decoder) throws {
@@ -52,6 +54,9 @@ struct CalendarEvent: Identifiable, Codable {
         // Декодирование цвета из hex строки
         let colorHex = try container.decode(String.self, forKey: .colorHex)
         color = Color(hex: colorHex) ?? .blue
+        
+        // Декодирование названия клуба
+        clubName = try container.decodeIfPresent(String.self, forKey: .clubName)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -65,6 +70,9 @@ struct CalendarEvent: Identifiable, Codable {
         
         // Кодирование цвета в hex строку
         try container.encode(color.toHex(), forKey: .colorHex)
+        
+        // Кодирование названия клуба
+        try container.encodeIfPresent(clubName, forKey: .clubName)
     }
 }
 
@@ -113,14 +121,15 @@ extension Color {
 
 // Расширение для преобразования ClubEvent в CalendarEvent
 extension CalendarEvent {
-    init(from clubEvent: ClubEvent, color: Color = .blue) {
+    init(from clubEvent: ClubEvent, color: Color = .blue, clubName: String? = nil) {
         self.init(
             id: clubEvent.id,
             title: clubEvent.title,
             date: clubEvent.date,
             location: clubEvent.location,
             description: clubEvent.description,
-            color: color
+            color: color,
+            clubName: clubName
         )
     }
     
@@ -129,7 +138,20 @@ extension CalendarEvent {
         
         return clubEvents.enumerated().map { index, clubEvent in
             let color = colors[index % colors.count]
-            return CalendarEvent(from: clubEvent, color: color)
+            // Извлекаем название клуба из заголовка события
+            let clubName = extractClubName(from: clubEvent.title)
+            return CalendarEvent(from: clubEvent, color: color, clubName: clubName)
         }
+    }
+    
+    // Извлекает название клуба из заголовка события
+    private static func extractClubName(from title: String) -> String? {
+        // Ищем паттерн "в [Название клуба]"
+        if let range = title.range(of: "в ", options: .caseInsensitive) {
+            let clubNameStart = title.index(range.upperBound, offsetBy: 0)
+            let clubName = String(title[clubNameStart...])
+            return clubName
+        }
+        return nil
     }
 }

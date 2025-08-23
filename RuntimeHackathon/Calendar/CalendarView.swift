@@ -46,6 +46,15 @@ struct SimpleEventDetailScreen: View {
                                 .foregroundColor(.green)
                             Text("Продолжительность: \(formatDuration(event.durationInMinutes))")
                         }
+                        
+                        // Клуб (если событие из клуба)
+                        if let clubName = event.clubName {
+                            HStack {
+                                Image(systemName: "person.3.fill")
+                                    .foregroundColor(.purple)
+                                Text("Клуб: \(clubName)")
+                            }
+                        }
                     }
                     .padding(.horizontal, 20)
                     
@@ -88,13 +97,14 @@ struct SimpleEventDetailScreen: View {
 
 struct CalendarView: View {
     @StateObject private var viewModel: CalendarViewModel
+    @EnvironmentObject var clubEventsService: ClubEventsService
     @State private var showingEventDetail = false
     @State private var selectedEvent: CalendarEvent?
     @State private var selectedTab = 0
     
-    // Инициализатор по умолчанию с моковыми данными
+    // Инициализатор по умолчанию с событиями клубов
     init() {
-        self._viewModel = StateObject(wrappedValue: CalendarViewModel())
+        self._viewModel = StateObject(wrappedValue: CalendarViewModel(withClubEvents: true))
     }
     
     // Инициализатор с внешними событиями ClubEvent
@@ -107,6 +117,18 @@ struct CalendarView: View {
             VStack(spacing: 0) {
                 // Табы для переключения представлений
                 calendarTabs
+                
+                // Обновляем события из сервиса
+                .onReceive(clubEventsService.$allClubEvents) { _ in
+                    viewModel.updateEvents(from: clubEventsService.allClubEvents)
+                }
+                .onAppear {
+                    // Загружаем события при появлении экрана
+                    DispatchQueue.main.async {
+                        clubEventsService.loadAllEvents()
+                        viewModel.updateEvents(from: clubEventsService.allClubEvents)
+                    }
+                }
                 
                 // Контент в зависимости от выбранного таба
                 switch selectedTab {
