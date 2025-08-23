@@ -8,7 +8,14 @@
 import Foundation
 import SwiftUI
 
-class ChatInfo: Identifiable, Codable {
+class ChatInfo: Identifiable, Codable, Equatable, Hashable {
+  static func == (lhs: ChatInfo, rhs: ChatInfo) -> Bool {
+    lhs.chatId == rhs.chatId
+  }
+
+  var hashValue: Int { Int.random(in: 0...14) }
+  func hash(into hasher: inout Hasher) {}
+
 
     let chatId: String
     let title: String

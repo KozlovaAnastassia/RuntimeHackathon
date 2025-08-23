@@ -18,7 +18,7 @@ class ChatListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
   init(chats: [ChatInfo]) {
-    self.chats = chats
+    ChatDatabase.shared.chats = chats
         loadChats()
     }
     
@@ -34,7 +34,7 @@ class ChatListViewModel: ObservableObject {
     }
     
     func loadChats() {
-      self.chats = chats.sorted {
+      self.chats = ChatDatabase.shared.chats.sorted {
         $0.lastMessageTime ?? Date() > $1.lastMessageTime ?? Date()
       }
     }

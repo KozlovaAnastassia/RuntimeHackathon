@@ -14,14 +14,16 @@ class ChatViewModel: ObservableObject {
   @Published var isLoading = false
   @Published var errorMessage: String?
 
-  init(messages: [Message]) {
-    self.messages = messages
+  private let chatId: String
+
+  init(chatId: String) {
+    self.chatId = chatId
   }
 
   private var cancellables = Set<AnyCancellable>()
 
   func loadMessages() {
-    self.messages = messages.sorted { $0.timestamp < $1.timestamp }
+    self.messages = ChatDatabase.shared.chats.first(where: { $0.chatId == chatId })?.messages ?? []
   }
 
   func sendMessage() {
@@ -35,8 +37,9 @@ class ChatViewModel: ObservableObject {
       isCurrentUser: true
     )
 
-    messages += [message]
+    ChatDatabase.shared.chats.first(where: { $0.chatId == chatId })?.messages.append(message)
     newMessageText = ""
+    loadMessages()
   }
 
   func formatTime(_ date: Date) -> String {

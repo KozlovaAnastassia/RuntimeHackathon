@@ -51,6 +51,9 @@ struct ChatListView: View {
             } message: {
                 Text(viewModel.errorMessage ?? "")
             }
+            .onAppear {
+              viewModel.loadChats()
+            }
         }
     }
     
@@ -86,7 +89,7 @@ struct ChatListView: View {
             } else {
                 List {
                     ForEach(viewModel.filteredChats) { chat in
-                      NavigationLink(destination: ChatView(viewModel: ChatViewModel(messages: chat.messages))) {
+                      NavigationLink(destination: ChatView(viewModel: ChatViewModel(chatId: chat.chatId))) {
                         ChatPreviewRow(chat: chat, viewModel: viewModel)
                         }
                         .listRowInsets(EdgeInsets())
