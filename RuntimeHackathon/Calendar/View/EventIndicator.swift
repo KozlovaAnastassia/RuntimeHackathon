@@ -24,10 +24,11 @@ struct EventIndicator: View {
 #Preview {
     EventIndicator(
         event: CalendarEvent(
+            id: UUID(),
             title: "Тестовое событие",
+            date: Date(),
+            location: "Тестовое место",
             description: "Описание события",
-            startTime: Date(),
-            endTime: Date().addingTimeInterval(3600),
             color: .blue
         )
     )

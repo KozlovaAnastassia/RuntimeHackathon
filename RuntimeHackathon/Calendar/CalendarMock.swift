@@ -9,28 +9,31 @@ struct CalendarMock {
         
         // Событие на 15 минут
         let shortEvent = CalendarEvent(
+            id: UUID(),
             title: "Короткая встреча",
+            date: calendar.date(byAdding: .hour, value: 1, to: today) ?? today,
+            location: "Конференц-зал А",
             description: "Быстрая синхронизация",
-            startTime: calendar.date(byAdding: .hour, value: 1, to: today) ?? today,
-            endTime: calendar.date(byAdding: .minute, value: 15, to: calendar.date(byAdding: .hour, value: 1, to: today) ?? today) ?? today,
             color: .blue
         )
         
         // Событие на 2 часа
         let longEvent = CalendarEvent(
+            id: UUID(),
             title: "Длинная презентация",
+            date: calendar.date(byAdding: .hour, value: 3, to: today) ?? today,
+            location: "Аудитория 101",
             description: "Подробный обзор проекта",
-            startTime: calendar.date(byAdding: .hour, value: 3, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 5, to: today) ?? today,
             color: .green
         )
         
         // Событие на 4 часа
         let veryLongEvent = CalendarEvent(
+            id: UUID(),
             title: "Рабочий день",
+            date: calendar.date(byAdding: .hour, value: 9, to: today) ?? today,
+            location: "Офис",
             description: "Основная работа над проектом",
-            startTime: calendar.date(byAdding: .hour, value: 9, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 13, to: today) ?? today,
             color: .orange
         )
         
@@ -43,18 +46,20 @@ struct CalendarMock {
         let calendar = Calendar.current
         
         let weekendEvent1 = CalendarEvent(
+            id: UUID(),
             title: "Отдых",
+            date: calendar.date(byAdding: .hour, value: 10, to: today) ?? today,
+            location: "Дом",
             description: "Время для себя",
-            startTime: calendar.date(byAdding: .hour, value: 10, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 12, to: today) ?? today,
             color: .purple
         )
         
         let weekendEvent2 = CalendarEvent(
+            id: UUID(),
             title: "Спорт",
+            date: calendar.date(byAdding: .hour, value: 16, to: today) ?? today,
+            location: "Спортзал",
             description: "Тренировка",
-            startTime: calendar.date(byAdding: .hour, value: 16, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 17, to: today) ?? today,
             color: .red
         )
         
@@ -66,26 +71,29 @@ struct CalendarMock {
         let calendar = Calendar.current
         
         let morningMeeting = CalendarEvent(
+            id: UUID(),
             title: "Утренняя встреча",
+            date: calendar.date(byAdding: .hour, value: 9, to: today) ?? today,
+            location: "Переговорная 1",
             description: "Планирование дня",
-            startTime: calendar.date(byAdding: .hour, value: 9, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 9, to: today) ?? today,
             color: .blue
         )
         
         let lunch = CalendarEvent(
+            id: UUID(),
             title: "Обед",
+            date: calendar.date(byAdding: .hour, value: 13, to: today) ?? today,
+            location: "Столовая",
             description: "Перерыв на обед",
-            startTime: calendar.date(byAdding: .hour, value: 13, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 14, to: today) ?? today,
             color: .orange
         )
         
         let projectWork = CalendarEvent(
+            id: UUID(),
             title: "Работа над проектом",
+            date: calendar.date(byAdding: .hour, value: 14, to: today) ?? today,
+            location: "Рабочее место",
             description: "Разработка новых функций",
-            startTime: calendar.date(byAdding: .hour, value: 14, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 18, to: today) ?? today,
             color: .green
         )
         

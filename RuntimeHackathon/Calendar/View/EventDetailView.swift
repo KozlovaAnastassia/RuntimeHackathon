@@ -25,6 +25,20 @@ struct EventDetailView: View {
                         .font(.body)
                         .foregroundColor(.secondary)
                     
+                    // Местоположение
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "location")
+                                .foregroundColor(.red)
+                            Text("Место")
+                                .fontWeight(.medium)
+                        }
+                        
+                        Text(event.location)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
+                    
                     // Время
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
@@ -52,6 +66,20 @@ struct EventDetailView: View {
                         }
                         
                         Text(durationString)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    // Дата создания
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "calendar.badge.plus")
+                                .foregroundColor(.purple)
+                            Text("Создано")
+                                .fontWeight(.medium)
+                        }
+                        
+                        Text(dateString(from: event.createdAt))
                             .font(.body)
                             .foregroundColor(.secondary)
                     }
@@ -93,6 +121,14 @@ struct EventDetailView: View {
         return formatter.string(from: date)
     }
     
+    private func dateString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter.string(from: date)
+    }
+    
     private var durationString: String {
         let hours = event.durationInMinutes / 60
         let minutes = event.durationInMinutes % 60
@@ -108,10 +144,11 @@ struct EventDetailView: View {
 #Preview {
     EventDetailView(
         event: CalendarEvent(
+            id: UUID(),
             title: "Тестовое событие",
+            date: Date(),
+            location: "Тестовое место",
             description: "Описание события",
-            startTime: Date(),
-            endTime: Date().addingTimeInterval(3600),
             color: .blue
         ),
         viewModel: CalendarViewModel()
