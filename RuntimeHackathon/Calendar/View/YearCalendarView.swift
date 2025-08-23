@@ -10,19 +10,17 @@ struct YearCalendarView: View {
             yearHeader
             
             // Сетка месяцев
-            ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 20) {
-                    ForEach(1...12, id: \.self) { month in
-                        MonthMiniView(
-                            month: month,
-                            year: viewModel.selectedYear,
-                            events: eventsForMonth(month),
-                            onEventTap: onEventTap
-                        )
-                    }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
+                ForEach(1...12, id: \.self) { month in
+                    MonthMiniView(
+                        month: month,
+                        year: viewModel.selectedYear,
+                        events: eventsForMonth(month),
+                        onEventTap: onEventTap
+                    )
                 }
-                .padding()
             }
+            .padding(8)
         }
     }
     
@@ -50,7 +48,7 @@ struct YearCalendarView: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 10)
+        .padding(.vertical, 8)
         .background(Color(.systemBackground))
     }
     
@@ -71,23 +69,15 @@ struct MonthMiniView: View {
     let onEventTap: (CalendarEvent) -> Void
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 4) {
             // Название месяца
             Text(monthName)
-                .font(.headline)
+                .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
             
             // Мини-календарь
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 2) {
-                // Дни недели
-                ForEach(weekdaySymbols, id: \.self) { day in
-                    Text(day)
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                        .frame(height: 20)
-                }
-                
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 1) {
                 // Дни месяца
                 ForEach(monthDays, id: \.self) { day in
                     if day > 0 {
@@ -99,26 +89,22 @@ struct MonthMiniView: View {
                         )
                     } else {
                         Color.clear
-                            .frame(height: 20)
+                            .frame(height: 16)
                     }
                 }
             }
+            
+            Spacer()
         }
-        .padding(8)
+        .padding(4)
         .background(Color(.systemGray6).opacity(0.3))
-        .cornerRadius(8)
+        .cornerRadius(6)
     }
     
     private var monthName: String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
         return formatter.monthSymbols[month - 1]
-    }
-    
-    private var weekdaySymbols: [String] {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter.veryShortWeekdaySymbols
     }
     
     private var monthDays: [Int] {
@@ -177,7 +163,7 @@ struct DayMiniView: View {
                 .font(.caption2)
                 .fontWeight(isToday ? .bold : .regular)
                 .foregroundColor(isToday ? .white : .primary)
-                .frame(width: 20, height: 20)
+                .frame(width: 16, height: 16)
                 .background(isToday ? Color.blue : Color.clear)
                 .clipShape(Circle())
             
@@ -186,12 +172,12 @@ struct DayMiniView: View {
                     ForEach(events.prefix(2)) { event in
                         Circle()
                             .fill(event.color)
-                            .frame(width: 4, height: 4)
+                            .frame(width: 3, height: 3)
                     }
                 }
             }
         }
-        .frame(height: 20)
+        .frame(height: 16)
         .onTapGesture {
             if let firstEvent = events.first {
                 onEventTap(firstEvent)
