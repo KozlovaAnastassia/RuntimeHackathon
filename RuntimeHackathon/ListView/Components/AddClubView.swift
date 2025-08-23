@@ -50,14 +50,15 @@ struct AddClubView: View {
     }
     
     private var infoView: some View {
-        // Название клуба
-        TextField("Название клуба", text: $name)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(12)
-        
-        // Описание клуба
-        return VStack(alignment: .trailing, spacing: 4) {
+      VStack(alignment: .trailing, spacing: 4) {
+            // Название клуба
+            TextField("Название клуба", text: $name)
+                .padding()
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(12)
+                .padding(.horizontal, 12)
+            
+            // Описание клуба
             TextEditor(text: $description)
                 .frame(minHeight: 100, maxHeight: 200)
                 .padding()
@@ -123,6 +124,7 @@ struct AddClubView: View {
             let club = Club(
                 name: name,
                 imageName: "star",
+                isJoined: true,
                 description: description,
                 tags: Array(selectedTags),
                 isCreator: true
