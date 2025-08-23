@@ -1,37 +1,6 @@
 import Foundation
 import SwiftUI
 
-// Модель события календаря
-struct CalendarEvent: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let startTime: Date
-    let endTime: Date
-    let color: Color
-    
-    var duration: TimeInterval {
-        endTime.timeIntervalSince(startTime)
-    }
-    
-    var durationInMinutes: Int {
-        Int(duration / 60)
-    }
-}
-
-// Модель дня календаря
-struct CalendarDay: Identifiable {
-    let id = UUID()
-    let date: Date
-    let events: [CalendarEvent]
-    let isCurrentMonth: Bool
-    let isToday: Bool
-    
-    var dayNumber: Int {
-        Calendar.current.component(.day, from: date)
-    }
-}
-
 @MainActor
 class CalendarViewModel: ObservableObject {
     @Published var selectedDate: Date = Date()
@@ -47,37 +16,7 @@ class CalendarViewModel: ObservableObject {
     
     // Генерация тестовых событий
     private func generateSampleEvents() {
-        let today = Date()
-        let calendar = Calendar.current
-        
-        // Событие на 15 минут
-        let shortEvent = CalendarEvent(
-            title: "Короткая встреча",
-            description: "Быстрая синхронизация",
-            startTime: calendar.date(byAdding: .hour, value: 1, to: today) ?? today,
-            endTime: calendar.date(byAdding: .minute, value: 15, to: calendar.date(byAdding: .hour, value: 1, to: today) ?? today) ?? today,
-            color: .blue
-        )
-        
-        // Событие на 2 часа
-        let longEvent = CalendarEvent(
-            title: "Длинная презентация",
-            description: "Подробный обзор проекта",
-            startTime: calendar.date(byAdding: .hour, value: 3, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 5, to: today) ?? today,
-            color: .green
-        )
-        
-        // Событие на 4 часа
-        let veryLongEvent = CalendarEvent(
-            title: "Рабочий день",
-            description: "Основная работа над проектом",
-            startTime: calendar.date(byAdding: .hour, value: 9, to: today) ?? today,
-            endTime: calendar.date(byAdding: .hour, value: 13, to: today) ?? today,
-            color: .orange
-        )
-        
-        events = [shortEvent, longEvent, veryLongEvent]
+        events = CalendarMock.generateSampleEvents()
     }
     
     // Обновление дней календаря
@@ -155,6 +94,22 @@ class CalendarViewModel: ObservableObject {
     // Удаление события
     func removeEvent(_ event: CalendarEvent) {
         events.removeAll { $0.id == event.id }
+        updateCalendarDays()
+    }
+    
+    // Методы для загрузки разных типов моковых данных
+    func loadWeekendEvents() {
+        events = CalendarMock.generateWeekendEvents()
+        updateCalendarDays()
+    }
+    
+    func loadWorkdayEvents() {
+        events = CalendarMock.generateWorkdayEvents()
+        updateCalendarDays()
+    }
+    
+    func loadEmptyEvents() {
+        events = CalendarMock.generateEmptyEvents()
         updateCalendarDays()
     }
 }
