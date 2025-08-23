@@ -84,12 +84,12 @@ struct UserProfileView: View {
                         // Участник клубов
                         let joinedClubs = viewModel.user.joinedClubs.filter { $0.isJoined }
                         // Созданные клубы
-//                        let createdClubs = viewModel.user.createdClubs
+                        let createdClubs = viewModel.user.createdClubs.filter { $0.isCreator }
 
-//                        if !createdClubs.isEmpty {
-//                            CreatedClubsSection(clubs: createdClubs)
-//                                .padding(.horizontal)
-//                        }
+                        if !createdClubs.isEmpty {
+                            CreatedClubsSection(clubs: createdClubs)
+                                .padding(.horizontal)
+                        }
 
                         if !joinedClubs.isEmpty {
                             JoinedClubsSection(clubs: joinedClubs)
@@ -543,6 +543,37 @@ struct JoinedClubsSection: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Участник клубов")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                Spacer()
+                if clubs.count > 3 {
+                    Text("еще \(clubs.count - 3)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            ForEach(clubs.prefix(3), id: \.id) { club in
+                ClubRowViewFull(club: club)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        )
+    }
+}
+
+struct CreatedClubsSection: View {
+    let clubs: [Club]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Создатель клубов")
                     .font(.headline)
                     .foregroundColor(.primary)
                 Spacer()
