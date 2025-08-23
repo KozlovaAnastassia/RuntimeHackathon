@@ -7,13 +7,22 @@
 
 import Foundation
 
-struct Message: Identifiable, Codable {
+class Message: Identifiable, Codable {
+
   let id = UUID()
   let userId: String
   let userName: String
   let text: String
   let timestamp: Date
   let isCurrentUser: Bool
+
+  init(userId: String, userName: String, text: String, timestamp: Date, isCurrentUser: Bool) {
+    self.userId = userId
+    self.userName = userName
+    self.text = text
+    self.timestamp = timestamp
+    self.isCurrentUser = isCurrentUser
+  }
 }
 
 struct ChatRoom {

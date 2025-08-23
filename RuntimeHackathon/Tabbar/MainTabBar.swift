@@ -22,7 +22,7 @@ struct MainTabBar: View {
                 CalendarView()
                     .environmentObject(clubEventsService)
             case 3:
-                ChatListView()
+              ChatListView(viewModel: ChatListViewModel(chats: storage.clubs.filter({ $0.isJoined }).map{ $0.chat }))
             case 4:
                 UserProfileView(user: sampleUser)
             default:
