@@ -11,7 +11,7 @@ import PhotosUI
 struct ClubDetailView: View {
     let club: Club // Принимаем модель Club
     @StateObject private var clubViewModel: ClubViewModel
-    @State private var isCreator = false // Можно определить по логике приложения
+    @State private var isCreator: Bool
     @State private var showingCreateEvent = false
     @State private var showingCreateNews = false
     @State private var calendarReloadTrigger = UUID()
@@ -21,7 +21,9 @@ struct ClubDetailView: View {
     init(club: Club) {
         self.club = club
         // Создаем ViewModel для конкретного клуба
-        self._clubViewModel = StateObject(wrappedValue: ClubViewModel(clubId: club.id))
+      self._clubViewModel = StateObject(wrappedValue: ClubViewModel(clubId: club.id, isCreator: club.isCreator))
+        // Инициализируем isCreator значением из модели клуба
+        self._isCreator = State(initialValue: club.isCreator)
     }
     
     var body: some View {
@@ -156,7 +158,7 @@ struct ClubHeaderSection: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(club.isJoined ? Color.red : Color.orange) // Оранжевый цвет
+                    .background(club.isJoined ? Color.gray : Color.orange) // Оранжевый цвет
                     .cornerRadius(12)
             }
         }
