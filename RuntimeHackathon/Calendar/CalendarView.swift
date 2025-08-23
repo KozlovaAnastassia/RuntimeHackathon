@@ -1,5 +1,91 @@
 import SwiftUI
 
+// Простая версия EventDetailScreen для тестирования
+struct SimpleEventDetailScreen: View {
+    let event: CalendarEvent
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Цветовая полоса
+                    Rectangle()
+                        .fill(event.color)
+                        .frame(height: 4)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Заголовок
+                        Text(event.title)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        // Описание
+                        Text(event.description)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                        
+                        // Местоположение
+                        HStack {
+                            Image(systemName: "location.fill")
+                                .foregroundColor(.red)
+                            Text("Место: \(event.location)")
+                        }
+                        
+                        // Дата и время
+                        HStack {
+                            Image(systemName: "calendar")
+                                .foregroundColor(.blue)
+                            Text("Дата: \(formatDate(event.date))")
+                        }
+                        
+                        // Продолжительность
+                        HStack {
+                            Image(systemName: "clock")
+                                .foregroundColor(.green)
+                            Text("Продолжительность: \(formatDuration(event.durationInMinutes))")
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    Spacer()
+                }
+            }
+            .navigationTitle("Детали мероприятия")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(
+                leading: Button("Закрыть") {
+                    dismiss()
+                },
+                trailing: Button("Записаться") {
+                    // Здесь будет логика записи
+                }
+                .foregroundColor(.blue)
+            )
+        }
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter.string(from: date)
+    }
+    
+    private func formatDuration(_ minutes: Int) -> String {
+        let hours = minutes / 60
+        let remainingMinutes = minutes % 60
+        
+        if hours > 0 {
+            return "\(hours) ч \(remainingMinutes) мин"
+        } else {
+            return "\(remainingMinutes) мин"
+        }
+    }
+}
+
 struct CalendarView: View {
     @StateObject private var viewModel: CalendarViewModel
     @State private var showingEventDetail = false
@@ -26,26 +112,31 @@ struct CalendarView: View {
                 switch selectedTab {
                 case 0:
                     EventsListView(viewModel: viewModel) { event in
+                        print("DEBUG: Нажато событие в списке: \(event.title)")
                         selectedEvent = event
                         showingEventDetail = true
                     }
                 case 1:
                     DayCalendarView(viewModel: viewModel) { event in
+                        print("DEBUG: Нажато событие в дне: \(event.title)")
                         selectedEvent = event
                         showingEventDetail = true
                     }
                 case 2:
                     WeekCalendarView(viewModel: viewModel) { event in
+                        print("DEBUG: Нажато событие в неделе: \(event.title)")
                         selectedEvent = event
                         showingEventDetail = true
                     }
                 case 3:
                     MonthCalendarView(viewModel: viewModel) { event in
+                        print("DEBUG: Нажато событие в месяце: \(event.title)")
                         selectedEvent = event
                         showingEventDetail = true
                     }
                 case 4:
                     YearCalendarView(viewModel: viewModel) { event in
+                        print("DEBUG: Нажато событие в годе: \(event.title)")
                         selectedEvent = event
                         showingEventDetail = true
                     }
@@ -56,7 +147,10 @@ struct CalendarView: View {
             .navigationBarHidden(true)
             .sheet(isPresented: $showingEventDetail) {
                 if let event = selectedEvent {
-                    EventDetailView(event: event, viewModel: viewModel)
+                    SimpleEventDetailScreen(event: event)
+                } else {
+                    Text("Ошибка: событие не найдено")
+                        .padding()
                 }
             }
         }
