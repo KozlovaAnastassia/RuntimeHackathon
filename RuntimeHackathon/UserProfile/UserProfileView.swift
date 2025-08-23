@@ -616,10 +616,6 @@ struct ClubRowView: View {
                             .font(.caption)
                     }
                 }
-
-//                Text(club.category.rawValue)
-//                    .font(.caption)
-//                    .foregroundColor(.secondary)
             }
 
             Spacer()
@@ -628,9 +624,6 @@ struct ClubRowView: View {
                 Image(systemName: "person.2.fill")
                     .font(.caption)
                     .foregroundColor(.orange)
-//                Text("\(club.membersCount)")
-//                    .font(.caption)
-//                    .foregroundColor(.secondary)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -822,46 +815,47 @@ struct ClubRowViewFull: View {
                 .frame(width: 30)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(club.name)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(1)
+                HStack(spacing: 6) {
+                    Text(club.name)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .lineLimit(1)
 
-//                Text(club.category.rawValue)
-//                    .font(.caption)
-//                    .foregroundColor(.secondary)
+                    // Иконка создателя
+                    if club.isCreator {
+                        Text("👑")
+                            .font(.caption)
+                    }
+                }
             }
 
             Spacer()
 
             // Количество участников (если есть)
-//            if let membersCount = club.membersCount {
-//                HStack(spacing: 4) {
-//                    Image(systemName: "person.2.fill")
-//                        .font(.caption)
-//                        .foregroundColor(.orange)
-//                    Text("\(membersCount)")
-//                        .font(.caption)
-//                        .foregroundColor(.secondary)
-//                }
-//                .padding(.horizontal, 8)
-//                .padding(.vertical, 4)
-//                .background(
-//                    RoundedRectangle(cornerRadius: 8)
-//                        .fill(Color.gray.opacity(0.1))
-//                )
-//            }
+            if let membersCount = getMembersCount() {
+                HStack(spacing: 4) {
+                    Image(systemName: "person.2.fill")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                    Text("\(membersCount)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.gray.opacity(0.1))
+                )
+            }
         }
         .padding(.vertical, 6)
     }
 
-    private func getCategoryColor(_ category: ClubCategory) -> Color {
-        switch category {
-        case .book: return .orange
-        case .sport: return .green
-        case .language: return .blue
-        case .art: return .pink
-        case .tech: return .gray
-        }
+    private func getMembersCount() -> Int? {
+        // Временно возвращаем случайное число или значение из модели если есть
+        return Int.random(in: 10...50)
+        // Или если у Club есть свойство membersCount:
+        // return club.membersCount
     }
 }
