@@ -110,3 +110,26 @@ extension Color {
         )
     }
 }
+
+// Расширение для преобразования ClubEvent в CalendarEvent
+extension CalendarEvent {
+    init(from clubEvent: ClubEvent, color: Color = .blue) {
+        self.init(
+            id: clubEvent.id,
+            title: clubEvent.title,
+            date: clubEvent.date,
+            location: clubEvent.location,
+            description: clubEvent.description,
+            color: color
+        )
+    }
+    
+    static func fromClubEvents(_ clubEvents: [ClubEvent]) -> [CalendarEvent] {
+        let colors: [Color] = [.blue, .green, .orange, .purple, .red, .pink, .yellow, .mint]
+        
+        return clubEvents.enumerated().map { index, clubEvent in
+            let color = colors[index % colors.count]
+            return CalendarEvent(from: clubEvent, color: color)
+        }
+    }
+}

@@ -14,6 +14,12 @@ class CalendarViewModel: ObservableObject {
         updateCalendarDays()
     }
     
+    // Инициализатор с внешними событиями
+    init(clubEvents: [ClubEvent]) {
+        self.events = CalendarEvent.fromClubEvents(clubEvents)
+        updateCalendarDays()
+    }
+    
     // Генерация тестовых событий
     private func generateSampleEvents() {
         events = CalendarMock.generateSampleEvents()
@@ -110,6 +116,12 @@ class CalendarViewModel: ObservableObject {
     
     func loadEmptyEvents() {
         events = CalendarMock.generateEmptyEvents()
+        updateCalendarDays()
+    }
+    
+    // Метод для обновления событий из ClubEvent
+    func updateEvents(from clubEvents: [ClubEvent]) {
+        events = CalendarEvent.fromClubEvents(clubEvents)
         updateCalendarDays()
     }
 }

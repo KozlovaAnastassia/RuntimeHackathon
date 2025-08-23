@@ -1,9 +1,19 @@
 import SwiftUI
 
 struct CalendarView: View {
-    @StateObject private var viewModel = CalendarViewModel()
+    @StateObject private var viewModel: CalendarViewModel
     @State private var showingEventDetail = false
     @State private var selectedEvent: CalendarEvent?
+    
+    // Инициализатор по умолчанию с моковыми данными
+    init() {
+        self._viewModel = StateObject(wrappedValue: CalendarViewModel())
+    }
+    
+    // Инициализатор с внешними событиями ClubEvent
+    init(clubEvents: [ClubEvent]) {
+        self._viewModel = StateObject(wrappedValue: CalendarViewModel(clubEvents: clubEvents))
+    }
     
     var body: some View {
         NavigationView {
