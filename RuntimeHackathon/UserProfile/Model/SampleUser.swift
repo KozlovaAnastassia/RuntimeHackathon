@@ -10,8 +10,11 @@ import SwiftUI
 // Создаем экземпляр ClubsListViewModel
 let clubsViewModel = ClubsListViewModel()
 
-// Берем только присоединенные клубы
-let joinedClubs = clubsViewModel.clubs.filter { $0.isJoined }
+// Фильтруем клубы где пользователь участник
+let joinedClubs = clubsViewModel.clubs.filter { $0.isJoined && !$0.isCreator }
+
+// Фильтруем клубы где пользователь создатель
+let createdClubs = clubsViewModel.clubs.filter { $0.isCreator }
 
 let sampleUser = User(
     name: "Анна Петрова",
@@ -25,9 +28,7 @@ let sampleUser = User(
         Interest(name: "Йога", category: .sport)
     ],
     joinedClubs: joinedClubs,
-    createdClubs: [
-        Club(name: "Green Club", imageName: "leaf", isJoined: false)
-    ],
+    createdClubs: createdClubs,
     location: "Москва",
     joinDate: Date().addingTimeInterval(-86400 * 30 * 12)
 )
