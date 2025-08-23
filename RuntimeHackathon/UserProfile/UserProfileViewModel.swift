@@ -33,7 +33,7 @@ class UserProfileViewModel: ObservableObject {
     init(user: User) {
         self.user = user
         self.editedName = user.name
-        self.editedNickname = user.nickname ?? ""
+        self.editedNickname = user.nickname
         self.editedLocation = user.location ?? ""
         self.editedBio = user.bio ?? ""
         self.editedInterests = user.interests
@@ -45,8 +45,9 @@ class UserProfileViewModel: ObservableObject {
 
         do {
             try await Task.sleep(nanoseconds: 500_000_000)
+            // Обновляем значения пользователя
             user.name = editedName
-            user.nickname = editedNickname.isEmpty ? nil : editedNickname
+            user.nickname = editedNickname
             user.location = editedLocation.isEmpty ? nil : editedLocation
             isEditingProfile = false
         } catch {
@@ -82,7 +83,7 @@ class UserProfileViewModel: ObservableObject {
 
     func cancelProfileEdit() {
         editedName = user.name
-        editedNickname = user.nickname ?? ""
+        editedNickname = user.nickname
         editedLocation = user.location ?? ""
         isEditingProfile = false
     }
