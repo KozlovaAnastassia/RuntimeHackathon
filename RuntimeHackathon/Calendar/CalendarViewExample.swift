@@ -1,23 +1,5 @@
 import SwiftUI
 
-// Пример структуры ClubEvent (если не определена в другом месте)
-struct ClubEvent: Identifiable, Codable {
-    let id = UUID()
-    let title: String
-    let date: Date
-    let location: String
-    let description: String
-    let createdAt: Date
-    
-    init(title: String, date: Date, location: String, description: String) {
-        self.title = title
-        self.date = date
-        self.location = location
-        self.description = description
-        self.createdAt = Date()
-    }
-}
-
 // Пример экрана, который использует CalendarView с ClubEvent
 struct CalendarViewExample: View {
     @State private var clubEvents: [ClubEvent] = []
