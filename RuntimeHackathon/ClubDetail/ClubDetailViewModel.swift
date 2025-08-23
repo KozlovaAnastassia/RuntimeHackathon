@@ -27,12 +27,22 @@ class ClubViewModel: ObservableObject {
     }
     
     func createEvent(title: String, date: Date, location: String, description: String) {
-        let newEvent = ClubEvent(title: title, date: date, location: location, description: description)
+        // Добавляем название клуба в заголовок события для идентификации в календаре
+        let clubName = getClubName()
+        let eventTitle = "\(title) в \(clubName)"
+        let newEvent = ClubEvent(title: eventTitle, date: date, location: location, description: description)
         events.append(newEvent)
+        print("DEBUG: Создано новое событие: \(eventTitle) для клуба \(clubId)")
         saveEvents()
-        
-        // Уведомляем сервис о новом событии
-        ClubEventsService.shared.addEvent(newEvent, to: clubId)
+    }
+    
+    // Получает название клуба по ID
+    private func getClubName() -> String {
+        let clubs = ClubsListViewModel().clubs
+        if let club = clubs.first(where: { $0.id == clubId }) {
+            return club.name
+        }
+        return "Неизвестный клуб"
     }
     
     func createNews(title: String, description: String, imagesData: [Data]) {
@@ -54,10 +64,12 @@ class ClubViewModel: ObservableObject {
         let key = "ClubEvents_\(clubId.uuidString)"
         if let encoded = try? JSONEncoder().encode(events) {
             UserDefaults.standard.set(encoded, forKey: key)
+            print("DEBUG: Сохранено \(events.count) событий в UserDefaults для клуба \(clubId)")
         }
         
         // Обновляем сервис асинхронно
         DispatchQueue.main.async {
+            print("DEBUG: Обновляем ClubEventsService...")
             ClubEventsService.shared.loadAllEvents()
         }
     }

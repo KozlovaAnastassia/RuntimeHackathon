@@ -14,28 +14,43 @@ struct ClubRow: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                // Локальное изображение или SF Symbol
-                if let image = club.localImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .cornerRadius(8)
-                        .padding(.trailing, 8)
-                } else {
-                    Image(systemName: club.imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .padding(.trailing, 8)
-                        .foregroundColor(.blue)
+            ZStack(alignment: .topTrailing) {
+                HStack {
+                    // Локальное изображение или SF Symbol
+                    if let image = club.localImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 100, height: 60)
+                            .cornerRadius(8)
+                            .padding(.trailing, 8)
+                    } else {
+                        Image(systemName: club.imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                            .padding(.trailing, 8)
+                            .foregroundColor(.orange)
+                    }
+                    
+                    Text(club.name)
+                        .font(.headline)
+                    
+                    Spacer()
                 }
+                .padding(.trailing, 8)
                 
-                Text(club.name)
-                    .font(.headline)
-                
-                Spacer()
+                if club.isCreator {
+                    Text("Создатель клуба")
+                        .font(.caption)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.orange)
+                        .cornerRadius(10)
+                        .padding(.top, 4)
+                        .padding(.trailing, 4)
+                }
             }
             
             HStack(spacing: 12) {
