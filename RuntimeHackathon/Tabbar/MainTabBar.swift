@@ -19,7 +19,7 @@ struct MainTabBar: View {
             case 1:
                 CalendarView()
             case 2:
-                ClubInfoView()
+                ClubDetailView()
             case 3:
                 ChatListView()
             case 4:
