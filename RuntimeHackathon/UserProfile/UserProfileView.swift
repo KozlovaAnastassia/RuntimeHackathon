@@ -134,19 +134,14 @@ struct ProfileHeaderView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             // Аватар СЛЕВА
-            AsyncImage(url: URL(string: user.avatarURL ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Image(systemName: "person.circle.fill")
-                    .font(.system(size: 60))
-                    .foregroundColor(.gray)
-            }
-            .frame(width: 80, height: 80)
-            .clipShape(Circle())
-            .overlay(Circle().stroke(Color.white, lineWidth: 3))
-            .shadow(radius: 5)
+            Image(systemName: "hare.fill")
+                .font(.system(size: 40))
+                .foregroundColor(.orange)
+                .frame(width: 80, height: 80)
+                .background(Color.orange.opacity(0.1))
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                .shadow(radius: 5)
 
             // Информация справа
             VStack(alignment: .leading, spacing: 12) {
@@ -263,13 +258,13 @@ struct ProfileHeaderView: View {
         .onAppear {
             // Инициализируем значения при появлении
             editedName = user.name
-            editedNickname = user.nickname ?? ""
+            editedNickname = user.nickname
             editedLocation = user.location ?? ""
         }
         .onChange(of: user) { newUser in
             // Обновляем значения при изменении пользователя
             editedName = newUser.name
-            editedNickname = newUser.nickname ?? ""
+            editedNickname = newUser.nickname
             editedLocation = newUser.location ?? ""
         }
     }
@@ -282,7 +277,7 @@ struct ProfileHeaderView: View {
     private func cancelAndClose() {
         // Сбрасываем значения при отмене
         editedName = user.name
-        editedNickname = user.nickname ?? ""
+        editedNickname = user.nickname
         editedLocation = user.location ?? ""
         onCancel()
     }
@@ -319,6 +314,12 @@ struct ProfileHeaderView: View {
 
         let lowercased = month.lowercased()
         return monthCases[lowercased] ?? lowercased
+    }
+
+    private var randomAnimalIcon: String {
+        let animals = ["dog.fill", "cat.fill", "bird.fill", "fish.fill", "hare.fill", "tortoise.fill"]
+        let index = user.id.uuidString.prefix(1).first?.asciiValue ?? 65
+        return animals[Int(index) % animals.count]
     }
 }
 
