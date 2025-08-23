@@ -148,20 +148,6 @@ struct ClubHeaderSection: View {
                 
                 Spacer()
             }
-            
-            // Кнопка действия
-            Button(action: {
-                // Логика присоединения/выхода из клуба
-                print(club.isJoined ? "Покидаем клуб" : "Присоединяемся к клубу")
-            }) {
-                Text(club.isJoined ? "Выйти из клуба" : "Присоединиться к клубу")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(club.isJoined ? Color.gray : Color.orange) // Оранжевый цвет
-                    .cornerRadius(12)
-            }
         }
     }
 }

@@ -30,7 +30,7 @@ struct ClubRow: View {
                             .scaledToFit()
                             .frame(width: 40, height: 40)
                             .padding(.trailing, 8)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.orange)
                     }
                     
                     Text(club.name)
