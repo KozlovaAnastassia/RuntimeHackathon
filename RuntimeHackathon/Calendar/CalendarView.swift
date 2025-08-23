@@ -119,7 +119,8 @@ struct CalendarView: View {
                 calendarTabs
                 
                 // Обновляем события из сервиса
-                .onReceive(clubEventsService.$allClubEvents) { _ in
+                .onReceive(clubEventsService.$allClubEvents) { updatedEvents in
+                    print("DEBUG: CalendarView получил обновление событий: \(updatedEvents.count) событий")
                     viewModel.updateEvents(from: clubEventsService.allClubEvents)
                 }
                 .onAppear {

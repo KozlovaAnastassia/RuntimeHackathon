@@ -235,6 +235,7 @@ class CalendarViewModel: ObservableObject {
     // Метод для обновления событий из ClubEvent
     func updateEvents(from clubEvents: [ClubEvent]) {
         events = ClubEventsService.shared.getAllCalendarEvents()
+        print("DEBUG: CalendarViewModel обновлен, теперь содержит \(events.count) событий")
         updateCalendarDays()
         updateWeekDays()
     }

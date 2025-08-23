@@ -10,7 +10,7 @@ import SwiftUI
 struct MainTabBar: View {
     @State private var selectedTab = 0
     @StateObject var storage = ClubsListViewModel()
-    @StateObject var clubEventsService = ClubEventsService.shared
+    @ObservedObject var clubEventsService = ClubEventsService.shared
     
     var body: some View {
         VStack {

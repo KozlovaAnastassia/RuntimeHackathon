@@ -20,16 +20,35 @@ class ClubEventsService: ObservableObject {
         
         // Получаем список всех клубов
         let clubs = ClubsListViewModel().clubs
+        print("DEBUG: Найдено \(clubs.count) клубов для загрузки событий")
         
         // Загружаем события для каждого клуба
         for club in clubs {
             let key = "ClubEvents_\(club.id.uuidString)"
-            if let data = UserDefaults.standard.data(forKey: key),
-               let decoded = try? JSONDecoder().decode([ClubEvent].self, from: data) {
-                allEvents.append(contentsOf: decoded)
+            print("DEBUG: Проверяем ключ: \(key) для клуба \(club.name)")
+            
+            if let data = UserDefaults.standard.data(forKey: key) {
+                print("DEBUG: Найдены данные в UserDefaults для клуба \(club.name)")
+                if let decoded = try? JSONDecoder().decode([ClubEvent].self, from: data) {
+                    allEvents.append(contentsOf: decoded)
+                    print("DEBUG: Загружено \(decoded.count) событий для клуба \(club.name)")
+                } else {
+                    print("DEBUG: ОШИБКА декодирования данных для клуба \(club.name)")
+                }
+            } else {
+                print("DEBUG: Нет данных в UserDefaults для клуба \(club.name)")
             }
         }
         
+        // Также проверим все ключи в UserDefaults, которые начинаются с "ClubEvents_"
+        let allKeys = UserDefaults.standard.dictionaryRepresentation().keys
+        let clubEventKeys = allKeys.filter { $0.hasPrefix("ClubEvents_") }
+        print("DEBUG: Найдено \(clubEventKeys.count) ключей ClubEvents_ в UserDefaults:")
+        for key in clubEventKeys {
+            print("DEBUG: Ключ: \(key)")
+        }
+        
+        print("DEBUG: Всего загружено \(allEvents.count) событий из всех клубов")
         allClubEvents = allEvents
     }
     
@@ -78,14 +97,19 @@ class ClubEventsService: ObservableObject {
     
     // Получает все события в формате CalendarEvent для календаря
     func getAllCalendarEvents() -> [CalendarEvent] {
+        print("DEBUG: getAllCalendarEvents() вызван, всего событий: \(allClubEvents.count)")
         let colors: [Color] = [.blue, .green, .orange, .purple, .red, .pink, .yellow, .mint]
         
-        return allClubEvents.enumerated().map { index, clubEvent in
+        let calendarEvents = allClubEvents.enumerated().map { index, clubEvent in
             let color = colors[index % colors.count]
             // Извлекаем название клуба из заголовка события
             let clubName = extractClubName(from: clubEvent.title)
+            print("DEBUG: Преобразуем событие: \(clubEvent.title) -> CalendarEvent")
             return CalendarEvent(from: clubEvent, color: color, clubName: clubName)
         }
+        
+        print("DEBUG: Возвращаем \(calendarEvents.count) событий для календаря")
+        return calendarEvents
     }
     
     // Извлекает название клуба из заголовка события
@@ -94,8 +118,10 @@ class ClubEventsService: ObservableObject {
         if let range = title.range(of: "в ", options: .caseInsensitive) {
             let clubNameStart = title.index(range.upperBound, offsetBy: 0)
             let clubName = String(title[clubNameStart...])
+            print("DEBUG: Извлечено название клуба: \(clubName) из заголовка: \(title)")
             return clubName
         }
+        print("DEBUG: Не удалось извлечь название клуба из заголовка: \(title)")
         return nil
     }
     
