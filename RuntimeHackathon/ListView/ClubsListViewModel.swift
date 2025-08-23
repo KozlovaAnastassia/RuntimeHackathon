@@ -11,7 +11,7 @@ import UIKit
 final class ClubsListViewModel: ObservableObject {
     @Published var clubs: [Club] = [
         Club(id: UUID(uuidString: "FA780649-27D7-4E81-95C6-8DE05DD53668")!, name: "Red Club", imageName: "sportscourt", isJoined: true, isCreator: true),
-        Club(id: UUID(uuidString: "50457F4C-223A-4105-81CE-1C2410906187")!, name: "Blue Club", imageName: "figure.walk", isJoined: false, isCreator: false),
+        Club(id: UUID(uuidString: "50457F4C-223A-4105-81CE-1C2410906187")!, name: "Blue Club", imageName: "figure.walk", isJoined: true, isCreator: false),
         Club(id: UUID(uuidString: "1F6CAD6A-F496-4BF2-A94F-0DD7A46207E1")!, name: "Green Club", imageName: "leaf", isJoined: false, isCreator: false)
     ]
     @Published var showAddClubForm: Bool = false
