@@ -10,20 +10,19 @@ import SwiftUI
 import Combine
 
 class ChatListViewModel: ObservableObject {
-    @Published var chats: [ChatPreview] = []
+    @Published var chats: [ChatInfo] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var searchText = ""
-    
-    private let chatService: ChatService
+
     private var cancellables = Set<AnyCancellable>()
     
-    init(chatService: ChatService = ChatService()) {
-        self.chatService = chatService
+  init(chats: [ChatInfo]) {
+    ChatDatabase.shared.chats = chats
         loadChats()
     }
     
-    var filteredChats: [ChatPreview] {
+    var filteredChats: [ChatInfo] {
         if searchText.isEmpty {
             return chats
         } else {
@@ -35,23 +34,9 @@ class ChatListViewModel: ObservableObject {
     }
     
     func loadChats() {
-        isLoading = true
-        chatService.getChatPreviews()
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    self?.isLoading = false
-                    if case .failure(let error) = completion {
-                        self?.errorMessage = error.localizedDescription
-                    }
-                },
-                receiveValue: { [weak self] chats in
-                    self?.chats = chats.sorted {
-                        $0.lastMessageTime ?? Date() > $1.lastMessageTime ?? Date()
-                    }
-                }
-            )
-            .store(in: &cancellables)
+      self.chats = ChatDatabase.shared.chats.sorted {
+        $0.lastMessageTime ?? Date() > $1.lastMessageTime ?? Date()
+      }
     }
     
     func refreshChats() {

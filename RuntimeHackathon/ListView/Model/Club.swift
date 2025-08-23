@@ -16,6 +16,7 @@ struct Club: Identifiable, Codable, Hashable {
     var description: String
     var tags: [String]
     var isCreator: Bool
+  var chat: ChatInfo
 
     init(
         id: UUID = UUID(),
@@ -25,7 +26,8 @@ struct Club: Identifiable, Codable, Hashable {
         localImagePath: String? = nil,
         description: String = "",
         tags: [String] = [],
-        isCreator: Bool = false
+        isCreator: Bool = false,
+        chat: ChatInfo = ChatInfo()
     ) {
         self.id = id
         self.name = name
@@ -35,6 +37,7 @@ struct Club: Identifiable, Codable, Hashable {
         self.description = description
         self.tags = tags
         self.isCreator = isCreator
+      self.chat = chat
     }
 
     // Загружает UIImage из локального пути
@@ -45,6 +48,6 @@ struct Club: Identifiable, Codable, Hashable {
 
     // MARK: - Codable
     enum CodingKeys: String, CodingKey {
-        case id, name, imageName, isJoined, localImagePath, description, tags, isCreator
+        case id, name, imageName, isJoined, localImagePath, description, tags, isCreator, chat
     }
 }

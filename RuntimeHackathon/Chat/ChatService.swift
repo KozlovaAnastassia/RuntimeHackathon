@@ -8,56 +8,19 @@
 import Combine
 import Foundation
 
-class ChatService {
-
-  private let chatInfo = ChatDatabase.shared
-
-  func getMessages(for chatId: String) -> AnyPublisher<[Message], Error> {
-        // Имитация загрузки сообщений
-        Future<[Message], Error> { promise in
-            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
-              guard let messages = self.chatInfo.chats.first(where: { $0.chatId == chatId })?.messages else { promise(.failure(fatalError())) }
-              promise(.success(messages))
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-    
-  func sendMessage(_ message: Message, for chatId: String) -> AnyPublisher<Message, Error> {
-        Future<Message, Error> { promise in
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
-              self.chatInfo.chats.first(where: { $0.chatId == chatId })?.messages += [message]
-                promise(.success(message))
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-}
-
-extension ChatService {
-  func getChatPreviews() -> AnyPublisher<[ChatPreview], Error> {
-    Future<[ChatPreview], Error> { promise in
-      DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
-        promise(.success(self.chatInfo.chats))
-      }
-    }
-    .eraseToAnyPublisher()
-  }
-}
-
 class ChatDatabase {
 
   private init() {}
   public static let shared = ChatDatabase()
 
-  private var messages: [Message] = [
+  var messages: [Message] = [
     Message(userId: "1", userName: "Анна", text: "Привет всем!", timestamp: Date().addingTimeInterval(-300), isCurrentUser: false),
     Message(userId: "2", userName: "Иван", text: "Добро пожаловать в наш клуб!", timestamp: Date().addingTimeInterval(-240), isCurrentUser: false),
     Message(userId: "3", userName: "Мария", text: "Какие интересные темы обсудим сегодня?", timestamp: Date().addingTimeInterval(-180), isCurrentUser: false)
   ]
 
   lazy var chats = [
-    ChatPreview(
+    ChatInfo(
       chatId: "1",
       title: "Фотография и искусство",
       unreadCount: 3,
@@ -66,7 +29,7 @@ class ChatDatabase {
       avatarColor: "blue",
       messages: messages
     ),
-    ChatPreview(
+    ChatInfo(
       chatId: "2",
       title: "Книжный клуб",
       unreadCount: 0,
@@ -75,7 +38,7 @@ class ChatDatabase {
       avatarColor: "green",
       messages: messages
     ),
-    ChatPreview(
+    ChatInfo(
       chatId: "3",
       title: "Путешествия по Европе",
       unreadCount: 5,
@@ -84,7 +47,7 @@ class ChatDatabase {
       avatarColor: "orange",
       messages: messages
     ),
-    ChatPreview(
+    ChatInfo(
       chatId: "4",
       title: "Кулинарные эксперименты",
       unreadCount: 0,
@@ -93,7 +56,7 @@ class ChatDatabase {
       avatarColor: "purple",
       messages: messages
     ),
-    ChatPreview(
+    ChatInfo(
       chatId: "5",
       title: "Технологии и программирование",
       unreadCount: 12,

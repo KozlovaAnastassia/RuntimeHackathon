@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct ChatListView: View {
-    @StateObject private var viewModel = ChatListViewModel()
+  @ObservedObject var viewModel: ChatListViewModel
     @State private var showingNewChat = false
-    
+
+  init(viewModel: ChatListViewModel) {
+    self.viewModel = viewModel
+  }
+
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -47,6 +51,9 @@ struct ChatListView: View {
             } message: {
                 Text(viewModel.errorMessage ?? "")
             }
+            .onAppear {
+              viewModel.loadChats()
+            }
         }
     }
     
@@ -82,8 +89,8 @@ struct ChatListView: View {
             } else {
                 List {
                     ForEach(viewModel.filteredChats) { chat in
-                      NavigationLink(destination: ChatView(chatId: chat.chatId)) {
-                            ChatPreviewRow(chat: chat)
+                      NavigationLink(destination: ChatView(viewModel: ChatViewModel(chatId: chat.chatId))) {
+                        ChatPreviewRow(chat: chat, viewModel: viewModel)
                         }
                         .listRowInsets(EdgeInsets())
                     }
@@ -121,8 +128,13 @@ struct ChatListView: View {
 }
 
 struct ChatPreviewRow: View {
-    let chat: ChatPreview
-    
+    let chat: ChatInfo
+
+  init(chat: ChatInfo, viewModel: ChatListViewModel) {
+    self.chat = chat
+    self.viewModel = viewModel
+  }
+
     var body: some View {
         HStack(spacing: 12) {
             // Аватар чата
@@ -191,5 +203,5 @@ struct ChatPreviewRow: View {
         .padding(.vertical, 8)
     }
     
-    @ObservedObject private var viewModel = ChatListViewModel()
+  @ObservedObject private var viewModel: ChatListViewModel
 }

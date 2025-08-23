@@ -11,7 +11,8 @@ struct MainTabBar: View {
     @State private var selectedTab = 0
     @StateObject var storage = ClubsListViewModel()
     @ObservedObject var clubEventsService = ClubEventsService.shared
-    
+  private let chatDatabase = ChatDatabase.shared
+
     var body: some View {
         VStack {
             // Контент по вкладкам
@@ -22,7 +23,7 @@ struct MainTabBar: View {
                 CalendarView()
                     .environmentObject(clubEventsService)
             case 3:
-                ChatListView()
+              ChatListView(viewModel: ChatListViewModel(chats: storage.clubs.filter({ $0.isJoined }).map{ $0.chat }))
             case 4:
                 UserProfileView(user: sampleUser)
             default:
