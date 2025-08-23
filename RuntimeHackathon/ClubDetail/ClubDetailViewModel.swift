@@ -12,9 +12,11 @@ class ClubViewModel: ObservableObject {
     @Published var events: [ClubEvent] = []
     @Published var newsItems: [NewsItem] = []
     private let clubId: UUID
+    private let isCreator: Bool
     
-    init(clubId: UUID) {
+  init(clubId: UUID, isCreator: Bool) {
         self.clubId = clubId
+        self.isCreator = isCreator
         loadEvents()
         loadNews()
     }
