@@ -10,6 +10,7 @@ import SwiftUI
 struct MainTabBar: View {
     @State private var selectedTab = 0
     @StateObject var storage = ClubsListViewModel()
+    @StateObject var clubEventsService = ClubEventsService.shared
     
     var body: some View {
         VStack {
@@ -19,6 +20,7 @@ struct MainTabBar: View {
                 ClubsListView(viewModel: storage)
             case 1:
                 CalendarView()
+                    .environmentObject(clubEventsService)
             case 3:
                 ChatListView()
             case 4:

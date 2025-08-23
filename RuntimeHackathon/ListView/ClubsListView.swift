@@ -55,6 +55,7 @@ struct ClubsListView: View {
         }
         .sheet(item: $selectedClub) { club in
             ClubDetailView(club: club)
+                .environmentObject(ClubEventsService.shared)
         }
     }
     

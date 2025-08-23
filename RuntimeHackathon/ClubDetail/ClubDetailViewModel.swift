@@ -19,12 +19,20 @@ class ClubViewModel: ObservableObject {
         self.isCreator = isCreator
         loadEvents()
         loadNews()
+        
+        // Откладываем загрузку событий из сервиса
+        DispatchQueue.main.async {
+            ClubEventsService.shared.loadAllEvents()
+        }
     }
     
     func createEvent(title: String, date: Date, location: String, description: String) {
         let newEvent = ClubEvent(title: title, date: date, location: location, description: description)
         events.append(newEvent)
         saveEvents()
+        
+        // Уведомляем сервис о новом событии
+        ClubEventsService.shared.addEvent(newEvent, to: clubId)
     }
     
     func createNews(title: String, description: String, imagesData: [Data]) {
@@ -47,14 +55,16 @@ class ClubViewModel: ObservableObject {
         if let encoded = try? JSONEncoder().encode(events) {
             UserDefaults.standard.set(encoded, forKey: key)
         }
+        
+        // Обновляем сервис асинхронно
+        DispatchQueue.main.async {
+            ClubEventsService.shared.loadAllEvents()
+        }
     }
     
     private func loadEvents() {
-        let key = "ClubEvents_\(clubId.uuidString)"
-        if let data = UserDefaults.standard.data(forKey: key),
-           let decoded = try? JSONDecoder().decode([ClubEvent].self, from: data) {
-            events = decoded
-        }
+        // Загружаем события из сервиса
+        events = ClubEventsService.shared.getEventsForClub(clubId)
     }
     
     private func saveNews() {
