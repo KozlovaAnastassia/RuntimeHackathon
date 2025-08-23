@@ -19,8 +19,6 @@ struct MainTabBar: View {
                 ClubsListView(viewModel: storage)
             case 1:
                 CalendarView()
-            case 2:
-                ClubDetailView()
             case 3:
                 ChatListView()
             case 4:
@@ -41,12 +39,6 @@ struct MainTabBar: View {
                 TabBarButton(index: 1,
                              systemImage: "calendar",
                              textKey: "Календарь",
-                             selectedTab: $selectedTab)
-                
-                Spacer()
-                TabBarButton(index: 2,
-                             assetImage: "info.circle",
-                             textKey: "Инфо",
                              selectedTab: $selectedTab)
                 Spacer()
                 TabBarButton(index: 3,
