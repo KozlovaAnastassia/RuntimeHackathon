@@ -21,7 +21,7 @@ struct MainTabBar: View {
             case 2:
                 ClubInfoView()
             case 3:
-                ChatView()
+                ChatListView()
             case 4:
                 ProfileView()
             default:
@@ -69,5 +69,4 @@ struct MainTabBar: View {
 // Заглушки для экранов
 struct ClubsListView: View { var body: some View { Text("Список клубов") } }
 struct ClubInfoView: View { var body: some View { Text("Инфо о клубе") } }
-struct ChatView: View { var body: some View { Text("Чат") } }
 struct ProfileView: View { var body: some View { Text("Профиль") } }
