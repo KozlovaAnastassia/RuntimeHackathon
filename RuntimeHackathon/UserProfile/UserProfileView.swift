@@ -81,15 +81,18 @@ struct UserProfileView: View {
                         )
                         .padding(.horizontal)
 
-                        // Созданные клубы
-                        if !viewModel.user.createdClubs.isEmpty {
-                            CreatedClubsSection(clubs: viewModel.user.createdClubs)
-                                .padding(.horizontal)
-                        }
-
                         // Участник клубов
-                        if !viewModel.user.joinedClubs.isEmpty {
-                            JoinedClubsSection(clubs: viewModel.user.joinedClubs)
+                        let joinedClubs = viewModel.user.joinedClubs.filter { $0.isJoined }
+                        // Созданные клубы
+//                        let createdClubs = viewModel.user.createdClubs
+
+//                        if !createdClubs.isEmpty {
+//                            CreatedClubsSection(clubs: createdClubs)
+//                                .padding(.horizontal)
+//                        }
+
+                        if !joinedClubs.isEmpty {
+                            JoinedClubsSection(clubs: joinedClubs)
                                 .padding(.horizontal)
                         }
 
@@ -533,40 +536,8 @@ struct InterestsSection: View {
     }
 }
 
-// Отдельные секции для клубов
-struct CreatedClubsSection: View {
-    let clubs: [ClubPreview]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Созданные клубы")
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                Spacer()
-                if clubs.count > 3 {
-                    Text("еще \(clubs.count - 3)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-
-            ForEach(clubs.prefix(3), id: \.id) { club in
-                ClubRowView(club: club, isCreator: true)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-        )
-    }
-}
-
 struct JoinedClubsSection: View {
-    let clubs: [ClubPreview]
+    let clubs: [Club]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -583,7 +554,7 @@ struct JoinedClubsSection: View {
             }
 
             ForEach(clubs.prefix(3), id: \.id) { club in
-                ClubRowView(club: club, isCreator: false)
+                ClubRowViewFull(club: club)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -597,7 +568,7 @@ struct JoinedClubsSection: View {
 }
 
 struct ClubRowView: View {
-    let club: ClubPreview
+    let club: Club
     let isCreator: Bool
 
     var body: some View {
@@ -615,9 +586,9 @@ struct ClubRowView: View {
                     }
                 }
 
-                Text(club.category.rawValue)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+//                Text(club.category.rawValue)
+//                    .font(.caption)
+//                    .foregroundColor(.secondary)
             }
 
             Spacer()
@@ -626,9 +597,9 @@ struct ClubRowView: View {
                 Image(systemName: "person.2.fill")
                     .font(.caption)
                     .foregroundColor(.orange)
-                Text("\(club.membersCount)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+//                Text("\(club.membersCount)")
+//                    .font(.caption)
+//                    .foregroundColor(.secondary)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -808,34 +779,58 @@ struct FlowLayout: Layout {
     }
 }
 
-struct UserProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleUser = User(
-            name: "Анна Петрова",
-            nickname: "anna_dev",
-            email: "anna.petrova@example.com",
-            bio: "Люблю читать книги и изучать новые языки. Участник книжного клуба более 2 лет. Также увлекаюсь йогой и акварельной живописью.",
-            avatarURL: "https://picsum.photos/200",
-            interests: [
-                Interest(name: "Научная фантастика", category: .book),
-                Interest(name: "Английский язык", category: .language),
-                Interest(name: "Йога", category: .sport),
-                Interest(name: "Акварель", category: .art),
-                Interest(name: "iOS разработка", category: .tech)
-            ],
-            joinedClubs: [
-                ClubPreview(name: "Клуб любителей фантастики", category: .book, membersCount: 42),
-                ClubPreview(name: "Изучаем английский", category: .language, membersCount: 28),
-                ClubPreview(name: "Йога для начинающих", category: .sport, membersCount: 15)
-            ],
-            createdClubs: [
-                ClubPreview(name: "Клуб Downtown", category: .book, membersCount: 15),
-                ClubPreview(name: "Tech Meetup", category: .tech, membersCount: 32)
-            ],
-            location: "Москва",
-            joinDate: Date().addingTimeInterval(-86400 * 30 * 12)
-        )
+struct ClubRowViewFull: View {
+    let club: Club
 
-        UserProfileView(user: sampleUser)
+    var body: some View {
+        HStack {
+            // Иконка клуба
+            Image(systemName: club.imageName)
+                .font(.title3)
+                .foregroundColor(.orange)
+                .frame(width: 30)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(club.name)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .lineLimit(1)
+
+//                Text(club.category.rawValue)
+//                    .font(.caption)
+//                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            // Количество участников (если есть)
+//            if let membersCount = club.membersCount {
+//                HStack(spacing: 4) {
+//                    Image(systemName: "person.2.fill")
+//                        .font(.caption)
+//                        .foregroundColor(.orange)
+//                    Text("\(membersCount)")
+//                        .font(.caption)
+//                        .foregroundColor(.secondary)
+//                }
+//                .padding(.horizontal, 8)
+//                .padding(.vertical, 4)
+//                .background(
+//                    RoundedRectangle(cornerRadius: 8)
+//                        .fill(Color.gray.opacity(0.1))
+//                )
+//            }
+        }
+        .padding(.vertical, 6)
+    }
+
+    private func getCategoryColor(_ category: ClubCategory) -> Color {
+        switch category {
+        case .book: return .orange
+        case .sport: return .green
+        case .language: return .blue
+        case .art: return .pink
+        case .tech: return .gray
+        }
     }
 }

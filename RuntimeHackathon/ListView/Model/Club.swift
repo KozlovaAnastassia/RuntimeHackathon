@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Club: Identifiable, Codable {
+struct Club: Identifiable, Codable, Hashable {
     let id: UUID
     let name: String
     let imageName: String

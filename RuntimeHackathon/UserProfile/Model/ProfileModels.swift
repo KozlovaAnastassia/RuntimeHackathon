@@ -15,8 +15,8 @@ struct User: Identifiable, Codable, Hashable {
     var bio: String?
     var avatarURL: String?
     var interests: [Interest]
-    var joinedClubs: [ClubPreview]
-    var createdClubs: [ClubPreview]
+    var joinedClubs: [Club]
+    var createdClubs: [Club]
     var location: String?
     var joinDate: Date
 }
@@ -34,13 +34,6 @@ enum InterestCategory: String, CaseIterable, Codable, Hashable {
     case art = "🎨"
     case tech = "💻"
     case music = "🎵"
-}
-
-struct ClubPreview: Identifiable, Codable, Hashable {
-    var id = UUID()
-    let name: String
-    let category: ClubCategory
-    let membersCount: Int
 }
 
 enum ClubCategory: String, CaseIterable, Codable, Hashable {
