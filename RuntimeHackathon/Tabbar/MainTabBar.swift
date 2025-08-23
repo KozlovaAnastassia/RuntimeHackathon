@@ -9,13 +9,14 @@ import SwiftUI
 
 struct MainTabBar: View {
     @State private var selectedTab = 0
+    @StateObject var storage = ClubsListViewModel()
     
     var body: some View {
         VStack {
             // Контент по вкладкам
             switch selectedTab {
             case 0:
-                    ClubsListView(viewModel: ClubsListViewModel())
+                ClubsListView(viewModel: storage)
             case 1:
                 CalendarView()
             case 2:

@@ -20,7 +20,7 @@ struct ClubsListView: View {
                 Text("Список клубов")
                     .font(.title2)
                     .padding(.top)
-                
+
                 VStack(spacing: 12) {
                     ForEach(sortedClubs) { club in
                         ClubRow(
@@ -32,7 +32,7 @@ struct ClubsListView: View {
                 }
                 .padding(.top)
             }
-            
+
             Button(action: { viewModel.showAddClubForm.toggle() }) {
                 HStack {
                     Image(systemName: "plus.circle.fill")
