@@ -17,10 +17,12 @@ struct MainTabBar: View {
             case 0:
                 ClubsListView()
             case 1:
-                ClubInfoView()
+                CalendarView()
             case 2:
-                ChatView()
+                ClubInfoView()
             case 3:
+                ChatView()
+            case 4:
                 ProfileView()
             default:
                 EmptyView()
@@ -36,16 +38,22 @@ struct MainTabBar: View {
                              selectedTab: $selectedTab)
                 Spacer()
                 TabBarButton(index: 1,
+                             systemImage: "calendar",
+                             textKey: "Календарь",
+                             selectedTab: $selectedTab)
+                
+                Spacer()
+                TabBarButton(index: 2,
                              assetImage: "info.circle",
                              textKey: "Инфо",
                              selectedTab: $selectedTab)
                 Spacer()
-                TabBarButton(index: 2,
+                TabBarButton(index: 3,
                              systemImage: "bubble.left.and.bubble.right",
                              textKey: "Чат",
                              selectedTab: $selectedTab)
                 Spacer()
-                TabBarButton(index: 3,
+                TabBarButton(index: 4,
                              systemImage: "person",
                              textKey: "Профиль",
                              selectedTab: $selectedTab)
