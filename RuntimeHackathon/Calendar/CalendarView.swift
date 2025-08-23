@@ -53,8 +53,7 @@ struct CalendarView: View {
                     EmptyView()
                 }
             }
-            .navigationTitle("Календарь")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
             .sheet(isPresented: $showingEventDetail) {
                 if let event = selectedEvent {
                     EventDetailView(event: event, viewModel: viewModel)
