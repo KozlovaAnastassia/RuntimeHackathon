@@ -8,9 +8,9 @@
 import Foundation
 
 struct User: Identifiable, Codable, Hashable {
-    let id = UUID()
+    var id = UUID()
     var name: String
-    var nickname: String? // Новый никнейм
+    var nickname: String
     var email: String
     var bio: String?
     var avatarURL: String?
@@ -22,7 +22,7 @@ struct User: Identifiable, Codable, Hashable {
 }
 
 struct Interest: Identifiable, Codable, Hashable {
-    let id = UUID()
+    var id = UUID()
     let name: String
     let category: InterestCategory
 }
@@ -37,7 +37,7 @@ enum InterestCategory: String, CaseIterable, Codable, Hashable {
 }
 
 struct ClubPreview: Identifiable, Codable, Hashable {
-    let id = UUID()
+    var id = UUID()
     let name: String
     let category: ClubCategory
     let membersCount: Int

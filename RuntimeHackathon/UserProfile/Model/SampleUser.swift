@@ -10,6 +10,7 @@ import SwiftUI
 var sampleUser: User {
     User(
         name: "Анна Петрова",
+        nickname: "AnnaPetrova",
         email: "anna@example.com",
         bio: "Люблю читать книги и изучать новые языки.",
         avatarURL: "https://picsum.photos/200",

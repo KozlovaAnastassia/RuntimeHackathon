@@ -16,72 +16,87 @@ struct UserProfileView: View {
 
     var body: some View {
         NavigationView {
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 25) {
-                    // Header с аватаром СЛЕВА с градиентом
-                    ProfileHeaderView(
-                        user: viewModel.user,
-                        isEditing: viewModel.isEditingProfile,
-                        onEdit: { viewModel.isEditingProfile.toggle() },
-                        onSave: { Task { await viewModel.saveProfileSection() } },
-                        onCancel: { viewModel.cancelProfileEdit() }
-                    )
-                    .padding(.horizontal)
-                    .padding(.top, 20)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [.blue.opacity(0.1), .clear]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
+            ZStack {
+                // Оранжевый градиент на весь экран
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.orange.opacity(0.3),
+                        Color.orange.opacity(0.15),
+                        Color.orange.opacity(0.05),
+                        .clear
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .edgesIgnoringSafeArea(.all)
 
-                    // Статистика интересов
-                    InterestStatsView(user: viewModel.user)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 25) {
+                        // Header с аватаром СЛЕВА
+                        ProfileHeaderView(
+                            user: viewModel.user,
+                            isEditing: viewModel.isEditingProfile,
+                            onEdit: {
+                                viewModel.editedName = viewModel.user.name
+                                viewModel.editedNickname = viewModel.user.nickname
+                                viewModel.editedLocation = viewModel.user.location ?? ""
+                                viewModel.isEditingProfile.toggle()
+                            },
+                            onSave: {
+                                Task { await viewModel.saveProfileSection() }
+                            },
+                            onCancel: { viewModel.cancelProfileEdit() }
+                        )
+                        .padding(.horizontal)
+                        .padding(.top, 20)
+
+                        // Статистика интересов
+                        InterestStatsView(user: viewModel.user)
+                            .padding(.horizontal)
+
+                        // Основная информация
+                        ProfileInfoSection(
+                            bio: viewModel.user.bio ?? "",
+                            isEditing: viewModel.isEditingBio,
+                            onEdit: { viewModel.isEditingBio.toggle() },
+                            onSave: { Task { await viewModel.saveBio() } },
+                            onCancel: { viewModel.cancelBioEdit() },
+                            editedBio: $viewModel.editedBio
+                        )
                         .padding(.horizontal)
 
-                    // Основная информация
-                    ProfileInfoSection(
-                        bio: viewModel.user.bio ?? "",
-                        isEditing: viewModel.isEditingBio,
-                        onEdit: { viewModel.isEditingBio.toggle() },
-                        onSave: { Task { await viewModel.saveBio() } },
-                        onCancel: { viewModel.cancelBioEdit() },
-                        editedBio: $viewModel.editedBio
-                    )
-                    .padding(.horizontal)
+                        // Интересы с кнопкой добавления
+                        InterestsSection(
+                            interests: viewModel.user.interests,
+                            isEditing: viewModel.isEditingInterests,
+                            onEdit: { viewModel.isEditingInterests.toggle() },
+                            onAddInterest: {
+                                viewModel.showingAddInterest = true
+                            },
+                            onRemoveInterest: { interest in
+                                viewModel.removeInterest(interest)
+                            },
+                            onSave: { Task { await viewModel.saveInterests() } },
+                            onCancel: { viewModel.cancelInterestsEdit() }
+                        )
+                        .padding(.horizontal)
 
-                    // Интересы с кнопкой добавления
-                    InterestsSection(
-                        interests: viewModel.user.interests,
-                        isEditing: viewModel.isEditingInterests,
-                        onEdit: { viewModel.isEditingInterests.toggle() },
-                        onAddInterest: {
-                            viewModel.showingAddInterest = true
-                        },
-                        onRemoveInterest: { interest in
-                            viewModel.removeInterest(interest)
-                        },
-                        onSave: { Task { await viewModel.saveInterests() } },
-                        onCancel: { viewModel.cancelInterestsEdit() }
-                    )
-                    .padding(.horizontal)
+                        // Созданные клубы
+                        if !viewModel.user.createdClubs.isEmpty {
+                            CreatedClubsSection(clubs: viewModel.user.createdClubs)
+                                .padding(.horizontal)
+                        }
 
-                    // Созданные клубы
-                    if !viewModel.user.createdClubs.isEmpty {
-                        CreatedClubsSection(clubs: viewModel.user.createdClubs)
-                            .padding(.horizontal)
+                        // Участник клубов
+                        if !viewModel.user.joinedClubs.isEmpty {
+                            JoinedClubsSection(clubs: viewModel.user.joinedClubs)
+                                .padding(.horizontal)
+                        }
+
+                        Spacer()
                     }
-
-                    // Участник клубов
-                    if !viewModel.user.joinedClubs.isEmpty {
-                        JoinedClubsSection(clubs: viewModel.user.joinedClubs)
-                            .padding(.horizontal)
-                    }
-
-                    Spacer()
+                    .padding(.bottom, 30)
                 }
-                .padding(.bottom, 30)
             }
             .navigationTitle("Профиль")
             .navigationBarTitleDisplayMode(.large)
@@ -102,10 +117,14 @@ struct UserProfileView: View {
             }
         }
     }
+
 }
 
-// MARK: - Улучшенные компоненты
 struct ProfileHeaderView: View {
+    @State private var editedName: String = ""
+    @State private var editedNickname: String = ""
+    @State private var editedLocation: String = ""
+
     let user: User
     let isEditing: Bool
     let onEdit: () -> Void
@@ -129,46 +148,91 @@ struct ProfileHeaderView: View {
             .overlay(Circle().stroke(Color.white, lineWidth: 3))
             .shadow(radius: 5)
 
-            // Информация справа (с никнеймом в формате @username)
-            VStack(alignment: .leading, spacing: 8) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(user.name)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
+            // Информация справа
+            VStack(alignment: .leading, spacing: 12) {
+                if isEditing {
+                    // Поля ввода в режиме редактирования
+                    VStack(alignment: .leading, spacing: 8) {
+                        TextField("Имя", text: $editedName)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .font(.title2)
+                            .fontWeight(.bold)
 
-                    if let nickname = user.nickname, !nickname.isEmpty {
-                        Text("@\(nickname)")
+                        TextField("Никнейм", text: $editedNickname)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
                             .font(.subheadline)
-                            .foregroundColor(.blue)
+                    }
+                } else {
+                    // Обычное отображение
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(user.name)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        Text("@\(user.nickname)")
+                            .font(.subheadline)
+                            .foregroundColor(.orange)
                             .fontWeight(.medium)
                     }
-
-                    Text(user.email)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
                 }
 
-                // Дополнительная информация
-                VStack(alignment: .leading, spacing: 6) {
-                    if let location = user.location, !location.isEmpty {
-                        HStack(spacing: 6) {
-                            Image(systemName: "location.fill")
+                // Контактная информация
+                if isEditing {
+                    // Поля ввода для контактов в режиме редактирования
+                    VStack(alignment: .leading, spacing: 8) {
+                        TextField("Email", text: .constant(user.email))
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .font(.caption)
+                            .disabled(true)
+
+                        TextField("Город", text: $editedLocation)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .font(.caption)
+
+                        HStack(spacing: 8) {
+                            Image(systemName: "calendar")
                                 .font(.caption)
-                                .foregroundColor(.blue)
-                            Text(location)
+                                .foregroundColor(.orange)
+                                .frame(width: 16)
+                            Text("С нами с \(formatDateFull(user.joinDate))")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
+                } else {
+                    // Обычное отображение контактов
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "envelope")
+                                .font(.caption)
+                                .foregroundColor(.orange)
+                                .frame(width: 16)
+                            Text(user.email)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
 
-                    HStack(spacing: 6) {
-                        Image(systemName: "calendar")
-                            .font(.caption)
-                            .foregroundColor(.green)
-                        Text("С нами с \(formatDateFull(user.joinDate))")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        if let location = user.location, !location.isEmpty {
+                            HStack(spacing: 8) {
+                                Image(systemName: "location.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                                    .frame(width: 16)
+                                Text(location)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+
+                        HStack(spacing: 8) {
+                            Image(systemName: "calendar")
+                                .font(.caption)
+                                .foregroundColor(.orange)
+                                .frame(width: 16)
+                            Text("С нами с \(formatDateFull(user.joinDate))")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
             }
@@ -176,15 +240,15 @@ struct ProfileHeaderView: View {
             Spacer()
 
             // Кнопка редактирования для секции профиля
-            Button(action: isEditing ? onSave : onEdit) {
+            Button(action: isEditing ? saveAndClose : onEdit) {
                 Image(systemName: isEditing ? "checkmark.circle.fill" : "pencil.circle.fill")
                     .font(.title2)
-                    .foregroundColor(isEditing ? .green : .blue)
+                    .foregroundColor(isEditing ? .green : .orange)
             }
             .buttonStyle(PlainButtonStyle())
 
             if isEditing {
-                Button(action: onCancel) {
+                Button(action: cancelAndClose) {
                     Image(systemName: "xmark.circle.fill")
                         .font(.title2)
                         .foregroundColor(.red)
@@ -196,15 +260,65 @@ struct ProfileHeaderView: View {
         .background(Color(.systemBackground))
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .onAppear {
+            // Инициализируем значения при появлении
+            editedName = user.name
+            editedNickname = user.nickname ?? ""
+            editedLocation = user.location ?? ""
+        }
+        .onChange(of: user) { newUser in
+            // Обновляем значения при изменении пользователя
+            editedName = newUser.name
+            editedNickname = newUser.nickname ?? ""
+            editedLocation = newUser.location ?? ""
+        }
+    }
+
+    private func saveAndClose() {
+        // Передаем отредактированные значения в onSave closure
+        onSave()
+    }
+
+    private func cancelAndClose() {
+        // Сбрасываем значения при отмене
+        editedName = user.name
+        editedNickname = user.nickname ?? ""
+        editedLocation = user.location ?? ""
+        onCancel()
     }
 
     private func formatDateFull(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "LLLL yyyy"
-        // Делаем первую букву заглавной
-        let dateString = formatter.string(from: date)
-        return dateString.prefix(1).uppercased() + dateString.dropFirst()
+        formatter.dateFormat = "LLLL"
+
+        let monthName = formatter.string(from: date)
+        let prepositionalMonth = convertToPrepositionalCase(monthName)
+
+        formatter.dateFormat = "yyyy"
+        let year = formatter.string(from: date)
+
+        return "\(prepositionalMonth) \(year)"
+    }
+
+    private func convertToPrepositionalCase(_ month: String) -> String {
+        let monthCases: [String: String] = [
+            "январь": "января",
+            "февраль": "февраля",
+            "март": "марта",
+            "апрель": "апреля",
+            "май": "мая",
+            "июнь": "июня",
+            "июль": "июля",
+            "август": "августа",
+            "сентябрь": "сентября",
+            "октябрь": "октября",
+            "ноябрь": "ноября",
+            "декабрь": "декабря"
+        ]
+
+        let lowercased = month.lowercased()
+        return monthCases[lowercased] ?? lowercased
     }
 }
 
@@ -235,7 +349,7 @@ struct StatItem: View {
         VStack(spacing: 6) {
             Image(systemName: icon)
                 .font(.body)
-                .foregroundColor(.blue)
+                .foregroundColor(.orange)
             Text("\(count)")
                 .font(.title3)
                 .fontWeight(.bold)
@@ -269,7 +383,7 @@ struct ProfileInfoSection: View {
                 Button(action: isEditing ? onSave : onEdit) {
                     Image(systemName: isEditing ? "checkmark.circle.fill" : "pencil.circle.fill")
                         .font(.title2)
-                        .foregroundColor(isEditing ? .green : .blue)
+                        .foregroundColor(isEditing ? .green : .orange)
                 }
                 .buttonStyle(PlainButtonStyle())
 
@@ -335,7 +449,7 @@ struct InterestsSection: View {
                 if isEditing {
                     Button(action: onAddInterest) {
                         Image(systemName: "plus.circle.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.orange)
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
@@ -343,7 +457,7 @@ struct InterestsSection: View {
                 Button(action: isEditing ? onSave : onEdit) {
                     Image(systemName: isEditing ? "checkmark.circle.fill" : "pencil.circle.fill")
                         .font(.title2)
-                        .foregroundColor(isEditing ? .green : .blue)
+                        .foregroundColor(isEditing ? .green : .orange)
                 }
                 .buttonStyle(PlainButtonStyle())
 
@@ -389,7 +503,7 @@ struct InterestsSection: View {
                         .padding(.vertical, 8)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.blue.opacity(0.1))
+                                .fill(Color.orange.opacity(0.1))
                         )
                         .foregroundColor(.primary)
                     }
@@ -399,7 +513,7 @@ struct InterestsSection: View {
                         Button(action: onAddInterest) {
                             Image(systemName: "plus")
                                 .font(.caption)
-                                .foregroundColor(.blue)
+                                .foregroundColor(.orange)
                         }
                         .frame(width: 40, height: 32)
                         .background(
@@ -510,7 +624,7 @@ struct ClubRowView: View {
             HStack(spacing: 4) {
                 Image(systemName: "person.2.fill")
                     .font(.caption)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.orange)
                 Text("\(club.membersCount)")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -562,11 +676,18 @@ struct AddInterestView: View {
                                     .frame(width: 80, height: 80)
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .fill(selectedCategory == category ? Color.blue.opacity(0.2) : Color.gray.opacity(0.1))
+                                            .fill(
+                                                selectedCategory == category ? Color.orange
+                                                    .opacity(0.2) : Color.gray
+                                                    .opacity(0.1)
+                                            )
                                     )
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .stroke(selectedCategory == category ? Color.blue : Color.clear, lineWidth: 2)
+                                            .stroke(
+                                                selectedCategory == category ? Color.orange : Color.clear,
+                                                lineWidth: 2
+                                            )
                                     )
                                 }
                             }
