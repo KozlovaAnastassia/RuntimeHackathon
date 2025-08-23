@@ -17,25 +17,20 @@ final class ClubsListViewModel: ObservableObject {
     
     @Published var showAddClubForm: Bool = false
     
-    func addClub(name: String, imageName: String, localImage: UIImage? = nil) {
-        var localImagePath: String? = nil
-        if let image = localImage, let data = image.jpegData(compressionQuality: 0.8) {
+    /// Добавление клуба с готовым объектом Club
+    func addClub(_ club: Club) {
+        var clubToAdd = club
+        
+        // Если есть локальное изображение, сохраняем в документы и сохраняем путь
+        if let image = club.localImage, let data = image.jpegData(compressionQuality: 0.8) {
             let filename = UUID().uuidString + ".jpg"
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent(filename)
             try? data.write(to: url)
-            localImagePath = url.path
+            clubToAdd.localImagePath = url.path
         }
         
-        // Создаём новый клуб только с локальным путем, localImage убираем
-        let newClub = Club(
-            name: name,
-            imageName: imageName,
-            isJoined: false,
-            localImagePath: localImagePath
-        )
-        
-        clubs.append(newClub)
+        clubs.append(clubToAdd)
     }
     
     func joinClub(_ club: Club) {
