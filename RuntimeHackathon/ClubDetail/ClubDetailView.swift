@@ -46,6 +46,7 @@ struct ClubDetailView: View {
                     clubEvents: clubViewModel.events,
                     reloadTrigger: calendarReloadTrigger
                 )
+                .environmentObject(ClubEventsService.shared)
                 
                 // Фильтр новостей
                 DateFilterSection(selectedFilter: $selectedDateFilter)
@@ -673,6 +674,7 @@ struct ClubInfoSection: View {
 struct CalendarSection: View {
     let clubEvents: [ClubEvent]
     let reloadTrigger: UUID
+    @EnvironmentObject var clubEventsService: ClubEventsService
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -680,7 +682,7 @@ struct CalendarSection: View {
                 .font(.title2)
                 .fontWeight(.bold)
             
-            CalendarView(clubEvents: clubEvents)
+            CalendarView()
                 .frame(height: 400)
                 .cornerRadius(12)
                 .overlay(

@@ -23,6 +23,16 @@ class CalendarViewModel: ObservableObject {
         updateWeekDays()
     }
     
+    // Инициализатор с событиями из сервиса
+    convenience init(withClubEvents: Bool = false) {
+        if withClubEvents {
+            let clubEvents = ClubEventsService.shared.allClubEvents
+            self.init(clubEvents: clubEvents)
+        } else {
+            self.init()
+        }
+    }
+    
     // Генерация тестовых событий
     private func generateSampleEvents() {
         events = CalendarMock.generateSampleEvents()
@@ -224,7 +234,7 @@ class CalendarViewModel: ObservableObject {
     
     // Метод для обновления событий из ClubEvent
     func updateEvents(from clubEvents: [ClubEvent]) {
-        events = CalendarEvent.fromClubEvents(clubEvents)
+        events = ClubEventsService.shared.getAllCalendarEvents()
         updateCalendarDays()
         updateWeekDays()
     }
