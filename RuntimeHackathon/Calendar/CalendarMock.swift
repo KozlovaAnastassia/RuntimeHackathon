@@ -105,3 +105,15 @@ struct CalendarMock {
         return []
     }
 }
+
+#Preview {
+    CalendarDayView(
+        day: CalendarDay(
+            date: Date(),
+            events: [],
+            isCurrentMonth: true,
+            isToday: true,
+            isCurrentWeek: true
+        )
+    ) { _ in }
+}

@@ -57,7 +57,8 @@ struct CalendarDayView: View {
             date: Date(),
             events: [],
             isCurrentMonth: true,
-            isToday: true
+            isToday: true,
+            isCurrentWeek: true
         )
     ) { _ in }
 }
