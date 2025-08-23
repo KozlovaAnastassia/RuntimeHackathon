@@ -23,7 +23,7 @@ struct MainTabBar: View {
             case 3:
                 ChatListView()
             case 4:
-                ProfileView()
+                UserProfileView(user: sampleUser)
             default:
                 EmptyView()
             }
