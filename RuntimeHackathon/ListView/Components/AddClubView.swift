@@ -58,21 +58,30 @@ struct AddClubView: View {
                 Button {
                     showImagePicker = true
                 } label: {
-                    HStack {
-                        Text("Добавить обложку клуба")
-                            .foregroundColor(.black)
-                            .font(.subheadline)
-                        Spacer()
-                        Image(systemName: "plus")
+                    if let image = selectedImage {
+                        Image(uiImage: image)
                             .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.black)
+                            .scaledToFit()
+                            .frame(height: 200)
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+                    } else {
+                        HStack {
+                            Text("Добавить обложку клуба")
+                                .foregroundColor(.black)
+                                .font(.subheadline)
+                            Spacer()
+                            Image(systemName: "plus")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.black)
+                        }
+                        .padding()
+                        .background(Color.blue.opacity(0.3))
+                        .cornerRadius(12)
+                        .padding(.horizontal)
                     }
-                    .padding()
-                    .background(Color.blue.opacity(0.3)) // синяя заливка
-                    .cornerRadius(12)
                 }
-                .padding(.horizontal)
                 
                 // Теги
                 VStack(alignment: .leading, spacing: 8) {
@@ -86,13 +95,14 @@ struct AddClubView: View {
                 
                 // Кнопка добавить клуб
                 Button("Добавить клуб") {
-                    let newClub = Club(
+                    let club = Club(
                         name: name,
                         imageName: "star",
-                        isJoined: false,
-                        localImagePath: nil // путь будет установлен внутри ViewModel
+                        description: description,
+                        tags: Array(selectedTags),
+                        isCreator: true
                     )
-                    viewModel.addClub(newClub)
+                    viewModel.addClub(club, localImage: selectedImage)
                     dismiss()
                 }
                 .disabled(name.isEmpty)
@@ -107,7 +117,10 @@ struct AddClubView: View {
         }
         .sheet(isPresented: $showImagePicker) {
             MediaPicker { image in
-                selectedImage = image
+                // просто сохраняем выбранное изображение, экран не закрывается
+                if let img = image {
+                    selectedImage = img
+                }
                 showImagePicker = false
             }
         }

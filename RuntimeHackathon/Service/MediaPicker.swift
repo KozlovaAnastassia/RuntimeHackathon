@@ -35,17 +35,16 @@ struct MediaPicker: UIViewControllerRepresentable {
         }
         
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-            picker.dismiss(animated: true)
-            
             guard let result = results.first else {
                 parent.didPickImage(nil)
                 return
             }
-            
+
             if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
                 result.itemProvider.loadObject(ofClass: UIImage.self) { image, _ in
                     DispatchQueue.main.async {
                         self.parent.didPickImage(image as? UIImage)
+                        // не вызываем picker.dismiss здесь
                     }
                 }
             } else {
