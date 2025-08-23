@@ -22,15 +22,15 @@ struct ChatListView: View {
             }
             .navigationTitle("Чаты")
             .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        showingNewChat = true
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    Button(action: {
+//                        showingNewChat = true
+//                    }) {
+//                        Image(systemName: "plus")
+//                    }
+//                }
+//            }
             .refreshable {
                 viewModel.refreshChats()
             }
@@ -82,7 +82,7 @@ struct ChatListView: View {
             } else {
                 List {
                     ForEach(viewModel.filteredChats) { chat in
-                        NavigationLink(destination: ChatView()) {
+                      NavigationLink(destination: ChatView(chatId: chat.chatId)) {
                             ChatPreviewRow(chat: chat)
                         }
                         .listRowInsets(EdgeInsets())
