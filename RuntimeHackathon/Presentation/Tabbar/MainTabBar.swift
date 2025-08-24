@@ -18,14 +18,14 @@ struct MainTabBar: View {
             // Контент по вкладкам
             switch selectedTab {
             case 0:
-                ClubsListView(viewModel: storage)
+                ClubsListScreen(viewModel: storage)
             case 1:
-                CalendarView()
+                CalendarScreen()
                     .environmentObject(clubEventsService)
             case 3:
-              ChatListView(viewModel: ChatListViewModel(chats: storage.clubs.filter({ $0.isJoined }).map{ $0.chat }))
+              ChatListScreen(viewModel: ChatListViewModel(chats: storage.clubs.filter({ $0.isJoined }).map{ $0.chat }))
             case 4:
-                UserProfileView(user: sampleUser)
+                UserProfileScreen(user: sampleUser)
             default:
                 EmptyView()
             }
@@ -34,22 +34,22 @@ struct MainTabBar: View {
             Spacer()
             HStack {
                 Spacer()
-                TabBarButton(index: 0,
+                TabBarButtonView(index: 0,
                              systemImage: "list.bullet.circle",
                              textKey: "Клубы",
                              selectedTab: $selectedTab)
                 Spacer()
-                TabBarButton(index: 1,
+                TabBarButtonView(index: 1,
                              systemImage: "calendar",
                              textKey: "Календарь",
                              selectedTab: $selectedTab)
                 Spacer()
-                TabBarButton(index: 3,
+                TabBarButtonView(index: 3,
                              systemImage: "bubble.left.and.bubble.right",
                              textKey: "Чат",
                              selectedTab: $selectedTab)
                 Spacer()
-                TabBarButton(index: 4,
+                TabBarButtonView(index: 4,
                              systemImage: "person",
                              textKey: "Профиль",
                              selectedTab: $selectedTab)

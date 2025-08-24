@@ -41,7 +41,7 @@ struct EventDetailScreen: View {
                                 .lineLimit(nil)
                             
                             // Местоположение
-                            InfoRow(
+                            EventInfoRowView(
                                 icon: "location.fill",
                                 iconColor: .red,
                                 title: "Место проведения",
@@ -49,7 +49,7 @@ struct EventDetailScreen: View {
                             )
                             
                             // Дата и время
-                            InfoRow(
+                            EventInfoRowView(
                                 icon: "calendar",
                                 iconColor: .blue,
                                 title: "Дата и время",
@@ -57,7 +57,7 @@ struct EventDetailScreen: View {
                             )
                             
                             // Продолжительность
-                            InfoRow(
+                            EventInfoRowView(
                                 icon: "clock",
                                 iconColor: .green,
                                 title: "Продолжительность",
@@ -65,7 +65,7 @@ struct EventDetailScreen: View {
                             )
                             
                             // Дата создания
-                            InfoRow(
+                            EventInfoRowView(
                                 icon: "calendar.badge.plus",
                                 iconColor: .purple,
                                 title: "Создано",

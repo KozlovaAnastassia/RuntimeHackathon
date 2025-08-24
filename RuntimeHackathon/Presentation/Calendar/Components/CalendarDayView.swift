@@ -18,7 +18,7 @@ struct CalendarDayView: View {
             if !day.events.isEmpty {
                 VStack(spacing: 1) {
                     ForEach(day.events.prefix(3)) { event in
-                        EventIndicator(event: event)
+                        EventIndicatorView(event: event)
                             .onTapGesture {
                                 onEventTap(event)
                             }
