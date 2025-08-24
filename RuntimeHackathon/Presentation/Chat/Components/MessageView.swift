@@ -49,12 +49,6 @@ struct MessageView: View {
 #Preview {
     MessageView(
         viewModel: ChatViewModel(chatId: "test-chat-id"),
-        message: ChatMessage(
-            userId: "user-1",
-            userName: "Анна",
-            text: "Привет! Как дела?",
-            timestamp: Date(),
-            isCurrentUser: false
-        )
+        message: MessageMock.sampleMessage
     )
 }

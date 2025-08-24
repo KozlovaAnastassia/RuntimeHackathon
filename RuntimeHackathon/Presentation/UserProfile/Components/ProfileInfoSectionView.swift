@@ -74,11 +74,11 @@ struct ProfileInfoSectionView: View {
 
 #Preview {
     ProfileInfoSectionView(
-        bio: "Люблю программирование и новые технологии",
+        bio: ProfileInfoSectionMock.sampleBio,
         isEditing: false,
         onEdit: {},
         onSave: {},
         onCancel: {},
-        editedBio: .constant("Люблю программирование и новые технологии")
+        editedBio: .constant(ProfileInfoSectionMock.sampleBio)
     )
 }

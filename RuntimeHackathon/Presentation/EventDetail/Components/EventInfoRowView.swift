@@ -37,9 +37,9 @@ struct EventInfoRowView: View {
 
 #Preview {
     EventInfoRowView(
-        icon: "location.fill",
-        iconColor: .blue,
-        title: "Место проведения",
-        value: "Конференц-зал А, 3 этаж"
+        icon: EventInfoMock.sampleEventInfo.icon,
+        iconColor: EventInfoMock.sampleEventInfo.iconColor,
+        title: EventInfoMock.sampleEventInfo.title,
+        value: EventInfoMock.sampleEventInfo.value
     )
 }

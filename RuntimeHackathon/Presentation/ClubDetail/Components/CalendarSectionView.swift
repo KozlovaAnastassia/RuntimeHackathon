@@ -25,8 +25,8 @@ struct CalendarSectionView: View {
 
 #Preview {
     CalendarSectionView(
-        clubEvents: [],
-        reloadTrigger: UUID()
+        clubEvents: CalendarSectionMock.sampleClubEvents,
+        reloadTrigger: CalendarSectionMock.sampleReloadTrigger
     )
     .environmentObject(ClubEventsService.shared)
 }

@@ -22,14 +22,5 @@ struct EventIndicatorView: View {
 }
 
 #Preview {
-    EventIndicatorView(
-        event: CalendarEvent(
-            id: UUID(),
-            title: "Тестовое событие",
-            date: Date(),
-            location: "Тестовое место",
-            description: "Описание события",
-            color: .blue
-        )
-    )
+    EventIndicatorView(event: CalendarComponentsMock.sampleEventIndicator)
 }

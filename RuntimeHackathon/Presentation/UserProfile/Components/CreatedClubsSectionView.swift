@@ -39,7 +39,5 @@ struct CreatedClubsSectionView: View {
 }
 
 #Preview {
-    CreatedClubsSectionView(clubs: [
-        Club(id: UUID(), name: "Мой клуб", imageName: "star", isJoined: true, isCreator: true)
-    ])
+    CreatedClubsSectionView(clubs: CreatedClubsSectionMock.sampleClubs)
 }

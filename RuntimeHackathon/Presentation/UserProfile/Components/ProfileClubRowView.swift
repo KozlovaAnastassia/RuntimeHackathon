@@ -47,7 +47,7 @@ struct ProfileClubRowView: View {
 
 #Preview {
     ProfileClubRowView(
-        club: Club(id: UUID(), name: "Тестовый клуб", imageName: "star", isJoined: true, isCreator: false),
+        club: ProfileClubRowMock.sampleClub,
         isCreator: false
     )
 }

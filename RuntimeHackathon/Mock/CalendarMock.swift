@@ -1,6 +1,41 @@
+import Foundation
 import SwiftUI
 
+// MARK: - Моковые данные для календаря
 struct CalendarMock {
+    static let sampleEvent = CalendarEvent(
+        id: UUID(),
+        title: "Встреча клуба программистов",
+        date: Date(),
+        location: "Конференц-зал А, 3 этаж",
+        description: "Еженедельная встреча участников клуба программистов. Обсудим новые технологии, поделимся опытом и спланируем будущие проекты. Приглашаются все желающие!",
+        color: .blue
+    )
+    
+    static let sampleEventSimple = CalendarEvent(
+        id: UUID(),
+        title: "Тестовое событие",
+        date: Date(),
+        location: "Тестовое место",
+        description: "Описание тестового события",
+        color: .blue
+    )
+    
+    static let sampleCalendarDay = CalendarDay(
+        date: Date(),
+        events: [],
+        isCurrentMonth: true,
+        isToday: true
+    )
+    
+    static let sampleCalendarDays = [
+        CalendarDay(
+            date: Date(),
+            events: [],
+            isCurrentMonth: true,
+            isToday: true
+        )
+    ]
     
     // Генерация тестовых событий
     static func generateSampleEvents() -> [CalendarEvent] {

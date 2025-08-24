@@ -99,16 +99,7 @@ struct NewsCardView: View {
 
 #Preview {
     NewsCardView(
-        item: NewsFeedItem(
-            id: "1",
-            title: "Тестовая новость",
-            description: "Описание тестовой новости",
-            imagesData: [],
-            date: Date(),
-            publicationDate: Date(),
-            type: .news,
-            newsId: UUID()
-        ),
+        item: NewsMock.sampleNewsItem,
         isCreator: true,
         onDelete: {}
     )

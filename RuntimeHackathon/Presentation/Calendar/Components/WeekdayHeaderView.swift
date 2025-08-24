@@ -19,5 +19,5 @@ struct WeekdayHeaderView: View {
 }
 
 #Preview {
-    WeekdayHeaderView(weekdaySymbols: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"])
+    WeekdayHeaderView(weekdaySymbols: CalendarComponentsMock.sampleWeekdaySymbols)
 }

@@ -17,14 +17,5 @@ struct CalendarGridView: View {
 }
 
 #Preview {
-    CalendarGridView(
-        calendarDays: [
-            CalendarDay(
-                date: Date(),
-                events: [],
-                isCurrentMonth: true,
-                isToday: true
-            )
-        ]
-    ) { _ in }
+    CalendarGridView(calendarDays: CalendarMock.sampleCalendarDays) { _ in }
 }

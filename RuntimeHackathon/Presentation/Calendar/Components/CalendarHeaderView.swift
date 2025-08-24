@@ -36,7 +36,7 @@ struct CalendarHeaderView: View {
 
 #Preview {
     CalendarHeaderView(
-        monthYearString: "Декабрь 2024",
+        monthYearString: CalendarComponentsMock.sampleMonthYearString,
         onPreviousMonth: {},
         onNextMonth: {}
     )

@@ -37,9 +37,9 @@ struct TabBarButtonView: View {
 
 #Preview {
     TabBarButtonView(
-        index: 0,
-        systemImage: "list.bullet.circle",
-        textKey: "Клубы",
-        selectedTab: .constant(0)
+        index: TabBarMock.sampleTabBarData.index,
+        systemImage: TabBarMock.sampleTabBarData.systemImage,
+        textKey: TabBarMock.sampleTabBarData.textKey,
+        selectedTab: .constant(TabBarMock.sampleSelectedTab)
     )
 }

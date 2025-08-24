@@ -66,6 +66,6 @@ struct ProfileClubRowFullView: View {
 
 #Preview {
     ProfileClubRowFullView(
-        club: Club(id: UUID(), name: "Тестовый клуб", imageName: "star", isJoined: true, isCreator: true)
+        club: ProfileClubRowMock.sampleClubCreator
     )
 }

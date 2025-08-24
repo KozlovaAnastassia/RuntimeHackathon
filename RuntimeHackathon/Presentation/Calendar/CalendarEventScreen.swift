@@ -102,14 +102,5 @@ struct CalendarEventScreen: View {
 }
 
 #Preview {
-    CalendarEventScreen(
-        event: CalendarEvent(
-            id: UUID(),
-            title: "Тестовое событие",
-            date: Date(),
-            location: "Тестовое место",
-            description: "Описание тестового события",
-            color: .blue
-        )
-    )
+    CalendarEventScreen(event: CalendarMock.sampleEventSimple)
 }

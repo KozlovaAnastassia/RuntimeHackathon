@@ -53,12 +53,6 @@ struct CalendarDayView: View {
 
 #Preview {
     CalendarDayView(
-        day: CalendarDay(
-            date: Date(),
-            events: [],
-            isCurrentMonth: true,
-            isToday: true,
-            isCurrentWeek: true
-        )
+        day: CalendarDayMock.sampleDayWithEvents
     ) { _ in }
 }

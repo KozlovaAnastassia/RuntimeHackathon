@@ -107,13 +107,7 @@ struct ClubRowView: View {
 
 #Preview {
     ClubRowView(
-        club: Club(
-            id: UUID(),
-            name: "Тестовый клуб",
-            imageName: "sportscourt",
-            isJoined: true,
-            isCreator: false
-        ),
+        club: ClubRowMock.sampleClub,
         onJoin: {},
         onLeave: {}
     )

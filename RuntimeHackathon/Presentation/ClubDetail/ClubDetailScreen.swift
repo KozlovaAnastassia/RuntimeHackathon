@@ -85,11 +85,5 @@ struct ClubDetailScreen: View {
 }
 
 #Preview {
-    ClubDetailScreen(club: Club(
-        id: UUID(),
-        name: "Тестовый клуб",
-        imageName: "sportscourt",
-        isJoined: true,
-        isCreator: true
-    ))
+    ClubDetailScreen(club: ClubDetailMock.sampleClub)
 }

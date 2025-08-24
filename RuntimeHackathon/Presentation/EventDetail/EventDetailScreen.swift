@@ -239,14 +239,5 @@ struct EventDetailScreen: View {
 }
 
 #Preview {
-    EventDetailScreen(
-        event: CalendarEvent(
-            id: UUID(),
-            title: "Встреча клуба программистов",
-            date: Date(),
-            location: "Конференц-зал А, 3 этаж",
-            description: "Еженедельная встреча участников клуба программистов. Обсудим новые технологии, поделимся опытом и спланируем будущие проекты. Приглашаются все желающие!",
-            color: .blue
-        )
-    )
+    EventDetailScreen(event: CalendarMock.sampleEvent)
 }

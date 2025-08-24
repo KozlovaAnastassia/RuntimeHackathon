@@ -113,10 +113,7 @@ struct InterestsSectionView: View {
 
 #Preview {
     InterestsSectionView(
-        interests: [
-            Interest(id: UUID(), name: "Swift", category: .tech),
-            Interest(id: UUID(), name: "Футбол", category: .sport)
-        ],
+        interests: InterestsSectionMock.sampleInterests,
         isEditing: false,
         onEdit: {},
         onAddInterest: {},

@@ -44,7 +44,6 @@ class CalendarViewModel: ObservableObject {
         let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: startOfMonth)?.start ?? startOfMonth
         
         var days: [CalendarDay] = []
-        let today = Date()
         
         // Генерируем 42 дня (6 недель по 7 дней)
         for dayOffset in 0..<42 {
@@ -73,7 +72,6 @@ class CalendarViewModel: ObservableObject {
         let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
         
         var days: [CalendarDay] = []
-        let today = Date()
         
         // Генерируем 7 дней недели
         for dayOffset in 0..<7 {

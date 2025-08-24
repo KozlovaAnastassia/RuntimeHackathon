@@ -67,11 +67,5 @@ struct ClubHeaderSectionView: View {
 }
 
 #Preview {
-    ClubHeaderSectionView(club: Club(
-        id: UUID(),
-        name: "Тестовый клуб",
-        imageName: "sportscourt",
-        isJoined: true,
-        isCreator: true
-    ))
+    ClubHeaderSectionView(club: ClubHeaderMock.sampleClub)
 }
