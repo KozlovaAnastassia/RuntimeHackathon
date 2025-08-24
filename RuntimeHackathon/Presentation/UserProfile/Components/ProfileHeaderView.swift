@@ -184,29 +184,13 @@ struct ProfileHeaderView: View {
     }
 
     private func convertToPrepositionalCase(_ month: String) -> String {
-        let monthCases: [String: String] = [
-            "январь": "января",
-            "февраль": "февраля",
-            "март": "марта",
-            "апрель": "апреля",
-            "май": "мая",
-            "июнь": "июня",
-            "июль": "июля",
-            "август": "августа",
-            "сентябрь": "сентября",
-            "октябрь": "октября",
-            "ноябрь": "ноября",
-            "декабрь": "декабря"
-        ]
-
         let lowercased = month.lowercased()
-        return monthCases[lowercased] ?? lowercased
+        return ProfileMock.monthCases[lowercased] ?? lowercased
     }
 
     private var randomAnimalIcon: String {
-        let animals = ["dog.fill", "cat.fill", "bird.fill", "fish.fill", "hare.fill", "tortoise.fill"]
         let index = user.id.uuidString.prefix(1).first?.asciiValue ?? 65
-        return animals[Int(index) % animals.count]
+        return ProfileMock.animals[Int(index) % ProfileMock.animals.count]
     }
 }
 

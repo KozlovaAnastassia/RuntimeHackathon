@@ -30,29 +30,7 @@ struct CalendarViewExample: View {
     }
     
     private func loadSampleClubEvents() {
-        let today = Date()
-        let calendar = Calendar.current
-        
-        clubEvents = [
-            ClubEvent(
-                title: "Встреча клуба",
-                date: calendar.date(byAdding: .hour, value: 2, to: today) ?? today,
-                location: "Главный зал",
-                description: "Еженедельная встреча участников клуба"
-            ),
-            ClubEvent(
-                title: "Мастер-класс",
-                date: calendar.date(byAdding: .hour, value: 5, to: today) ?? today,
-                location: "Аудитория 3",
-                description: "Мастер-класс по программированию"
-            ),
-            ClubEvent(
-                title: "Турнир",
-                date: calendar.date(byAdding: .day, value: 1, to: today) ?? today,
-                location: "Спортивный зал",
-                description: "Ежегодный турнир клуба"
-            )
-        ]
+        clubEvents = ClubMock.sampleClubEvents
     }
 }
 

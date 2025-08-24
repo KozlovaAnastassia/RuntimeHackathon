@@ -33,7 +33,7 @@ struct ChipsView: View {
     }
 
     func randomColor(for text: String) -> Color {
-        let colors: [Color] = [.yellow, .orange, .green, .pink, .purple, .red, .mint, .teal]
+        let colors: [Color] = ProfileMock.colors.map { Color($0) }
         let hash = abs(text.hashValue)
         return colors[hash % colors.count]
     }
