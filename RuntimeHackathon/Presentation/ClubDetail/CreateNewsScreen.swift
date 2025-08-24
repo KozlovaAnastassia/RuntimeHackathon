@@ -106,15 +106,18 @@ struct CreateNewsScreen: View {
     
     private func createNews() {
         let imageData = selectedImages.compactMap { $0.pngData() }
-        clubViewModel.createNews(
-            title: newsTitle,
-            description: newsDescription,
-            imagesData: imageData
-        )
-        presentationMode.wrappedValue.dismiss()
+        Task {
+            await clubViewModel.createNews(
+                title: newsTitle,
+                description: newsDescription,
+                imagesData: imageData
+            )
+            presentationMode.wrappedValue.dismiss()
+        }
     }
 }
 
 #Preview {
     CreateNewsScreen(clubViewModel: ClubViewModel(clubId: ClubDataMock.testClub.id, isCreator: true))
+        .withDataLayer()
 }

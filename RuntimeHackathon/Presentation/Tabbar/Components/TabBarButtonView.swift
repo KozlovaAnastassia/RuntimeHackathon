@@ -38,8 +38,9 @@ struct TabBarButtonView: View {
 #Preview {
     TabBarButtonView(
         index: 0,
-        systemImage: UIComponentsMock.sampleTabBarData.icon,
-        textKey: UIComponentsMock.sampleTabBarData.title,
-        selectedTab: .constant(UIComponentsMock.sampleSelectedTab)
+        systemImage: "list.bullet.circle",
+        textKey: "Клубы",
+        selectedTab: .constant(0)
     )
+    .withDataLayer()
 }

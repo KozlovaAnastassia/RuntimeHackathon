@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+@MainActor
 class ChatViewModel: ObservableObject {
   @Published var messages: [ChatMessage] = []
   @Published var newMessageText = ""
@@ -15,18 +16,29 @@ class ChatViewModel: ObservableObject {
   @Published var errorMessage: String?
 
   private let chatId: String
+  private let repository: ChatRepository
 
-  init(chatId: String) {
+  init(chatId: String, repository: ChatRepository = DataLayerIntegration.shared.chatRepository) {
     self.chatId = chatId
+    self.repository = repository
   }
 
   private var cancellables = Set<AnyCancellable>()
 
-  func loadMessages() {
-    self.messages = ChatDatabase.shared.chats.first(where: { $0.chatId == chatId })?.messages ?? []
+  func loadMessages() async {
+    isLoading = true
+    errorMessage = nil
+    
+    do {
+      messages = try await repository.getMessages(for: chatId)
+    } catch {
+      errorMessage = error.localizedDescription
+    }
+    
+    isLoading = false
   }
 
-  func sendMessage() {
+  func sendMessage() async {
     guard !newMessageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
 
     let message = ChatMessage(
@@ -37,9 +49,13 @@ class ChatViewModel: ObservableObject {
       isCurrentUser: true
     )
 
-    ChatDatabase.shared.chats.first(where: { $0.chatId == chatId })?.messages.append(message)
-    newMessageText = ""
-    loadMessages()
+    do {
+      try await repository.sendMessage(message, to: chatId)
+      newMessageText = ""
+      await loadMessages()
+    } catch {
+      errorMessage = error.localizedDescription
+    }
   }
 
   func formatTime(_ date: Date) -> String {

@@ -205,8 +205,8 @@ class ClubDatabase {
 
 // MARK: - Расширения для преобразования
 extension ChatInfo {
-    init(from entity: ChatEntity) {
-        let messages = entity.messages?.allObjects.compactMap { messageEntity in
+    convenience init(from entity: ChatEntity) {
+        let messages: [ChatMessage] = entity.messages?.allObjects.compactMap { messageEntity in
             guard let messageEntity = messageEntity as? MessageEntity,
                   let userId = messageEntity.userId,
                   let userName = messageEntity.userName,

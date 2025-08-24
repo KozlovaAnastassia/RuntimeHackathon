@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 // MARK: - API модели для календарных событий
 struct CalendarEventApiResponse: Codable {

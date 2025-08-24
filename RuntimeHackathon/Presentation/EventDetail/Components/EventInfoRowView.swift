@@ -37,9 +37,10 @@ struct EventInfoRowView: View {
 
 #Preview {
     EventInfoRowView(
-        icon: ContentDataMock.sampleEventInfo.icon,
-        iconColor: ContentDataMock.sampleEventInfo.iconColor,
-        title: ContentDataMock.sampleEventInfo.title,
-        value: ContentDataMock.sampleEventInfo.value
+        icon: "location.fill",
+        iconColor: .red,
+        title: "Место проведения",
+        value: "Офис компании"
     )
+    .withDataLayer()
 }

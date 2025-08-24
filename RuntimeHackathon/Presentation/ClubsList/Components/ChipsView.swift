@@ -84,7 +84,8 @@ struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: H
 
 #Preview {
     ChipsView(
-        items: UIComponentsMock.sampleTags,
-        selectedItems: .constant(Set(UIComponentsMock.selectedTags))
+        items: ["Технологии", "Программирование", "Дизайн"],
+        selectedItems: .constant(Set(["Технологии"]))
     )
+    .withDataLayer()
 }

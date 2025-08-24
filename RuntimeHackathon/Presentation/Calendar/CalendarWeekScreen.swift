@@ -202,4 +202,5 @@ struct WeekEventView: View {
         viewModel: CalendarViewModel(),
         onEventTap: { _ in }
     )
+    .withDataLayer()
 }

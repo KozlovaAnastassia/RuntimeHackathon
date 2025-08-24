@@ -81,4 +81,5 @@ struct EventRowView: View {
         viewModel: CalendarViewModel(),
         onEventTap: { _ in }
     )
+    .withDataLayer()
 }

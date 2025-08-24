@@ -103,4 +103,5 @@ struct NewsCardView: View {
         isCreator: true,
         onDelete: {}
     )
+    .withDataLayer()
 }

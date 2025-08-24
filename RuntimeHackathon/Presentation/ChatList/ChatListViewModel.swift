@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 
+@MainActor
 class ChatListViewModel: ObservableObject {
     @Published var chats: [ChatInfo] = []
     @Published var isLoading = false
@@ -16,10 +17,10 @@ class ChatListViewModel: ObservableObject {
     @Published var searchText = ""
 
     private var cancellables = Set<AnyCancellable>()
+    private let repository: ChatRepository
     
-  init(chats: [ChatInfo]) {
-    ChatDatabase.shared.chats = chats
-        loadChats()
+    init(repository: ChatRepository = DataLayerIntegration.shared.chatRepository) {
+        self.repository = repository
     }
     
     var filteredChats: [ChatInfo] {
@@ -33,14 +34,41 @@ class ChatListViewModel: ObservableObject {
         }
     }
     
-    func loadChats() {
-      self.chats = ChatDatabase.shared.chats.sorted {
-        $0.lastMessageTime ?? Date() > $1.lastMessageTime ?? Date()
-      }
+    func loadChats() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            chats = try await repository.getChats()
+            chats.sort { $0.lastMessageTime ?? Date() > $1.lastMessageTime ?? Date() }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
     }
     
-    func refreshChats() {
-        loadChats()
+    func searchChats() async {
+        guard !searchText.isEmpty else {
+            await loadChats()
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            chats = try await repository.searchChats(query: searchText)
+            chats.sort { $0.lastMessageTime ?? Date() > $1.lastMessageTime ?? Date() }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
+    }
+    
+    func refreshChats() async {
+        await loadChats()
     }
     
     func formatLastMessageTime(_ date: Date?) -> String {

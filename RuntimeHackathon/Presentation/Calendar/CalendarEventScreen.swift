@@ -103,4 +103,5 @@ struct CalendarEventScreen: View {
 
 #Preview {
     CalendarEventScreen(event: CalendarDataMock.sampleEventSimple)
+        .withDataLayer()
 }

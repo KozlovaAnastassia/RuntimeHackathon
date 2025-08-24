@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct UserProfileScreen: View {
     @StateObject private var viewModel: UserProfileViewModel
 
     init(user: User) {
-        _viewModel = StateObject(wrappedValue: UserProfileViewModel(user: user))
+        _viewModel = StateObject(wrappedValue: UserProfileViewModel())
     }
 
     var body: some View {
@@ -33,58 +34,72 @@ struct UserProfileScreen: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 25) {
                         // Header с аватаром СЛЕВА
-                        ProfileHeaderView(
-                            user: viewModel.user,
-                            isEditing: viewModel.isEditingProfile,
-                            onEdit: {
-                                viewModel.editedName = viewModel.user.name
-                                viewModel.editedNickname = viewModel.user.nickname
-                                viewModel.editedLocation = viewModel.user.location ?? ""
-                                viewModel.isEditingProfile.toggle()
-                            },
-                            onSave: {
-                                Task { await viewModel.saveProfileSection() }
-                            },
-                            onCancel: { viewModel.cancelProfileEdit() }
-                        )
-                        .padding(.horizontal)
-                        .padding(.top, 20)
+                        if let user = viewModel.user {
+                            ProfileHeaderView(
+                                user: user,
+                                isEditing: viewModel.isEditingProfile,
+                                onEdit: {
+                                    viewModel.editedName = user.name
+                                    viewModel.editedNickname = user.nickname
+                                    viewModel.editedLocation = user.location ?? ""
+                                    viewModel.isEditingProfile.toggle()
+                                },
+                                onSave: {
+                                    Task { await viewModel.saveProfileSection() }
+                                },
+                                onCancel: { viewModel.cancelProfileEdit() }
+                            )
+                            .padding(.horizontal)
+                            .padding(.top, 20)
+                        } else {
+                            ProgressView("Загрузка профиля...")
+                                .padding(.horizontal)
+                                .padding(.top, 20)
+                        }
 
                         // Статистика интересов
-                        InterestStatsView(user: viewModel.user)
-                            .padding(.horizontal)
+                        if let user = viewModel.user {
+                            InterestStatsView(user: user)
+                                .padding(.horizontal)
+                        }
 
                         // Основная информация
-                        ProfileInfoSectionView(
-                            bio: viewModel.user.bio ?? "",
-                            isEditing: viewModel.isEditingBio,
-                            onEdit: { viewModel.isEditingBio.toggle() },
-                            onSave: { Task { await viewModel.saveBio() } },
-                            onCancel: { viewModel.cancelBioEdit() },
-                            editedBio: $viewModel.editedBio
-                        )
-                        .padding(.horizontal)
+                        if let user = viewModel.user {
+                            ProfileInfoSectionView(
+                                bio: user.bio ?? "",
+                                isEditing: viewModel.isEditingBio,
+                                onEdit: { viewModel.isEditingBio.toggle() },
+                                onSave: { Task { await viewModel.saveBio() } },
+                                onCancel: { viewModel.cancelBioEdit() },
+                                editedBio: $viewModel.editedBio
+                            )
+                            .padding(.horizontal)
+                        }
 
                         // Интересы с кнопкой добавления
-                        InterestsSectionView(
-                            interests: viewModel.user.interests,
-                            isEditing: viewModel.isEditingInterests,
-                            onEdit: { viewModel.isEditingInterests.toggle() },
-                            onAddInterest: {
-                                viewModel.showingAddInterest = true
-                            },
-                            onRemoveInterest: { interest in
-                                viewModel.removeInterest(interest)
-                            },
-                            onSave: { Task { await viewModel.saveInterests() } },
-                            onCancel: { viewModel.cancelInterestsEdit() }
-                        )
-                        .padding(.horizontal)
+                        if let user = viewModel.user {
+                            InterestsSectionView(
+                                interests: user.interests,
+                                isEditing: viewModel.isEditingInterests,
+                                onEdit: { viewModel.isEditingInterests.toggle() },
+                                onAddInterest: {
+                                    viewModel.showingAddInterest = true
+                                },
+                                onRemoveInterest: { interest in
+                                    Task {
+                                        await viewModel.removeInterest(interest)
+                                    }
+                                },
+                                onSave: { Task { await viewModel.saveInterests() } },
+                                onCancel: { viewModel.cancelInterestsEdit() }
+                            )
+                            .padding(.horizontal)
+                        }
 
                         // Участник клубов
-                        let joinedClubs = viewModel.user.joinedClubs.filter { $0.isJoined }
+                        let joinedClubs = viewModel.user?.joinedClubs.filter { $0.isJoined } ?? []
                         // Созданные клубы
-                        let createdClubs = viewModel.user.createdClubs.filter { $0.isCreator }
+                        let createdClubs = viewModel.user?.createdClubs.filter { $0.isCreator } ?? []
 
                         if !createdClubs.isEmpty {
                             CreatedClubsSectionView(clubs: createdClubs)
@@ -98,8 +113,8 @@ struct UserProfileScreen: View {
 
                         Spacer()
                     }
-                    .padding(.bottom, 100)
                 }
+                .padding(.bottom, 100)
             }
             .navigationTitle("Профиль")
             .navigationBarTitleDisplayMode(.large)
@@ -108,7 +123,9 @@ struct UserProfileScreen: View {
                     newInterestName: $viewModel.newInterestName,
                     selectedCategory: $viewModel.selectedInterestCategory,
                     onAdd: {
-                        viewModel.addInterest()
+                        Task {
+                            await viewModel.addInterest()
+                        }
                     },
                     onCancel: {
                         viewModel.newInterestName = ""
@@ -122,4 +139,5 @@ struct UserProfileScreen: View {
 
 #Preview {
     UserProfileScreen(user: ProfileDataMock.sampleUser)
+        .withDataLayer()
 }

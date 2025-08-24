@@ -129,8 +129,10 @@ struct AddClubScreen: View {
                 tags: Array(selectedTags),
                 isCreator: true
             )
-            viewModel.addClub(club, localImage: selectedImage)
-            dismiss()
+            Task {
+                await viewModel.addClub(club, localImage: selectedImage)
+                dismiss()
+            }
         }
         .disabled(name.isEmpty)
         .padding()
@@ -144,4 +146,5 @@ struct AddClubScreen: View {
 
 #Preview {
     AddClubScreen(viewModel: ClubsListViewModel())
+        .withDataLayer()
 }

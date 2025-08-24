@@ -59,7 +59,9 @@ struct ClubDetailScreen: View {
                     isCreator: isCreator,
                     dateFilter: selectedDateFilter,
                     onDeleteNews: { newsId in
-                        clubViewModel.deleteNews(id: newsId)
+                        Task {
+                            await clubViewModel.deleteNews(id: newsId)
+                        }
                     }
                 )
             }
@@ -81,9 +83,13 @@ struct ClubDetailScreen: View {
         .sheet(isPresented: $showingCreateNews) {
             CreateNewsScreen(clubViewModel: clubViewModel)
         }
+        .task {
+            await clubViewModel.loadData()
+        }
     }
 }
 
 #Preview {
     ClubDetailScreen(club: ClubDataMock.testClub)
+        .withDataLayer()
 }

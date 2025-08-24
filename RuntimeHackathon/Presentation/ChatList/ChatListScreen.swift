@@ -36,14 +36,18 @@ struct ChatListScreen: View {
 //                }
 //            }
             .refreshable {
-                viewModel.refreshChats()
+                Task {
+                    await viewModel.refreshChats()
+                }
             }
             .sheet(isPresented: $showingNewChat) {
                 ChatNewScreen()
             }
             .alert("Ошибка", isPresented: .constant(viewModel.errorMessage != nil)) {
                 Button("Повторить") {
-                    viewModel.loadChats()
+                    Task {
+                        await viewModel.loadChats()
+                    }
                 }
                 Button("Отмена") {
                     viewModel.errorMessage = nil
@@ -52,7 +56,9 @@ struct ChatListScreen: View {
                 Text(viewModel.errorMessage ?? "")
             }
             .onAppear {
-              viewModel.loadChats()
+                Task {
+                    await viewModel.loadChats()
+                }
             }
         }
     }
@@ -128,7 +134,8 @@ struct ChatListScreen: View {
 }
 
 #Preview {
-    ChatListScreen(viewModel: ChatListViewModel(chats: ChatDataMock.emptyChats))
+    ChatListScreen(viewModel: ChatListViewModel())
+        .withDataLayer()
 }
 
 

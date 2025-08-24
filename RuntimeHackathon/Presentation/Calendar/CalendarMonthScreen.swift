@@ -33,4 +33,5 @@ struct CalendarMonthScreen: View {
         viewModel: CalendarViewModel(),
         onEventTap: { _ in }
     )
+    .withDataLayer()
 }

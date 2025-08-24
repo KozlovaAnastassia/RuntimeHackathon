@@ -202,4 +202,5 @@ struct ProfileHeaderView: View {
         onSave: {},
         onCancel: {}
     )
+    .withDataLayer()
 }

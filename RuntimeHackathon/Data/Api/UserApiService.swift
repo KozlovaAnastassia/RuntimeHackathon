@@ -116,8 +116,9 @@ class UserApiService {
     // MARK: - Удаление интереса
     func removeInterest(_ interestId: UUID) async throws -> User {
         let request = RemoveInterestRequest(interestId: interestId.uuidString)
-        let response: UserApiResponse = try await apiClient.delete("/user/interests/\(interestId.uuidString)")
-        return response.data.toUser()
+        _ = try await apiClient.delete("/user/interests/\(interestId.uuidString)")
+        // После удаления получаем обновленный профиль
+        return try await getProfile()
     }
     
     // MARK: - Получение интересов пользователя

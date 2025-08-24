@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ClubsListScreen: View {
     @ObservedObject var viewModel: ClubsListViewModel
@@ -17,24 +18,33 @@ struct ClubsListScreen: View {
     
     var body: some View {
         VStack {
-            ScrollView {
-                Text("Список клубов")
-                    .font(.title2)
-                    .padding(.top)
+            if viewModel.isLoading {
+                ProgressView("Загрузка клубов...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollView {
+                    Text("Список клубов")
+                        .font(.title2)
+                        .padding(.top)
 
-                VStack(spacing: 12) {
-                    ForEach(sortedClubs) { club in
-                        ClubRowView(
-                            club: club,
-                            onJoin: { withAnimation(.spring()) { viewModel.joinClub(club) } },
-                            onLeave: { withAnimation(.spring()) { viewModel.leaveClub(club) } }
-                        )
-                        .onTapGesture {
-                            selectedClub = club
+                    VStack(spacing: 12) {
+                        ForEach(sortedClubs) { club in
+                            ClubRowView(
+                                club: club,
+                                onJoin: { 
+                                    Task { await viewModel.joinClub(club) }
+                                },
+                                onLeave: { 
+                                    Task { await viewModel.leaveClub(club) }
+                                }
+                            )
+                            .onTapGesture {
+                                selectedClub = club
+                            }
                         }
                     }
+                    .padding(.top)
                 }
-                .padding(.top)
             }
 
             Button(action: { viewModel.showAddClubForm.toggle() }) {
@@ -57,6 +67,18 @@ struct ClubsListScreen: View {
             ClubDetailScreen(club: club)
                 .environmentObject(ClubEventsService.shared)
         }
+        .task {
+            await viewModel.loadClubs()
+        }
+        .alert("Ошибка", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("OK") {
+                viewModel.errorMessage = nil
+            }
+        } message: {
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+            }
+        }
     }
     
     private var sortedClubs: [Club] {
@@ -66,4 +88,5 @@ struct ClubsListScreen: View {
 
 #Preview {
     ClubsListScreen(viewModel: ClubsListViewModel())
+        .withDataLayer()
 }

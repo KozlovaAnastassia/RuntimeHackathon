@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import SwiftUI
 
 class CalendarDatabase {
     static let shared = CalendarDatabase()
@@ -247,5 +248,27 @@ class CalendarDatabase {
             print("Ошибка получения событий клуба: \(error)")
             return []
         }
+    }
+    
+    // MARK: - Получение событий за неделю
+    func getWeekEvents() -> [CalendarEvent] {
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? now
+        let endOfWeek = calendar.dateInterval(of: .weekOfYear, for: now)?.end ?? now
+        
+        return getEvents(from: startOfWeek, to: endOfWeek)
+    }
+    
+    // MARK: - Получение предстоящих событий
+    func getUpcomingEvents(limit: Int = 10) -> [CalendarEvent] {
+        let now = Date()
+        let allEvents = getAllEvents()
+        
+        return allEvents
+            .filter { $0.date > now }
+            .sorted { $0.date < $1.date }
+            .prefix(limit)
+            .map { $0 }
     }
 }

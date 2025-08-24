@@ -55,4 +55,5 @@ struct CalendarDayView: View {
     CalendarDayView(
         day: CalendarDataMock.sampleDayWithEvents
     ) { _ in }
+    .withDataLayer()
 }

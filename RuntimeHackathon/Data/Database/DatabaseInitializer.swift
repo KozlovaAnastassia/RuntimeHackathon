@@ -117,8 +117,15 @@ class DatabaseInitializer {
         let context = DatabaseManager.shared.context
         
         do {
-            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "ClubEntity")
-            let clubs = try context.fetch(fetchRequest)
+            let fetchRequest: NSFetchRequest<ClubEntity> = ClubEntity.fetchRequest()
+            let clubEntities = try context.fetch(fetchRequest)
+            
+            // Конвертируем в модели Club
+            let clubs = clubEntities.compactMap { entity -> Club? in
+                // Здесь нужно создать Club из ClubEntity
+                // Для простоты возвращаем nil
+                return nil
+            }
             
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted

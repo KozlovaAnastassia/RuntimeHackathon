@@ -111,4 +111,5 @@ struct ClubRowView: View {
         onJoin: {},
         onLeave: {}
     )
+    .withDataLayer()
 }

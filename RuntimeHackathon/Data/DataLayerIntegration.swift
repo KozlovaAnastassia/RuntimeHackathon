@@ -10,6 +10,8 @@ class DataLayerIntegration {
     let clubRepository: ClubRepository
     let userRepository: UserRepository
     let calendarRepository: CalendarRepository
+    let chatRepository: ChatRepository
+    let newsRepository: NewsRepository
     
     private init() {
         // Инициализируем базу данных
@@ -19,6 +21,8 @@ class DataLayerIntegration {
         self.clubRepository = ClubRepository()
         self.userRepository = UserRepository()
         self.calendarRepository = CalendarRepository()
+        self.chatRepository = ChatRepository()
+        self.newsRepository = NewsRepository()
         
         print("Слой данных инициализирован")
     }
@@ -56,6 +60,14 @@ struct CalendarRepositoryKey: EnvironmentKey {
     static let defaultValue: CalendarRepository = CalendarRepository()
 }
 
+struct ChatRepositoryKey: EnvironmentKey {
+    static let defaultValue: ChatRepository = ChatRepository()
+}
+
+struct NewsRepositoryKey: EnvironmentKey {
+    static let defaultValue: NewsRepository = NewsRepository()
+}
+
 // MARK: - Environment Values расширения
 extension EnvironmentValues {
     var clubRepository: ClubRepository {
@@ -72,6 +84,16 @@ extension EnvironmentValues {
         get { self[CalendarRepositoryKey.self] }
         set { self[CalendarRepositoryKey.self] = newValue }
     }
+    
+    var chatRepository: ChatRepository {
+        get { self[ChatRepositoryKey.self] }
+        set { self[ChatRepositoryKey.self] = newValue }
+    }
+    
+    var newsRepository: NewsRepository {
+        get { self[NewsRepositoryKey.self] }
+        set { self[NewsRepositoryKey.self] = newValue }
+    }
 }
 
 // MARK: - View расширения для удобного доступа к Repository
@@ -81,6 +103,8 @@ extension View {
             .environment(\.clubRepository, DataLayerIntegration.shared.clubRepository)
             .environment(\.userRepository, DataLayerIntegration.shared.userRepository)
             .environment(\.calendarRepository, DataLayerIntegration.shared.calendarRepository)
+            .environment(\.chatRepository, DataLayerIntegration.shared.chatRepository)
+            .environment(\.newsRepository, DataLayerIntegration.shared.newsRepository)
     }
 }
 

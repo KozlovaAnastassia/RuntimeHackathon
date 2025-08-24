@@ -9,7 +9,7 @@ import SwiftUI
 
 @MainActor
 class UserProfileViewModel: ObservableObject {
-    @Published var user: User
+    @Published var user: User?
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -29,88 +29,139 @@ class UserProfileViewModel: ObservableObject {
     @Published var showingAddInterest = false
     @Published var newInterestName = ""
     @Published var selectedInterestCategory: InterestCategory = CategoryMock.bookInterest
-
-    init(user: User) {
-        self.user = user
-        self.editedName = user.name
-        self.editedNickname = user.nickname
-        self.editedLocation = user.location ?? ""
-        self.editedBio = user.bio ?? ""
-        self.editedInterests = user.interests
+    
+    private let repository: UserRepository
+    
+    init(repository: UserRepository = DataLayerIntegration.shared.userRepository) {
+        self.repository = repository
+    }
+    
+    func loadProfile(userId: UUID) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            user = try await repository.getUser(by: userId)
+            if let user = user {
+                editedName = user.name
+                editedNickname = user.nickname
+                editedLocation = user.location ?? ""
+                editedBio = user.bio ?? ""
+                editedInterests = user.interests
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
     }
 
     func saveProfileSection() async {
+        guard var currentUser = user else { return }
+        
         isLoading = true
         defer { isLoading = false }
 
         do {
-            try await Task.sleep(nanoseconds: 500_000_000)
             // Обновляем значения пользователя
-            user.name = editedName
-            user.nickname = editedNickname
-            user.location = editedLocation.isEmpty ? nil : editedLocation
+            currentUser.name = editedName
+            currentUser.nickname = editedNickname
+            currentUser.location = editedLocation.isEmpty ? nil : editedLocation
+            
+            try await repository.updateProfile(currentUser)
+            user = currentUser
             isEditingProfile = false
         } catch {
-            errorMessage = "Ошибка сохранения профиля"
+            errorMessage = "Ошибка сохранения профиля: \(error.localizedDescription)"
         }
     }
 
     func saveBio() async {
+        guard var currentUser = user else { return }
+        
         isLoading = true
         defer { isLoading = false }
 
         do {
-            try await Task.sleep(nanoseconds: 500_000_000)
-            user.bio = editedBio.isEmpty ? nil : editedBio
+            currentUser.bio = editedBio.isEmpty ? nil : editedBio
+            try await repository.updateProfile(currentUser)
+            user = currentUser
             isEditingBio = false
         } catch {
-            errorMessage = "Ошибка сохранения информации"
+            errorMessage = "Ошибка сохранения информации: \(error.localizedDescription)"
         }
     }
 
     func saveInterests() async {
+        guard var currentUser = user else { return }
+        
         isLoading = true
         defer { isLoading = false }
 
         do {
-            try await Task.sleep(nanoseconds: 500_000_000)
-            user.interests = editedInterests
+            currentUser.interests = editedInterests
+            try await repository.updateProfile(currentUser)
+            user = currentUser
             isEditingInterests = false
         } catch {
-            errorMessage = "Ошибка сохранения интересов"
+            errorMessage = "Ошибка сохранения интересов: \(error.localizedDescription)"
         }
     }
 
     func cancelProfileEdit() {
-        editedName = user.name
-        editedNickname = user.nickname
-        editedLocation = user.location ?? ""
+        guard let currentUser = user else { return }
+        editedName = currentUser.name
+        editedNickname = currentUser.nickname
+        editedLocation = currentUser.location ?? ""
         isEditingProfile = false
     }
 
     func cancelBioEdit() {
-        editedBio = user.bio ?? ""
+        guard let currentUser = user else { return }
+        editedBio = currentUser.bio ?? ""
         isEditingBio = false
     }
 
     func cancelInterestsEdit() {
-        editedInterests = user.interests
+        guard let currentUser = user else { return }
+        editedInterests = currentUser.interests
         isEditingInterests = false
     }
 
     // Добавление нового интереса
-    func addInterest() {
+    func addInterest() async {
+        guard let currentUser = user else { return }
+        
         let newInterest = Interest(
             name: newInterestName.trimmingCharacters(in: .whitespacesAndNewlines),
             category: selectedInterestCategory
         )
-        editedInterests.append(newInterest)
-        newInterestName = ""
-        showingAddInterest = false
+        
+        do {
+            try await repository.addInterest(newInterest, to: currentUser.id)
+            editedInterests.append(newInterest)
+            newInterestName = ""
+            showingAddInterest = false
+            
+            // Перезагружаем профиль для получения обновленных данных
+            await loadProfile(userId: currentUser.id)
+        } catch {
+            errorMessage = "Ошибка добавления интереса: \(error.localizedDescription)"
+        }
     }
 
     // Удаление интереса
-    func removeInterest(_ interest: Interest) {
-        editedInterests.removeAll { $0.id == interest.id }
+    func removeInterest(_ interest: Interest) async {
+        guard let currentUser = user else { return }
+        
+        do {
+            try await repository.removeInterest(interest, from: currentUser.id)
+            editedInterests.removeAll { $0.id == interest.id }
+            
+            // Перезагружаем профиль для получения обновленных данных
+            await loadProfile(userId: currentUser.id)
+        } catch {
+            errorMessage = "Ошибка удаления интереса: \(error.localizedDescription)"
+        }
     }
 }

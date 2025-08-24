@@ -73,17 +73,17 @@ class UserDatabase {
                 return nil
             }
             
-            let interests = entity.interests?.allObjects.compactMap { interestEntity in
+            let interests: [Interest] = entity.interests?.allObjects.compactMap { interestEntity in
                 guard let interestEntity = interestEntity as? InterestEntity else { return nil }
                 return Interest(from: interestEntity)
             } ?? []
             
-            let joinedClubs = entity.joinedClubs?.allObjects.compactMap { clubEntity in
+            let joinedClubs: [Club] = entity.joinedClubs?.allObjects.compactMap { clubEntity in
                 guard let clubEntity = clubEntity as? UserClubEntity else { return nil }
                 return Club(from: clubEntity)
             } ?? []
             
-            let createdClubs = entity.createdClubs?.allObjects.compactMap { clubEntity in
+            let createdClubs: [Club] = entity.createdClubs?.allObjects.compactMap { clubEntity in
                 guard let clubEntity = clubEntity as? UserClubEntity else { return nil }
                 return Club(from: clubEntity)
             } ?? []
@@ -193,37 +193,5 @@ class UserDatabase {
         clubEntity.relationshipType = "created"
         
         return clubEntity
-    }
-}
-
-// MARK: - Расширения для преобразования
-extension Interest {
-    init(from entity: InterestEntity) {
-        let category = InterestCategory(
-            name: entity.categoryName ?? "",
-            emoji: entity.categoryEmoji ?? "",
-            displayName: entity.categoryDisplayName ?? ""
-        )
-        
-        self.init(
-            id: UUID(uuidString: entity.id ?? "") ?? UUID(),
-            name: entity.name ?? "",
-            category: category
-        )
-    }
-}
-
-extension Club {
-    init(from entity: UserClubEntity) {
-        self.init(
-            id: UUID(uuidString: entity.id ?? "") ?? UUID(),
-            name: entity.name ?? "",
-            imageName: entity.imageName ?? "",
-            isJoined: entity.isJoined,
-            localImagePath: entity.localImagePath,
-            description: entity.clubDescription ?? "",
-            tags: entity.tags ?? [],
-            isCreator: entity.isCreator
-        )
     }
 }
