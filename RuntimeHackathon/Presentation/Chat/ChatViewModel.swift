@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 class ChatViewModel: ObservableObject {
-  @Published var messages: [Message] = []
+  @Published var messages: [ChatMessage] = []
   @Published var newMessageText = ""
   @Published var isLoading = false
   @Published var errorMessage: String?
@@ -29,7 +29,7 @@ class ChatViewModel: ObservableObject {
   func sendMessage() {
     guard !newMessageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
 
-    let message = Message(
+    let message = ChatMessage(
       userId: "currentUserId",
       userName: "Текущий пользователь",
       text: newMessageText,

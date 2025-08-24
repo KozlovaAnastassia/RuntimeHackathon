@@ -12,7 +12,7 @@ struct ChatSummaryView: View {
     @StateObject private var viewModel: ChatSummaryViewModel
     @Environment(\.dismiss) private var dismiss
     
-    init(messages: [Message]) {
+    init(messages: [ChatMessage]) {
         _viewModel = StateObject(wrappedValue: ChatSummaryViewModel(messages: messages))
     }
     

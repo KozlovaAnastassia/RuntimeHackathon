@@ -13,10 +13,10 @@ class ChatDatabase {
   private init() {}
   public static let shared = ChatDatabase()
 
-  var messages: [Message] = [
-    Message(userId: "1", userName: "Анна", text: "Привет всем!", timestamp: Date().addingTimeInterval(-300), isCurrentUser: false),
-    Message(userId: "2", userName: "Иван", text: "Добро пожаловать в наш клуб!", timestamp: Date().addingTimeInterval(-240), isCurrentUser: false),
-    Message(userId: "3", userName: "Мария", text: "Какие интересные темы обсудим сегодня?", timestamp: Date().addingTimeInterval(-180), isCurrentUser: false)
+  var messages: [ChatMessage] = [
+    ChatMessage(userId: "1", userName: "Анна", text: "Привет всем!", timestamp: Date().addingTimeInterval(-300), isCurrentUser: false),
+    ChatMessage(userId: "2", userName: "Иван", text: "Добро пожаловать в наш клуб!", timestamp: Date().addingTimeInterval(-240), isCurrentUser: false),
+    ChatMessage(userId: "3", userName: "Мария", text: "Какие интересные темы обсудим сегодня?", timestamp: Date().addingTimeInterval(-180), isCurrentUser: false)
   ]
 
   lazy var chats = [

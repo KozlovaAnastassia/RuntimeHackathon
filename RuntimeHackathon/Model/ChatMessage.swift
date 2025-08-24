@@ -7,8 +7,7 @@
 
 import Foundation
 
-class Message: Identifiable, Codable {
-
+class ChatMessage: Identifiable, Codable {
   let id = UUID()
   let userId: String
   let userName: String
@@ -23,12 +22,4 @@ class Message: Identifiable, Codable {
     self.timestamp = timestamp
     self.isCurrentUser = isCurrentUser
   }
-}
-
-struct ChatRoom {
-  let id: String
-  let name: String
-  let membersCount: Int
-  let lastMessage: String?
-  let lastMessageTime: Date?
 }

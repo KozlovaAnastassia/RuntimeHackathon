@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct MessageView: View {
-    let message: Message
+    let message: ChatMessage
     @ObservedObject private var viewModel: ChatViewModel
 
-    init(viewModel: ChatViewModel, message: Message) {
+    init(viewModel: ChatViewModel, message: ChatMessage) {
         self.viewModel = viewModel
         self.message = message
     }
@@ -49,7 +49,7 @@ struct MessageView: View {
 #Preview {
     MessageView(
         viewModel: ChatViewModel(chatId: "test-chat-id"),
-        message: Message(
+        message: ChatMessage(
             userId: "user-1",
             userName: "Анна",
             text: "Привет! Как дела?",

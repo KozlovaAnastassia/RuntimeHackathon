@@ -8,7 +8,7 @@
 import Foundation
 
 protocol AIChatServiceProtocol {
-  func sendMessage(_ message: String, chatHistory: [ChatMessage]) async throws -> String
+  func sendMessage(_ message: String, chatHistory: [AiChatMessage]) async throws -> String
 }
 
 class YandexGPTService: AIChatServiceProtocol {
@@ -20,7 +20,7 @@ class YandexGPTService: AIChatServiceProtocol {
   private init() {}
   public static let shared = YandexGPTService()
 
-  func sendMessage(_ message: String, chatHistory: [ChatMessage]) async throws -> String {
+  func sendMessage(_ message: String, chatHistory: [AiChatMessage]) async throws -> String {
     let messages = prepareMessages(for: message, chatHistory: chatHistory)
 
     let request = YandexGPTCompletionRequest(
@@ -73,7 +73,7 @@ class YandexGPTService: AIChatServiceProtocol {
     return sortedClubs + remainingClubs
   }
 
-  private func prepareMessages(for newMessage: String, chatHistory: [ChatMessage]) -> [YandexGPTCompletionRequest.Message] {
+  private func prepareMessages(for newMessage: String, chatHistory: [AiChatMessage]) -> [YandexGPTCompletionRequest.Message] {
     var messages: [YandexGPTCompletionRequest.Message] = []
 
     // Системное сообщение с инструкциями
@@ -138,31 +138,10 @@ class YandexGPTService: AIChatServiceProtocol {
   }
 }
 
-// Ошибки для AI сервиса
-enum AIError: Error, LocalizedError {
-  case invalidURL
-  case invalidResponse
-  case httpError(statusCode: Int, message: String)
-  case decodingError
-
-  var errorDescription: String? {
-    switch self {
-    case .invalidURL:
-      return "Неверный URL для AI сервиса"
-    case .invalidResponse:
-      return "Неверный ответ от AI сервиса"
-    case .httpError(let statusCode, let message):
-      return "Ошибка AI сервиса (\(statusCode)): \(message)"
-    case .decodingError:
-      return "Ошибка обработки ответа от AI"
-    }
-  }
-}
-
 // MARK: - Метод для генерации описания переписки
 
 extension YandexGPTService {
-  func generateChatSummary(messages: [Message]) async throws -> String {
+  func generateChatSummary(messages: [ChatMessage]) async throws -> String {
     // Берем последние 20 сообщений для создания резюме
     let recentMessages = messages.suffix(20)
 
@@ -191,7 +170,7 @@ extension YandexGPTService {
     return try await sendMessage(prompt, chatHistory: [])
   }
 
-  func generateChatTitleFromMessages(messages: [Message]) async throws -> String {
+  func generateChatTitleFromMessages(messages: [ChatMessage]) async throws -> String {
     let recentMessages = messages.suffix(15)
 
     let conversationText = recentMessages.map { message in
@@ -218,7 +197,7 @@ extension YandexGPTService {
     return String(title.prefix(50)).trimmingCharacters(in: .whitespacesAndNewlines)
   }
 
-  func generateKeyPoints(messages: [Message]) async throws -> [String] {
+  func generateKeyPoints(messages: [ChatMessage]) async throws -> [String] {
     let recentMessages = messages.suffix(25)
 
     let conversationText = recentMessages.map { message in

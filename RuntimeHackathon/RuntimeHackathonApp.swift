@@ -17,5 +17,5 @@ struct RuntimeHackathonApp: App {
 }
 
 #Preview {
-  
+    MainTabBar()
 }

@@ -16,10 +16,10 @@ class ChatSummaryViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    let messages: [Message]
+    let messages: [ChatMessage]
   private let aiService = YandexGPTService.shared
 
-    init(messages: [Message]) {
+    init(messages: [ChatMessage]) {
         self.messages = messages
     }
     

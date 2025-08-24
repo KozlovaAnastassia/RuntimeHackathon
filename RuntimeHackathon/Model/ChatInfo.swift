@@ -29,9 +29,9 @@ class ChatInfo: Identifiable, Codable, Equatable, Hashable {
     let membersCount: Int
     let isOnline: Bool
     let avatarColor: String // В реальном приложении будет URL или Image
-  var messages: [Message]
+  var messages: [ChatMessage]
 
-  init(chatId: String, title: String, unreadCount: Int, membersCount: Int, isOnline: Bool, avatarColor: String, messages: [Message]) {
+  init(chatId: String, title: String, unreadCount: Int, membersCount: Int, isOnline: Bool, avatarColor: String, messages: [ChatMessage]) {
     self.chatId = chatId
     self.title = title
     self.unreadCount = unreadCount

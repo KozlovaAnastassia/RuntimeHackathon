@@ -5,26 +5,7 @@
 //  Created by AFONIN Kirill on 23.08.2025.
 //
 
-
 import Foundation
-
-// Запрос к API
-struct YandexGPTCompletionRequest: Codable {
-    let modelUri: String
-    let completionOptions: CompletionOptions
-    let messages: [Message]
-    
-    struct CompletionOptions: Codable {
-        let stream: Bool
-        let temperature: Double?
-        let maxTokens: Int?
-    }
-    
-    struct Message: Codable {
-        let role: String
-        let text: String
-    }
-}
 
 // Ответ от API
 struct YandexGPTCompletionResponse: Codable {
@@ -79,20 +60,5 @@ extension YandexGPTCompletionResponse {
 
   var isFinal: Bool {
     result.alternatives.first?.status == .final
-  }
-}
-
-
-// Новая модель для AI чата
-struct ChatMessage: Identifiable, Codable {
-  let id = UUID()
-  let role: MessageRole
-  let content: String
-  let timestamp: Date
-
-  enum MessageRole: String, Codable {
-    case user
-    case assistant
-    case system
   }
 }
