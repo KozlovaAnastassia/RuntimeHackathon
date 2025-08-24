@@ -100,7 +100,9 @@ class ClubEventsService: ObservableObject {
         print("DEBUG: getAllCalendarEvents() вызван, всего событий: \(allClubEvents.count)")
         
         let calendarEvents = allClubEvents.enumerated().map { index, clubEvent in
-            let color = ClubEventsMock.calendarColors[index % ClubEventsMock.calendarColors.count]
+            let colorKeys = Array(CalendarDataMock.calendarColors.keys)
+            let colorKey = colorKeys[index % colorKeys.count]
+            let color = CalendarDataMock.calendarColors[colorKey] ?? .blue
             // Извлекаем название клуба из заголовка события
             let clubName = extractClubName(from: clubEvent.title)
             print("DEBUG: Преобразуем событие: \(clubEvent.title) -> CalendarEvent")
@@ -149,6 +151,6 @@ class ClubEventsService: ObservableObject {
     
     // Создает тестовые события для конкретного клуба
     private func createSampleEventsForClub(_ club: Club) -> [ClubEvent] {
-        return ClubEventsMock.createSampleEventsForClub(club)
+        return CalendarDataMock.createSampleEventsForClub(club.id)
     }
 }

@@ -66,6 +66,6 @@ struct ProfileClubRowFullView: View {
 
 #Preview {
     ProfileClubRowFullView(
-        club: ProfileClubRowMock.sampleClubCreator
+        club: ClubDataMock.myClub
     )
 }

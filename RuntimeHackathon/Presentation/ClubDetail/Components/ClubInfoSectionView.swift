@@ -3,27 +3,27 @@ import SwiftUI
 struct ClubInfoSectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(ClubInfoMock.sectionTitle)
+            Text("О клубе")
                 .font(.title2)
                 .fontWeight(.bold)
             
-            Text(ClubInfoMock.clubDescription)
+            Text(ContentDataMock.clubInfoStrings["О клубе"] ?? "")
                 .font(.body)
             
             HStack {
                 VStack(alignment: .leading) {
-                    Text(ClubInfoMock.locationTitle)
+                    Text("Место встречи")
                         .font(.headline)
-                    Text(ClubInfoMock.meetingLocation)
+                    Text("Главный зал")
                         .font(.subheadline)
                 }
                 
                 Spacer()
                 
                 VStack(alignment: .leading) {
-                    Text(ClubInfoMock.timeTitle)
+                    Text("Время встречи")
                         .font(.headline)
-                    Text(ClubInfoMock.meetingTime)
+                    Text("Каждый вторник в 19:00")
                         .font(.subheadline)
                 }
             }

@@ -113,7 +113,7 @@ struct InterestsSectionView: View {
 
 #Preview {
     InterestsSectionView(
-        interests: InterestsSectionMock.sampleInterests,
+        interests: ProfileDataMock.sampleInterests,
         isEditing: false,
         onEdit: {},
         onAddInterest: {},

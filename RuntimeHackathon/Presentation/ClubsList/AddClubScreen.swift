@@ -15,7 +15,7 @@ struct AddClubScreen: View {
     @State private var selectedImage: UIImage? = nil
     @State private var showImagePicker = false
     
-    @State private var availableTags: [String] = ClubMock.availableTags
+    @State private var availableTags: [String] = ClubDataMock.availableTags
     @State private var selectedTags: Set<String> = []
     
     private let maxDescriptionLength = 300

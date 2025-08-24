@@ -28,7 +28,7 @@ struct AddInterestScreen: View {
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(InterestCategoryMock.allCategories, id: \.id) { category in
+                            ForEach(CategoryMock.allInterestCategories, id: \.id) { category in
                                 Button(action: {
                                     selectedCategory = category
                                 }) {
@@ -91,7 +91,7 @@ struct AddInterestScreen: View {
 #Preview {
     AddInterestScreen(
         newInterestName: .constant(""),
-        selectedCategory: .constant(InterestCategoryMock.book),
+        selectedCategory: .constant(CategoryMock.bookInterest),
         onAdd: {},
         onCancel: {}
     )

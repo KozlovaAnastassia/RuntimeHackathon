@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ClubsListViewModel: ObservableObject {
-    @Published var clubs: [Club] = ClubMock.sampleClubs
+    @Published var clubs: [Club] = ClubDataMock.sampleClubs
     @Published var showAddClubForm: Bool = false
 
     func addClub(_ club: Club, localImage: UIImage? = nil) {

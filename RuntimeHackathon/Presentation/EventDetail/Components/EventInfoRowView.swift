@@ -37,9 +37,9 @@ struct EventInfoRowView: View {
 
 #Preview {
     EventInfoRowView(
-        icon: EventInfoMock.sampleEventInfo.icon,
-        iconColor: EventInfoMock.sampleEventInfo.iconColor,
-        title: EventInfoMock.sampleEventInfo.title,
-        value: EventInfoMock.sampleEventInfo.value
+        icon: ContentDataMock.sampleEventInfo.icon,
+        iconColor: ContentDataMock.sampleEventInfo.iconColor,
+        title: ContentDataMock.sampleEventInfo.title,
+        value: ContentDataMock.sampleEventInfo.value
     )
 }

@@ -99,7 +99,7 @@ struct NewsCardView: View {
 
 #Preview {
     NewsCardView(
-        item: NewsMock.sampleNewsItem,
+        item: ContentDataMock.sampleNewsFeedItem,
         isCreator: true,
         onDelete: {}
     )

@@ -49,6 +49,6 @@ struct MessageView: View {
 #Preview {
     MessageView(
         viewModel: ChatViewModel(chatId: "test-chat-id"),
-        message: MessageMock.sampleMessage
+        message: ChatDataMock.sampleMessage
     )
 }

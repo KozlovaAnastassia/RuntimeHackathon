@@ -47,7 +47,7 @@ struct ProfileClubRowView: View {
 
 #Preview {
     ProfileClubRowView(
-        club: ProfileClubRowMock.sampleClub,
+        club: ClubDataMock.testClub,
         isCreator: false
     )
 }

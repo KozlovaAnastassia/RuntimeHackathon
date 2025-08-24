@@ -53,6 +53,6 @@ struct CalendarDayView: View {
 
 #Preview {
     CalendarDayView(
-        day: CalendarDayMock.sampleDayWithEvents
+        day: CalendarDataMock.sampleDayWithEvents
     ) { _ in }
 }

@@ -63,7 +63,7 @@ struct CreateEventScreen: View {
 
 #Preview {
     CreateEventScreen(
-        clubViewModel: ClubViewModelMock.sampleClubViewModel,
+        clubViewModel: ClubViewModel(clubId: ClubDataMock.testClub.id, isCreator: true),
         onEventCreated: {}
     )
 }

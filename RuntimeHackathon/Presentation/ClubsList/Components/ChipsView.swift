@@ -33,7 +33,7 @@ struct ChipsView: View {
     }
 
     func randomColor(for text: String) -> Color {
-        let colors: [Color] = ProfileMock.colors.map { Color($0) }
+        let colors: [Color] = ProfileDataMock.colors.map { Color($0) }
         let hash = abs(text.hashValue)
         return colors[hash % colors.count]
     }
@@ -84,7 +84,7 @@ struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: H
 
 #Preview {
     ChipsView(
-        items: TagsMock.sampleTags,
-        selectedItems: .constant(TagsMock.selectedTags)
+        items: UIComponentsMock.sampleTags,
+        selectedItems: .constant(Set(UIComponentsMock.selectedTags))
     )
 }

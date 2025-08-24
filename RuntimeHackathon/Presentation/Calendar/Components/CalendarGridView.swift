@@ -17,5 +17,5 @@ struct CalendarGridView: View {
 }
 
 #Preview {
-    CalendarGridView(calendarDays: CalendarMock.sampleCalendarDays) { _ in }
+    CalendarGridView(calendarDays: CalendarDataMock.sampleCalendarDays) { _ in }
 }

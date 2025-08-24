@@ -13,6 +13,6 @@ class ChatDatabase {
   private init() {}
   public static let shared = ChatDatabase()
 
-  var messages: [ChatMessage] = ChatMock.sampleMessages
-  lazy var chats = ChatMock.sampleChats
+      var messages: [ChatMessage] = ChatDataMock.sampleMessages
+    lazy var chats = ChatDataMock.sampleChats
 }

@@ -128,7 +128,7 @@ struct ChatListScreen: View {
 }
 
 #Preview {
-    ChatListScreen(viewModel: ChatListViewModel(chats: ChatListMock.emptyChats))
+    ChatListScreen(viewModel: ChatListViewModel(chats: ChatDataMock.emptyChats))
 }
 
 

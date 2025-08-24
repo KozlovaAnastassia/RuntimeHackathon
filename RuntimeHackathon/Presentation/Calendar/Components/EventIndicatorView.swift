@@ -22,5 +22,5 @@ struct EventIndicatorView: View {
 }
 
 #Preview {
-    EventIndicatorView(event: CalendarComponentsMock.sampleEventIndicator)
+    EventIndicatorView(event: CalendarDataMock.sampleEvent)
 }

@@ -39,5 +39,5 @@ struct CreatedClubsSectionView: View {
 }
 
 #Preview {
-    CreatedClubsSectionView(clubs: CreatedClubsSectionMock.sampleClubs)
+    CreatedClubsSectionView(clubs: ProfileDataMock.sampleClubs)
 }

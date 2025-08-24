@@ -107,7 +107,7 @@ struct ClubRowView: View {
 
 #Preview {
     ClubRowView(
-        club: ClubRowMock.sampleClub,
+        club: ClubDataMock.testClub,
         onJoin: {},
         onLeave: {}
     )

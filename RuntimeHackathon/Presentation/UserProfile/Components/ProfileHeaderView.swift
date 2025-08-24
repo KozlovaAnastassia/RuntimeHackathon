@@ -185,18 +185,18 @@ struct ProfileHeaderView: View {
 
     private func convertToPrepositionalCase(_ month: String) -> String {
         let lowercased = month.lowercased()
-        return ProfileMock.monthCases[lowercased] ?? lowercased
+        return ProfileDataMock.monthCasesDict[lowercased] ?? lowercased
     }
 
     private var randomAnimalIcon: String {
         let index = user.id.uuidString.prefix(1).first?.asciiValue ?? 65
-        return ProfileMock.animals[Int(index) % ProfileMock.animals.count]
+        return ProfileDataMock.animals[Int(index) % ProfileDataMock.animals.count]
     }
 }
 
 #Preview {
     ProfileHeaderView(
-        user: UserMock.sampleUser,
+        user: ProfileDataMock.sampleUser,
         isEditing: false,
         onEdit: {},
         onSave: {},

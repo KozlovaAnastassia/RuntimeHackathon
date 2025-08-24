@@ -116,5 +116,5 @@ struct CreateNewsScreen: View {
 }
 
 #Preview {
-    CreateNewsScreen(clubViewModel: ClubViewModelMock.sampleClubViewModel)
+    CreateNewsScreen(clubViewModel: ClubViewModel(clubId: ClubDataMock.testClub.id, isCreator: true))
 }

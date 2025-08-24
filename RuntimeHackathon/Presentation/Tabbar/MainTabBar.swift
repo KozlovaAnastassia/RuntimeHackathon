@@ -25,7 +25,7 @@ struct MainTabBar: View {
             case 3:
               ChatListScreen(viewModel: ChatListViewModel(chats: storage.clubs.filter({ $0.isJoined }).map{ $0.chat }))
             case 4:
-                UserProfileScreen(user: UserMock.sampleUser)
+                UserProfileScreen(user: ProfileDataMock.sampleUser)
             default:
                 EmptyView()
             }

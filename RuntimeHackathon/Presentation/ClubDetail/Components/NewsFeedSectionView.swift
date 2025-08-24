@@ -95,8 +95,8 @@ struct NewsFeedSectionView: View {
 
 #Preview {
     NewsFeedSectionView(
-        events: NewsFeedSectionMock.sampleEvents,
-        newsItems: NewsFeedSectionMock.sampleNewsItems,
+        events: ContentDataMock.sampleEvents,
+        newsItems: ContentDataMock.sampleNewsItems,
         isCreator: true,
         dateFilter: .all,
         onDeleteNews: { _ in }

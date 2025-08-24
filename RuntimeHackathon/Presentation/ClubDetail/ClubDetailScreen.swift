@@ -85,5 +85,5 @@ struct ClubDetailScreen: View {
 }
 
 #Preview {
-    ClubDetailScreen(club: ClubDetailMock.sampleClub)
+    ClubDetailScreen(club: ClubDataMock.testClub)
 }

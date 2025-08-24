@@ -28,7 +28,7 @@ class UserProfileViewModel: ObservableObject {
     // Для добавления интересов
     @Published var showingAddInterest = false
     @Published var newInterestName = ""
-    @Published var selectedInterestCategory: InterestCategory = InterestCategoryMock.book
+    @Published var selectedInterestCategory: InterestCategory = CategoryMock.bookInterest
 
     init(user: User) {
         self.user = user

@@ -239,5 +239,5 @@ struct EventDetailScreen: View {
 }
 
 #Preview {
-    EventDetailScreen(event: CalendarMock.sampleEvent)
+    EventDetailScreen(event: CalendarDataMock.sampleEvent)
 }

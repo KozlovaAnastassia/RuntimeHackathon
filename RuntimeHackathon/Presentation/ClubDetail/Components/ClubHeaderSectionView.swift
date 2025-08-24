@@ -67,5 +67,5 @@ struct ClubHeaderSectionView: View {
 }
 
 #Preview {
-    ClubHeaderSectionView(club: ClubHeaderMock.sampleClub)
+    ClubHeaderSectionView(club: ClubDataMock.testClub)
 }

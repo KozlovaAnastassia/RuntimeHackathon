@@ -35,7 +35,7 @@ class CalendarViewModel: ObservableObject {
     
     // Генерация тестовых событий
     private func generateSampleEvents() {
-        events = CalendarMock.generateSampleEvents()
+                    events = CalendarDataMock.generateSampleEvents()
     }
     
     // Обновление дней календаря
@@ -213,19 +213,19 @@ class CalendarViewModel: ObservableObject {
     
     // Методы для загрузки разных типов моковых данных
     func loadWeekendEvents() {
-        events = CalendarMock.generateWeekendEvents()
+                    events = CalendarDataMock.generateWeekendEvents()
         updateCalendarDays()
         updateWeekDays()
     }
     
     func loadWorkdayEvents() {
-        events = CalendarMock.generateWorkdayEvents()
+                    events = CalendarDataMock.generateWorkdayEvents()
         updateCalendarDays()
         updateWeekDays()
     }
     
     func loadEmptyEvents() {
-        events = CalendarMock.generateEmptyEvents()
+                    events = CalendarDataMock.generateEmptyEvents()
         updateCalendarDays()
         updateWeekDays()
     }

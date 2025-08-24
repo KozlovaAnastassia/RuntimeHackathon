@@ -233,5 +233,5 @@ struct ChatSummaryScreen: View {
 }
 
 #Preview {
-    ChatSummaryScreen(messages: ChatSummaryMock.sampleMessages)
+    ChatSummaryScreen(messages: ChatDataMock.summaryMessages)
 }
