@@ -8,24 +8,33 @@ class DatabaseInitializer {
     
     // MARK: - Инициализация базы данных
     func initializeDatabase() {
+        print("DEBUG: Инициализация базы данных")
         // Инициализируем Core Data
         _ = DatabaseManager.shared.persistentContainer
         
         // Загружаем начальные данные если база пустая
         loadInitialDataIfNeeded()
+        print("DEBUG: База данных инициализирована")
     }
     
     // MARK: - Загрузка начальных данных
     private func loadInitialDataIfNeeded() {
+        print("DEBUG: Проверяем необходимость загрузки начальных данных")
         let clubDatabase = ClubDatabase.shared
         let userDatabase = UserDatabase.shared
         let calendarDatabase = CalendarDatabase.shared
         
         // Проверяем, есть ли данные в базе
         let existingClubs = clubDatabase.getAllClubs()
+        let existingUsers = userDatabase.getAllUsers()
+        
+        print("DEBUG: Найдено клубов: \(existingClubs.count), пользователей: \(existingUsers.count)")
         
         if existingClubs.isEmpty {
+            print("DEBUG: База пустая, загружаем моковые данные")
             loadMockData()
+        } else {
+            print("DEBUG: База не пустая, моковые данные уже загружены")
         }
     }
     
@@ -71,10 +80,12 @@ class DatabaseInitializer {
     }
     
     private func loadMockUsers() {
+        print("DEBUG: Загружаем моковых пользователей")
         let userDatabase = UserDatabase.shared
         
         // Загружаем пользователя из моковых данных
         let mockUser = ProfileDataMock.sampleUser
+        print("DEBUG: Сохраняем пользователя: \(mockUser.name) с ID: \(mockUser.id)")
         userDatabase.saveUser(mockUser)
         
         // Загружаем интересы
@@ -82,6 +93,7 @@ class DatabaseInitializer {
         for interest in mockInterests {
             userDatabase.addInterest(interest, to: mockUser.id)
         }
+        print("DEBUG: Моковые пользователи загружены")
     }
     
     private func loadMockEvents() {

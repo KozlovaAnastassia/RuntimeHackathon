@@ -9,6 +9,7 @@ class UserDatabase {
     
     // MARK: - Сохранение пользователя
     func saveUser(_ user: User) {
+        print("DEBUG: UserDatabase.saveUser(\(user.name) с ID: \(user.id))")
         let context = databaseManager.context
         
         let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
@@ -16,11 +17,14 @@ class UserDatabase {
         
         do {
             let existingUsers = try context.fetch(fetchRequest)
+            print("DEBUG: Найдено \(existingUsers.count) существующих пользователей")
             let userEntity: UserEntity
             
             if let existingUser = existingUsers.first {
+                print("DEBUG: Обновляем существующего пользователя")
                 userEntity = existingUser
             } else {
+                print("DEBUG: Создаем нового пользователя")
                 userEntity = UserEntity(context: context)
                 userEntity.id = user.id.uuidString
             }
@@ -49,6 +53,7 @@ class UserDatabase {
             }
             
             databaseManager.saveContext()
+            print("DEBUG: Пользователь успешно сохранен в базу данных")
         } catch {
             print("Ошибка сохранения пользователя: \(error)")
         }
@@ -56,6 +61,7 @@ class UserDatabase {
     
     // MARK: - Получение пользователя
     func getUser(by id: UUID) -> User? {
+        print("DEBUG: UserDatabase.getUser(by: \(id))")
         let context = databaseManager.context
         let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id.uuidString)
@@ -63,6 +69,8 @@ class UserDatabase {
         
         do {
             let userEntities = try context.fetch(fetchRequest)
+            print("DEBUG: Найдено \(userEntities.count) пользователей в базе")
+            
             guard let entity = userEntities.first,
                   let idString = entity.id,
                   let userId = UUID(uuidString: idString),
@@ -70,6 +78,7 @@ class UserDatabase {
                   let nickname = entity.nickname,
                   let email = entity.email,
                   let joinDate = entity.joinDate else {
+                print("DEBUG: Не удалось извлечь данные пользователя из entity")
                 return nil
             }
             
@@ -88,7 +97,7 @@ class UserDatabase {
                 return Club(from: clubEntity)
             } ?? []
             
-            return User(
+            let user = User(
                 id: userId,
                 name: name,
                 nickname: nickname,
@@ -101,6 +110,8 @@ class UserDatabase {
                 location: entity.location,
                 joinDate: joinDate
             )
+            print("DEBUG: Пользователь успешно извлечен из базы данных: \(user.name)")
+            return user
         } catch {
             print("Ошибка получения пользователя: \(error)")
             return nil
@@ -193,5 +204,57 @@ class UserDatabase {
         clubEntity.relationshipType = "created"
         
         return clubEntity
+    }
+    
+    // MARK: - Получение всех пользователей
+    func getAllUsers() -> [User] {
+        let context = databaseManager.context
+        let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
+        
+        do {
+            let userEntities = try context.fetch(fetchRequest)
+            return userEntities.compactMap { entity in
+                guard let idString = entity.id,
+                      let id = UUID(uuidString: idString),
+                      let name = entity.name,
+                      let nickname = entity.nickname,
+                      let email = entity.email,
+                      let joinDate = entity.joinDate else {
+                    return nil
+                }
+                
+                let interests: [Interest] = entity.interests?.allObjects.compactMap { interestEntity in
+                    guard let interestEntity = interestEntity as? InterestEntity else { return nil }
+                    return Interest(from: interestEntity)
+                } ?? []
+                
+                let joinedClubs: [Club] = entity.joinedClubs?.allObjects.compactMap { clubEntity in
+                    guard let clubEntity = clubEntity as? UserClubEntity else { return nil }
+                    return Club(from: clubEntity)
+                } ?? []
+                
+                let createdClubs: [Club] = entity.createdClubs?.allObjects.compactMap { clubEntity in
+                    guard let clubEntity = clubEntity as? UserClubEntity else { return nil }
+                    return Club(from: clubEntity)
+                } ?? []
+                
+                return User(
+                    id: id,
+                    name: name,
+                    nickname: nickname,
+                    email: email,
+                    bio: entity.bio,
+                    avatarURL: entity.avatarURL,
+                    interests: interests,
+                    joinedClubs: joinedClubs,
+                    createdClubs: createdClubs,
+                    location: entity.location,
+                    joinDate: joinDate
+                )
+            }
+        } catch {
+            print("Ошибка получения всех пользователей: \(error)")
+            return []
+        }
     }
 }

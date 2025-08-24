@@ -10,8 +10,10 @@ import CoreData
 
 struct UserProfileScreen: View {
     @StateObject private var viewModel: UserProfileViewModel
+    private let user: User
 
     init(user: User) {
+        self.user = user
         _viewModel = StateObject(wrappedValue: UserProfileViewModel())
     }
 
@@ -118,6 +120,9 @@ struct UserProfileScreen: View {
             }
             .navigationTitle("Профиль")
             .navigationBarTitleDisplayMode(.large)
+            .task {
+                await viewModel.loadProfile(userId: user.id)
+            }
             .sheet(isPresented: $viewModel.showingAddInterest) {
                 AddInterestScreen(
                     newInterestName: $viewModel.newInterestName,
@@ -133,7 +138,17 @@ struct UserProfileScreen: View {
                     }
                 )
             }
+            .alert("Ошибка", isPresented: .constant(viewModel.errorMessage != nil)) {
+                Button("OK") {
+                    viewModel.errorMessage = nil
+                }
+            } message: {
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                }
+            }
         }
+        .withDataLayer()
     }
 }
 

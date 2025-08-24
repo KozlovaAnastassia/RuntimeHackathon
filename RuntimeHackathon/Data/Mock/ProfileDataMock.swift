@@ -9,6 +9,7 @@ struct ProfileDataMock {
         let createdClubs: [Club] = []
         
         return User(
+            id: UUID(uuidString: "12345678-1234-1234-1234-123456789012") ?? UUID(),
             name: "Анна Петрова",
             nickname: "anna_dev",
             email: "anna.petrova@example.com",

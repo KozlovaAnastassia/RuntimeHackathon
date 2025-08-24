@@ -37,23 +37,31 @@ class UserProfileViewModel: ObservableObject {
     }
     
     func loadProfile(userId: UUID) async {
+        print("DEBUG: Начинаем загрузку профиля для пользователя \(userId)")
         isLoading = true
         errorMessage = nil
         
         do {
             user = try await repository.getUser(by: userId)
+            print("DEBUG: Получен пользователь: \(user?.name ?? "nil")")
             if let user = user {
                 editedName = user.name
                 editedNickname = user.nickname
                 editedLocation = user.location ?? ""
                 editedBio = user.bio ?? ""
                 editedInterests = user.interests
+                print("DEBUG: Профиль загружен успешно")
+            } else {
+                print("DEBUG: Пользователь не найден")
+                errorMessage = "Пользователь не найден"
             }
         } catch {
+            print("DEBUG: Ошибка загрузки профиля: \(error)")
             errorMessage = error.localizedDescription
         }
         
         isLoading = false
+        print("DEBUG: Загрузка профиля завершена")
     }
 
     func saveProfileSection() async {

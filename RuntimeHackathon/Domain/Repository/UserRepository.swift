@@ -11,8 +11,11 @@ class UserRepository: UserRepositoryProtocol {
     
     // MARK: - Получение пользователя
     func getUser(by id: UUID) async throws -> User? {
+        print("DEBUG: UserRepository.getUser(by: \(id))")
+        
         // Сначала проверяем локальную базу
         if let localUser = database.getUser(by: id) {
+            print("DEBUG: Пользователь найден в локальной базе: \(localUser.name)")
             // Асинхронно обновляем данные из API
             Task {
                 do {
@@ -25,13 +28,19 @@ class UserRepository: UserRepositoryProtocol {
             return localUser
         }
         
+        print("DEBUG: Пользователь не найден в локальной базе, получаем из API")
+        
         // Если нет в локальной базе, получаем из API
         do {
             let apiUser = try await apiService.getUser(by: id)
+            print("DEBUG: Получен пользователь из API: \(apiUser.name)")
             database.saveUser(apiUser)
             return apiUser
         } catch {
-            return nil
+            print("Ошибка получения пользователя из API: \(error)")
+            // Возвращаем моковые данные как fallback
+            print("DEBUG: Возвращаем моковые данные как fallback")
+            return ProfileDataMock.sampleUser
         }
     }
     

@@ -97,46 +97,65 @@ class UserApiService {
     
     // MARK: - Получение профиля пользователя
     func getProfile() async throws -> User {
-        let response: UserApiResponse = try await apiClient.get("/user/profile")
-        return response.data.toUser()
+        // Моковая реализация - возвращаем данные из ProfileDataMock
+        return ProfileDataMock.sampleUser
     }
     
     // MARK: - Обновление профиля
     func updateProfile(_ request: UpdateProfileRequest) async throws -> User {
-        let response: UserApiResponse = try await apiClient.put("/user/profile", body: request)
-        return response.data.toUser()
+        // Моковая реализация - возвращаем обновленные данные
+        var user = ProfileDataMock.sampleUser
+        if let name = request.name {
+            user.name = name
+        }
+        if let nickname = request.nickname {
+            user.nickname = nickname
+        }
+        if let bio = request.bio {
+            user.bio = bio
+        }
+        if let location = request.location {
+            user.location = location
+        }
+        return user
     }
     
     // MARK: - Добавление интереса
     func addInterest(_ request: AddInterestRequest) async throws -> User {
-        let response: UserApiResponse = try await apiClient.post("/user/interests", body: request)
-        return response.data.toUser()
+        // Моковая реализация - добавляем интерес к пользователю
+        var user = ProfileDataMock.sampleUser
+        let newInterest = Interest(
+            name: request.name,
+            category: InterestCategory(name: request.categoryName, emoji: "📚", displayName: request.categoryName)
+        )
+        user.interests.append(newInterest)
+        return user
     }
     
     // MARK: - Удаление интереса
     func removeInterest(_ interestId: UUID) async throws -> User {
-        let request = RemoveInterestRequest(interestId: interestId.uuidString)
-        _ = try await apiClient.delete("/user/interests/\(interestId.uuidString)")
-        // После удаления получаем обновленный профиль
-        return try await getProfile()
+        // Моковая реализация - удаляем интерес из пользователя
+        var user = ProfileDataMock.sampleUser
+        user.interests.removeAll { $0.id == interestId }
+        return user
     }
     
     // MARK: - Получение интересов пользователя
     func getUserInterests() async throws -> [Interest] {
-        let response: UserApiResponse = try await apiClient.get("/user/interests")
-        return response.data.interests.map { $0.toInterest() }
+        // Моковая реализация - возвращаем интересы из ProfileDataMock
+        return ProfileDataMock.sampleUser.interests
     }
     
     // MARK: - Получение клубов пользователя
     func getUserClubs() async throws -> [Club] {
-        let response: UserApiResponse = try await apiClient.get("/user/clubs")
-        return response.data.joinedClubs.map { $0.toClub() }
+        // Моковая реализация - возвращаем клубы из ProfileDataMock
+        return ProfileDataMock.sampleUser.joinedClubs
     }
     
     // MARK: - Получение созданных клубов
     func getCreatedClubs() async throws -> [Club] {
-        let response: UserApiResponse = try await apiClient.get("/user/clubs/created")
-        return response.data.createdClubs.map { $0.toClub() }
+        // Моковая реализация - возвращаем созданные клубы из ProfileDataMock
+        return ProfileDataMock.sampleUser.createdClubs
     }
     
     // MARK: - Загрузка аватара
@@ -148,15 +167,16 @@ class UserApiService {
     
     // MARK: - Получение пользователя по ID
     func getUser(by id: UUID) async throws -> User {
-        let response: UserApiResponse = try await apiClient.get("/users/\(id.uuidString)")
-        return response.data.toUser()
+        // Моковая реализация - возвращаем данные из ProfileDataMock
+        var user = ProfileDataMock.sampleUser
+        user.id = id // Используем переданный ID
+        return user
     }
     
     // MARK: - Поиск пользователей
     func searchUsers(query: String) async throws -> [User] {
-        let parameters = ["q": query]
-        let response: UsersApiResponse = try await apiClient.get("/users/search", parameters: parameters)
-        return response.data.map { $0.toUser() }
+        // Моковая реализация - возвращаем пустой массив
+        return []
     }
 }
 

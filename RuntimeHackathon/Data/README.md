@@ -583,7 +583,3 @@ class NewsRepository: NewsRepositoryProtocol {
 
 ### Шаг 5: Добавить модификатор
 Добавить `.withDataLayer()` к корневому View.
-
-## Примеры использования
-
-См. файл `UpdatedViewModelsExamples.swift` для подробных примеров использования всех обновленных ViewModels и сервисов.
