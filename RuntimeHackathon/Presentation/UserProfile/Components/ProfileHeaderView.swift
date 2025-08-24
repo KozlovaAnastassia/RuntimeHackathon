@@ -196,7 +196,7 @@ struct ProfileHeaderView: View {
 
 #Preview {
     ProfileHeaderView(
-        user: sampleUser,
+        user: UserMock.sampleUser,
         isEditing: false,
         onEdit: {},
         onSave: {},

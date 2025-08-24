@@ -38,5 +38,5 @@ struct ImageCarouselView: View {
 }
 
 #Preview {
-    ImageCarouselView(images: [])
+    ImageCarouselView(images: ImageCarouselMock.sampleImages)
 }

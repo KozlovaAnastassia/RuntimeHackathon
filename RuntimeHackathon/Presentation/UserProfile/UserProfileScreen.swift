@@ -121,5 +121,5 @@ struct UserProfileScreen: View {
 }
 
 #Preview {
-    UserProfileScreen(user: sampleUser)
+    UserProfileScreen(user: UserMock.sampleUser)
 }

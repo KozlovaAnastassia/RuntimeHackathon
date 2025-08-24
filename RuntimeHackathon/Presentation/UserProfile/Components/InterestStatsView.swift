@@ -49,5 +49,5 @@ struct StatItem: View {
 }
 
 #Preview {
-    InterestStatsView(user: sampleUser)
+    InterestStatsView(user: UserMock.sampleUser)
 }
