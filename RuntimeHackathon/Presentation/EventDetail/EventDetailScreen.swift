@@ -238,36 +238,6 @@ struct EventDetailScreen: View {
     }
 }
 
-// MARK: - Supporting Views
-
-struct InfoRow: View {
-    let icon: String
-    let iconColor: Color
-    let title: String
-    let value: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .foregroundColor(iconColor)
-                .frame(width: 20)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.secondary)
-                
-                Text(value)
-                    .font(.body)
-                    .foregroundColor(.primary)
-            }
-            
-            Spacer()
-        }
-    }
-}
-
 #Preview {
     EventDetailScreen(
         event: CalendarEvent(

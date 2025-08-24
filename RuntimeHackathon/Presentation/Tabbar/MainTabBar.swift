@@ -62,7 +62,4 @@ struct MainTabBar: View {
 }
 
 
-// Заглушки для экранов
-//struct ClubsListView: View { var body: some View { Text("Список клубов") } }
-struct ClubInfoView: View { var body: some View { Text("Инфо о клубе") } }
-struct ProfileView: View { var body: some View { Text("Профиль") } }
+

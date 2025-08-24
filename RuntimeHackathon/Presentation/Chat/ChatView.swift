@@ -126,42 +126,4 @@ struct ChatView: View {
   }
 }
 
-struct MessageView: View {
-  let message: Message
 
-  init(viewModel: ChatViewModel, message: Message) {
-    self.viewModel = viewModel
-    self.message = message
-  }
-
-  var body: some View {
-    HStack {
-      if message.isCurrentUser {
-        Spacer()
-      }
-
-      VStack(alignment: message.isCurrentUser ? .trailing : .leading, spacing: 4) {
-        Text(message.userName)
-          .font(.caption)
-          .foregroundColor(.secondary)
-
-        Text(message.text)
-          .padding(.horizontal, 12)
-          .padding(.vertical, 8)
-          .background(message.isCurrentUser ? Color.blue : Color(.systemGray6))
-          .foregroundColor(message.isCurrentUser ? .white : .primary)
-          .cornerRadius(16)
-
-        Text(viewModel.formatTime(message.timestamp))
-          .font(.caption2)
-          .foregroundColor(.secondary)
-      }
-
-      if !message.isCurrentUser {
-        Spacer()
-      }
-    }
-  }
-
-  @ObservedObject private var viewModel: ChatViewModel
-}
