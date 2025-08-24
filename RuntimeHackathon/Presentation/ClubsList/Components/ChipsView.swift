@@ -81,3 +81,10 @@ struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: H
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+#Preview {
+    ChipsView(
+        items: ["Программирование", "Спорт", "Музыка", "Искусство", "Технологии"],
+        selectedItems: .constant(["Программирование", "Спорт"])
+    )
+}

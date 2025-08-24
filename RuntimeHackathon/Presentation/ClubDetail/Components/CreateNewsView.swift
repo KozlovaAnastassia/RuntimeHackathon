@@ -114,3 +114,7 @@ struct CreateNewsView: View {
         presentationMode.wrappedValue.dismiss()
     }
 }
+
+#Preview {
+    CreateNewsView(clubViewModel: ClubViewModel(clubId: UUID(), isCreator: true))
+}

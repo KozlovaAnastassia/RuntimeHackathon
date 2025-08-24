@@ -65,3 +65,13 @@ struct ClubHeaderSection: View {
         }
     }
 }
+
+#Preview {
+    ClubHeaderSection(club: Club(
+        id: UUID(),
+        name: "Тестовый клуб",
+        imageName: "sportscourt",
+        isJoined: true,
+        isCreator: true
+    ))
+}

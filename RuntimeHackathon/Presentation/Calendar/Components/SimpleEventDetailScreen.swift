@@ -100,3 +100,16 @@ struct SimpleEventDetailScreen: View {
         }
     }
 }
+
+#Preview {
+    SimpleEventDetailScreen(
+        event: CalendarEvent(
+            id: UUID(),
+            title: "Тестовое событие",
+            date: Date(),
+            location: "Тестовое место",
+            description: "Описание тестового события",
+            color: .blue
+        )
+    )
+}

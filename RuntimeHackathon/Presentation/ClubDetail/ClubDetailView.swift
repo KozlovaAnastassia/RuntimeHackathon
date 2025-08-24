@@ -83,3 +83,13 @@ struct ClubDetailView: View {
         }
     }
 }
+
+#Preview {
+    ClubDetailView(club: Club(
+        id: UUID(),
+        name: "Тестовый клуб",
+        imageName: "sportscourt",
+        isJoined: true,
+        isCreator: true
+    ))
+}

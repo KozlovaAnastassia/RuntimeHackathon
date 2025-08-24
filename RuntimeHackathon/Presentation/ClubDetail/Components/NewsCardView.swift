@@ -96,3 +96,20 @@ struct NewsCardView: View {
         return formatter.string(from: date)
     }
 }
+
+#Preview {
+    NewsCardView(
+        item: NewsFeedItem(
+            id: "1",
+            title: "Тестовая новость",
+            description: "Описание тестовой новости",
+            imagesData: [],
+            date: Date(),
+            publicationDate: Date(),
+            type: .news,
+            newsId: UUID()
+        ),
+        isCreator: true,
+        onDelete: {}
+    )
+}

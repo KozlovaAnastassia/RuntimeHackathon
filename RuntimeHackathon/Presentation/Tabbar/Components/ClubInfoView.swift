@@ -12,3 +12,7 @@ struct ClubInfoView: View {
         Text("Инфо о клубе")
     }
 }
+
+#Preview {
+    ClubInfoView()
+}

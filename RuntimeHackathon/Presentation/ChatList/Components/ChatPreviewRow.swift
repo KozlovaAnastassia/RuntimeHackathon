@@ -84,3 +84,18 @@ struct ChatPreviewRow: View {
         .padding(.vertical, 8)
     }
 }
+
+#Preview {
+    ChatPreviewRow(
+        chat: ChatInfo(
+            chatId: "test-chat-id",
+            title: "Тестовый чат",
+            unreadCount: 2,
+            membersCount: 5,
+            isOnline: true,
+            avatarColor: "blue",
+            messages: []
+        ),
+        viewModel: ChatListViewModel(chats: [])
+    )
+}

@@ -34,3 +34,12 @@ struct TabBarButton: View {
         }
     }
 }
+
+#Preview {
+    TabBarButton(
+        index: 0,
+        systemImage: "list.bullet.circle",
+        textKey: "Клубы",
+        selectedTab: .constant(0)
+    )
+}

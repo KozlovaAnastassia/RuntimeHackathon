@@ -63,3 +63,7 @@ struct ClubsListView: View {
         viewModel.clubs.sorted { $0.isJoined && !$1.isJoined }
     }
 }
+
+#Preview {
+    ClubsListView(viewModel: ClubsListViewModel())
+}

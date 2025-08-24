@@ -22,3 +22,11 @@ struct CalendarSection: View {
         }
     }
 }
+
+#Preview {
+    CalendarSection(
+        clubEvents: [],
+        reloadTrigger: UUID()
+    )
+    .environmentObject(ClubEventsService.shared)
+}

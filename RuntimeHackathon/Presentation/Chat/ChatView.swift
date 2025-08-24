@@ -126,4 +126,8 @@ struct ChatView: View {
   }
 }
 
+#Preview {
+    ChatView(viewModel: ChatViewModel(chatId: "test-chat-id"))
+}
+
 

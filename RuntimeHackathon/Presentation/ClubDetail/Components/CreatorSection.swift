@@ -46,3 +46,10 @@ struct CreatorSection: View {
         }
     }
 }
+
+#Preview {
+    CreatorSection(
+        showingCreateEvent: .constant(false),
+        showingCreateNews: .constant(false)
+    )
+}

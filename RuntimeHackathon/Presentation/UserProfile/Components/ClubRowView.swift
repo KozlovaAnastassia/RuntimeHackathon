@@ -44,3 +44,10 @@ struct ClubRowView: View {
         .padding(.vertical, 6)
     }
 }
+
+#Preview {
+    ClubRowView(
+        club: Club(id: UUID(), name: "Тестовый клуб", imageName: "star", isJoined: true, isCreator: false),
+        isCreator: false
+    )
+}

@@ -104,3 +104,17 @@ struct ClubRow: View {
         .animation(.spring(), value: club.isJoined)
     }
 }
+
+#Preview {
+    ClubRow(
+        club: Club(
+            id: UUID(),
+            name: "Тестовый клуб",
+            imageName: "sportscourt",
+            isJoined: true,
+            isCreator: false
+        ),
+        onJoin: {},
+        onLeave: {}
+    )
+}

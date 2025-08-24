@@ -209,3 +209,13 @@ struct ProfileHeaderView: View {
         return animals[Int(index) % animals.count]
     }
 }
+
+#Preview {
+    ProfileHeaderView(
+        user: sampleUser,
+        isEditing: false,
+        onEdit: {},
+        onSave: {},
+        onCancel: {}
+    )
+}

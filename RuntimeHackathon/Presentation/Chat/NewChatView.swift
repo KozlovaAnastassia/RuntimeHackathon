@@ -38,3 +38,7 @@ struct NewChatView: View {
         }
     }
 }
+
+#Preview {
+    NewChatView()
+}

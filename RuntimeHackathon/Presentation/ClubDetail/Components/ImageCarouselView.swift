@@ -36,3 +36,7 @@ struct ImageCarouselView: View {
         }
     }
 }
+
+#Preview {
+    ImageCarouselView(images: [])
+}

@@ -141,3 +141,7 @@ struct AddClubView: View {
         .padding(.horizontal)
     }
 }
+
+#Preview {
+    AddClubView(viewModel: ClubsListViewModel())
+}

@@ -127,4 +127,8 @@ struct ChatListView: View {
     }
 }
 
+#Preview {
+    ChatListView(viewModel: ChatListViewModel(chats: []))
+}
+
 

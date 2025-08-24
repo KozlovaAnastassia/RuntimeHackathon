@@ -109,3 +109,13 @@ struct NewsFeedSection: View {
         }
     }
 }
+
+#Preview {
+    NewsFeedSection(
+        events: [],
+        newsItems: [],
+        isCreator: true,
+        dateFilter: .all,
+        onDeleteNews: { _ in }
+    )
+}

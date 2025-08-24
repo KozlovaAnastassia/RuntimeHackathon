@@ -63,3 +63,9 @@ struct ClubRowViewFull: View {
         // return club.membersCount
     }
 }
+
+#Preview {
+    ClubRowViewFull(
+        club: Club(id: UUID(), name: "Тестовый клуб", imageName: "star", isJoined: true, isCreator: true)
+    )
+}

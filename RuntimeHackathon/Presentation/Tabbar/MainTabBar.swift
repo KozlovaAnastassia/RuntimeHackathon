@@ -61,5 +61,9 @@ struct MainTabBar: View {
     }
 }
 
+#Preview {
+    MainTabBar()
+}
+
 
 

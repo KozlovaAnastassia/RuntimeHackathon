@@ -47,3 +47,7 @@ struct StatItem: View {
         .frame(maxWidth: .infinity)
     }
 }
+
+#Preview {
+    InterestStatsView(user: sampleUser)
+}

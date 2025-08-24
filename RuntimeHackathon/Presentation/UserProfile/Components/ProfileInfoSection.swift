@@ -71,3 +71,14 @@ struct ProfileInfoSection: View {
         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
+
+#Preview {
+    ProfileInfoSection(
+        bio: "Люблю программирование и новые технологии",
+        isEditing: false,
+        onEdit: {},
+        onSave: {},
+        onCancel: {},
+        editedBio: .constant("Люблю программирование и новые технологии")
+    )
+}

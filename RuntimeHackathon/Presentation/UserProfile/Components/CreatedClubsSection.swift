@@ -37,3 +37,9 @@ struct CreatedClubsSection: View {
         )
     }
 }
+
+#Preview {
+    CreatedClubsSection(clubs: [
+        Club(id: UUID(), name: "Мой клуб", imageName: "star", isJoined: true, isCreator: true)
+    ])
+}

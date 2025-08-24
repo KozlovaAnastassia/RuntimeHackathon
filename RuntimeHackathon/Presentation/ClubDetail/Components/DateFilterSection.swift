@@ -58,3 +58,7 @@ struct DateFilterSection: View {
         }
     }
 }
+
+#Preview {
+    DateFilterSection(selectedFilter: .constant(.all))
+}

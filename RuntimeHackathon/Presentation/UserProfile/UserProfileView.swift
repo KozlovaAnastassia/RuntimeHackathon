@@ -119,3 +119,7 @@ struct UserProfileView: View {
         }
     }
 }
+
+#Preview {
+    UserProfileView(user: sampleUser)
+}

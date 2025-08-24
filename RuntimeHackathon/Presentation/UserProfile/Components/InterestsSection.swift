@@ -110,3 +110,18 @@ struct InterestsSection: View {
         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
+
+#Preview {
+    InterestsSection(
+        interests: [
+            Interest(id: UUID(), name: "Swift", category: .tech),
+            Interest(id: UUID(), name: "Футбол", category: .sport)
+        ],
+        isEditing: false,
+        onEdit: {},
+        onAddInterest: {},
+        onRemoveInterest: { _ in },
+        onSave: {},
+        onCancel: {}
+    )
+}

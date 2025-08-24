@@ -60,3 +60,10 @@ struct CreateEventView: View {
         presentationMode.wrappedValue.dismiss()
     }
 }
+
+#Preview {
+    CreateEventView(
+        clubViewModel: ClubViewModel(clubId: UUID(), isCreator: true),
+        onEventCreated: {}
+    )
+}

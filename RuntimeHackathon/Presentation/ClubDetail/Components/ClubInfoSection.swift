@@ -33,3 +33,7 @@ struct ClubInfoSection: View {
         .cornerRadius(12)
     }
 }
+
+#Preview {
+    ClubInfoSection()
+}

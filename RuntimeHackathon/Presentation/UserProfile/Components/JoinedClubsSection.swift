@@ -37,3 +37,10 @@ struct JoinedClubsSection: View {
         )
     }
 }
+
+#Preview {
+    JoinedClubsSection(clubs: [
+        Club(id: UUID(), name: "Клуб программистов", imageName: "laptopcomputer", isJoined: true, isCreator: false),
+        Club(id: UUID(), name: "Клуб фотографов", imageName: "camera", isJoined: true, isCreator: false)
+    ])
+}

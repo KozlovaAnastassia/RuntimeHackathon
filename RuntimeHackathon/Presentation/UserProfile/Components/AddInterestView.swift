@@ -98,3 +98,12 @@ struct AddInterestView: View {
         }
     }
 }
+
+#Preview {
+    AddInterestView(
+        newInterestName: .constant(""),
+        selectedCategory: .constant(.book),
+        onAdd: {},
+        onCancel: {}
+    )
+}

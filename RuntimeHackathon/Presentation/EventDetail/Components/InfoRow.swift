@@ -34,3 +34,12 @@ struct InfoRow: View {
         }
     }
 }
+
+#Preview {
+    InfoRow(
+        icon: "location.fill",
+        iconColor: .blue,
+        title: "Место проведения",
+        value: "Конференц-зал А, 3 этаж"
+    )
+}

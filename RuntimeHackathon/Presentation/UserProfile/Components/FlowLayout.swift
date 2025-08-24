@@ -79,3 +79,26 @@ struct FlowLayout: Layout {
         }
     }
 }
+
+#Preview {
+    FlowLayout(spacing: 8, lineSpacing: 8) {
+        Text("Тег 1")
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Color.blue.opacity(0.2))
+            .cornerRadius(12)
+        
+        Text("Тег 2")
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Color.green.opacity(0.2))
+            .cornerRadius(12)
+        
+        Text("Очень длинный тег")
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Color.orange.opacity(0.2))
+            .cornerRadius(12)
+    }
+    .padding()
+}
