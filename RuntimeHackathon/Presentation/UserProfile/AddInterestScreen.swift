@@ -28,14 +28,14 @@ struct AddInterestScreen: View {
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(InterestCategory.allCases, id: \.self) { category in
+                            ForEach(InterestCategoryMock.allCategories, id: \.id) { category in
                                 Button(action: {
                                     selectedCategory = category
                                 }) {
                                     VStack(spacing: 6) {
-                                        Text(category.rawValue)
+                                        Text(category.emoji)
                                             .font(.title2)
-                                        Text(getCategoryName(category))
+                                        Text(category.displayName)
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
@@ -43,7 +43,7 @@ struct AddInterestScreen: View {
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
                                             .fill(
-                                                selectedCategory == category ? Color.orange
+                                                selectedCategory.id == category.id ? Color.orange
                                                     .opacity(0.2) : Color.gray
                                                     .opacity(0.1)
                                             )
@@ -51,7 +51,7 @@ struct AddInterestScreen: View {
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 12)
                                             .stroke(
-                                                selectedCategory == category ? Color.orange : Color.clear,
+                                                selectedCategory.id == category.id ? Color.orange : Color.clear,
                                                 lineWidth: 2
                                             )
                                     )
@@ -86,23 +86,12 @@ struct AddInterestScreen: View {
             }
         }
     }
-
-    private func getCategoryName(_ category: InterestCategory) -> String {
-        switch category {
-        case .book: return "Книги"
-        case .sport: return "Спорт"
-        case .language: return "Языки"
-        case .art: return "Искусство"
-        case .tech: return "Технологии"
-        case .music: return "Музыка"
-        }
-    }
 }
 
 #Preview {
     AddInterestScreen(
         newInterestName: .constant(""),
-        selectedCategory: .constant(.book),
+        selectedCategory: .constant(InterestCategoryMock.book),
         onAdd: {},
         onCancel: {}
     )

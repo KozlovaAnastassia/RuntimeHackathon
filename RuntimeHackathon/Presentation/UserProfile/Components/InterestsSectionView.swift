@@ -63,7 +63,7 @@ struct InterestsSectionView: View {
                     // Существующие интересы
                     ForEach(interests, id: \.id) { interest in
                         HStack(spacing: 4) {
-                            Text(interest.category.rawValue)
+                            Text(interest.category.emoji)
                             Text(interest.name)
                                 .lineLimit(1)
 

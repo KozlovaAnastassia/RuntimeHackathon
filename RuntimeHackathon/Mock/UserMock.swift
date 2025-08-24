@@ -19,9 +19,9 @@ struct UserMock {
             bio: "Люблю читать книги и изучать новые языки...",
             avatarURL: nil,
             interests: [
-                Interest(name: "Научная фантастика", category: .book),
-                Interest(name: "Английский язык", category: .language),
-                Interest(name: "Йога", category: .sport)
+                Interest(name: "Научная фантастика", category: InterestCategoryMock.book),
+                Interest(name: "Английский язык", category: InterestCategoryMock.language),
+                Interest(name: "Йога", category: InterestCategoryMock.sport)
             ],
             joinedClubs: joinedClubs,
             createdClubs: createdClubs,

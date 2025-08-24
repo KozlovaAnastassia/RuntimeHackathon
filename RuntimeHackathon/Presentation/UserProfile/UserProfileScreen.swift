@@ -112,7 +112,7 @@ struct UserProfileScreen: View {
                     },
                     onCancel: {
                         viewModel.newInterestName = ""
-                        viewModel.selectedInterestCategory = .book
+                        viewModel.selectedInterestCategory = InterestCategoryMock.book
                     }
                 )
             }
