@@ -138,7 +138,8 @@ struct ChatDataMock {
     )
     
     // MARK: - ViewModel
-    static let sampleChatListViewModel = ChatListViewModel(chats: [])
+    // Удаляем для избежания циклических зависимостей
+    // static let sampleChatListViewModel = ChatListViewModel(repository: DataLayerIntegration.shared.chatRepository)
     
     // MARK: - Сообщения для ChatSummary
     static let summaryMessages: [ChatMessage] = [

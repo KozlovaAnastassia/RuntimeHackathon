@@ -144,4 +144,5 @@ struct DayEventView: View {
         viewModel: CalendarViewModel(),
         onEventTap: { _ in }
     )
+    .withDataLayer()
 }

@@ -1,156 +1,140 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 class ClubEventsService: ObservableObject {
     static let shared = ClubEventsService()
     
     @Published var allClubEvents: [ClubEvent] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
     
-    private init() {
-        loadAllEvents()
-        // Откладываем создание тестовых событий, чтобы избежать обновлений во время инициализации
-        DispatchQueue.main.async {
-            self.createSampleEventsIfNeeded()
-        }
+    private let calendarRepository: CalendarRepository
+    
+    private init(calendarRepository: CalendarRepository = DataLayerIntegration.shared.calendarRepository) {
+        self.calendarRepository = calendarRepository
     }
     
     // Загружает все события из всех клубов
-    func loadAllEvents() {
-        var allEvents: [ClubEvent] = []
+    func loadAllEvents() async {
+        isLoading = true
+        errorMessage = nil
         
-        // Получаем список всех клубов
-        let clubs = ClubsListViewModel().clubs
-        print("DEBUG: Найдено \(clubs.count) клубов для загрузки событий")
-        
-        // Загружаем события для каждого клуба
-        for club in clubs {
-            let key = "ClubEvents_\(club.id.uuidString)"
-            print("DEBUG: Проверяем ключ: \(key) для клуба \(club.name)")
+        do {
+            // Получаем все события из календарного репозитория
+            let calendarEvents = try await calendarRepository.getAllEvents()
             
-            if let data = UserDefaults.standard.data(forKey: key) {
-                print("DEBUG: Найдены данные в UserDefaults для клуба \(club.name)")
-                if let decoded = try? JSONDecoder().decode([ClubEvent].self, from: data) {
-                    allEvents.append(contentsOf: decoded)
-                    print("DEBUG: Загружено \(decoded.count) событий для клуба \(club.name)")
-                } else {
-                    print("DEBUG: ОШИБКА декодирования данных для клуба \(club.name)")
-                }
-            } else {
-                print("DEBUG: Нет данных в UserDefaults для клуба \(club.name)")
+            // Конвертируем CalendarEvent в ClubEvent
+            allClubEvents = calendarEvents.map { calendarEvent in
+                ClubEvent(
+                    title: calendarEvent.title,
+                    date: calendarEvent.date,
+                    location: calendarEvent.location,
+                    description: calendarEvent.description
+                )
             }
+            
+            print("DEBUG: Загружено \(allClubEvents.count) событий из репозитория")
+        } catch {
+            errorMessage = error.localizedDescription
+            print("DEBUG: Ошибка загрузки событий: \(error)")
         }
         
-        // Также проверим все ключи в UserDefaults, которые начинаются с "ClubEvents_"
-        let allKeys = UserDefaults.standard.dictionaryRepresentation().keys
-        let clubEventKeys = allKeys.filter { $0.hasPrefix("ClubEvents_") }
-        print("DEBUG: Найдено \(clubEventKeys.count) ключей ClubEvents_ в UserDefaults:")
-        for key in clubEventKeys {
-            print("DEBUG: Ключ: \(key)")
-        }
-        
-        print("DEBUG: Всего загружено \(allEvents.count) событий из всех клубов")
-        allClubEvents = allEvents
+        isLoading = false
     }
     
     // Добавляет новое событие в клуб и обновляет общий список
-    func addEvent(_ event: ClubEvent, to clubId: UUID) {
-        // Добавляем событие в клуб
-        let key = "ClubEvents_\(clubId.uuidString)"
-        var clubEvents = getEventsForClub(clubId)
-        clubEvents.append(event)
-        
-        if let encoded = try? JSONEncoder().encode(clubEvents) {
-            UserDefaults.standard.set(encoded, forKey: key)
-        }
-        
-        // Обновляем общий список асинхронно
-        DispatchQueue.main.async {
-            self.loadAllEvents()
+    func addEvent(_ event: ClubEvent, to clubId: UUID) async {
+        do {
+            // Создаем CalendarEvent для сохранения в репозитории
+            let calendarEvent = CalendarEvent(
+                id: event.id,
+                title: event.title,
+                date: event.date,
+                location: event.location,
+                description: event.description,
+                color: .blue,
+                clubName: await getClubName(for: clubId)
+            )
+            
+            try await calendarRepository.saveEvent(calendarEvent)
+            
+            // Обновляем общий список
+            await loadAllEvents()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
     
     // Получает события для конкретного клуба
-    func getEventsForClub(_ clubId: UUID) -> [ClubEvent] {
-        let key = "ClubEvents_\(clubId.uuidString)"
-        if let data = UserDefaults.standard.data(forKey: key),
-           let decoded = try? JSONDecoder().decode([ClubEvent].self, from: data) {
-            return decoded
+    func getEventsForClub(_ clubId: UUID) async -> [ClubEvent] {
+        do {
+            let clubName = await getClubName(for: clubId)
+            let calendarEvents = try await calendarRepository.getClubEvents(for: clubName)
+            
+            return calendarEvents.map { calendarEvent in
+                ClubEvent(
+                    title: calendarEvent.title,
+                    date: calendarEvent.date,
+                    location: calendarEvent.location,
+                    description: calendarEvent.description
+                )
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+            return []
         }
-        return []
     }
     
     // Удаляет событие из клуба
-    func removeEvent(_ event: ClubEvent, from clubId: UUID) {
-        let key = "ClubEvents_\(clubId.uuidString)"
-        var clubEvents = getEventsForClub(clubId)
-        clubEvents.removeAll { $0.id == event.id }
-        
-        if let encoded = try? JSONEncoder().encode(clubEvents) {
-            UserDefaults.standard.set(encoded, forKey: key)
+    func removeEvent(_ event: ClubEvent, from clubId: UUID) async {
+        do {
+            let calendarEvent = CalendarEvent(
+                id: event.id,
+                title: event.title,
+                date: event.date,
+                location: event.location,
+                description: event.description,
+                color: .blue,
+                clubName: await getClubName(for: clubId)
+            )
+            
+            try await calendarRepository.deleteEvent(calendarEvent)
+            
+            // Обновляем общий список
+            await loadAllEvents()
+        } catch {
+            errorMessage = error.localizedDescription
         }
-        
-        // Обновляем общий список асинхронно
-        DispatchQueue.main.async {
-            self.loadAllEvents()
+    }
+    
+    // Получает название клуба по ID
+    private func getClubName(for clubId: UUID) async -> String {
+        do {
+            if let club = try await DataLayerIntegration.shared.clubRepository.getClub(by: clubId) {
+                return club.name
+            }
+        } catch {
+            print("Ошибка получения названия клуба: \(error)")
         }
+        return "Неизвестный клуб"
     }
     
     // Получает все события в формате CalendarEvent для календаря
-    func getAllCalendarEvents() -> [CalendarEvent] {
-        print("DEBUG: getAllCalendarEvents() вызван, всего событий: \(allClubEvents.count)")
-        
-        let calendarEvents = allClubEvents.enumerated().map { index, clubEvent in
-            let colorKeys = Array(CalendarDataMock.calendarColors.keys)
-            let colorKey = colorKeys[index % colorKeys.count]
-            let color = CalendarDataMock.calendarColors[colorKey] ?? .blue
-            // Извлекаем название клуба из заголовка события
-            let clubName = extractClubName(from: clubEvent.title)
-            print("DEBUG: Преобразуем событие: \(clubEvent.title) -> CalendarEvent")
-            return CalendarEvent(from: clubEvent, color: color, clubName: clubName)
+    func getAllCalendarEvents() async -> [CalendarEvent] {
+        do {
+            let calendarEvents = try await calendarRepository.getAllEvents()
+            print("DEBUG: getAllCalendarEvents() вызван, всего событий: \(calendarEvents.count)")
+            return calendarEvents
+        } catch {
+            errorMessage = error.localizedDescription
+            print("DEBUG: Ошибка получения событий для календаря: \(error)")
+            return []
         }
-        
-        print("DEBUG: Возвращаем \(calendarEvents.count) событий для календаря")
-        return calendarEvents
-    }
-    
-    // Извлекает название клуба из заголовка события
-    private func extractClubName(from title: String) -> String? {
-        // Ищем паттерн "в [Название клуба]"
-        if let range = title.range(of: "в ", options: .caseInsensitive) {
-            let clubNameStart = title.index(range.upperBound, offsetBy: 0)
-            let clubName = String(title[clubNameStart...])
-            print("DEBUG: Извлечено название клуба: \(clubName) из заголовка: \(title)")
-            return clubName
-        }
-        print("DEBUG: Не удалось извлечь название клуба из заголовка: \(title)")
-        return nil
     }
     
     // Обновляет события при изменении в клубе
-    func refreshEvents() {
-        DispatchQueue.main.async {
-            self.loadAllEvents()
-        }
-    }
-    
-    // Создает тестовые события, если их нет
-    private func createSampleEventsIfNeeded() {
-        let clubs = ClubsListViewModel().clubs
-        
-        for club in clubs {
-            let clubEvents = getEventsForClub(club.id)
-            if clubEvents.isEmpty {
-                // Создаем тестовые события для каждого клуба
-                let sampleEvents = createSampleEventsForClub(club)
-                for event in sampleEvents {
-                    addEvent(event, to: club.id)
-                }
-            }
-        }
-    }
-    
-    // Создает тестовые события для конкретного клуба
-    private func createSampleEventsForClub(_ club: Club) -> [ClubEvent] {
-        return CalendarDataMock.createSampleEventsForClub(club.id)
+    func refreshEvents() async {
+        await loadAllEvents()
     }
 }

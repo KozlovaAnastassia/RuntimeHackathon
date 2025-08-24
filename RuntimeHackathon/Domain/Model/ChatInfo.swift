@@ -49,7 +49,7 @@ class ChatInfo: Identifiable, Codable, Equatable, Hashable {
       membersCount: 5,
       isOnline: true,
       avatarColor: "blue",
-      messages: ChatDatabase.shared.messages
+      messages: []
     )
   }
 }

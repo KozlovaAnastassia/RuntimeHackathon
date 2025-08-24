@@ -7,35 +7,66 @@ class CalendarViewModel: ObservableObject {
     @Published var events: [CalendarEvent] = []
     @Published var calendarDays: [CalendarDay] = []
     @Published var weekDays: [CalendarDay] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
     
     private let calendar = Calendar.current
+    private let repository: CalendarRepository
     
-    init() {
-        generateSampleEvents()
+    init(repository: CalendarRepository = DataLayerIntegration.shared.calendarRepository) {
+        self.repository = repository
         updateCalendarDays()
         updateWeekDays()
     }
     
     // Инициализатор с внешними событиями
-    init(clubEvents: [ClubEvent]) {
+    init(clubEvents: [ClubEvent], repository: CalendarRepository = DataLayerIntegration.shared.calendarRepository) {
+        self.repository = repository
         self.events = CalendarEvent.fromClubEvents(clubEvents)
         updateCalendarDays()
         updateWeekDays()
     }
     
     // Инициализатор с событиями из сервиса
-    convenience init(withClubEvents: Bool = false) {
+    convenience init(withClubEvents: Bool = false, repository: CalendarRepository = DataLayerIntegration.shared.calendarRepository) {
         if withClubEvents {
             let clubEvents = ClubEventsService.shared.allClubEvents
-            self.init(clubEvents: clubEvents)
+            self.init(clubEvents: clubEvents, repository: repository)
         } else {
-            self.init()
+            self.init(repository: repository)
         }
     }
     
-    // Генерация тестовых событий
-    private func generateSampleEvents() {
-                    events = CalendarDataMock.generateSampleEvents()
+    // Загрузка событий из репозитория
+    func loadEvents() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            events = try await repository.getAllEvents()
+            updateCalendarDays()
+            updateWeekDays()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
+    }
+    
+    // Загрузка событий для конкретной даты
+    func loadEvents(for date: Date) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            events = try await repository.getEvents(for: date)
+            updateCalendarDays()
+            updateWeekDays()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
     }
     
     // Обновление дней календаря
@@ -198,41 +229,80 @@ class CalendarViewModel: ObservableObject {
     }
     
     // Добавление нового события
-    func addEvent(_ event: CalendarEvent) {
-        events.append(event)
-        updateCalendarDays()
-        updateWeekDays()
+    func addEvent(_ event: CalendarEvent) async {
+        do {
+            try await repository.saveEvent(event)
+            events.append(event)
+            updateCalendarDays()
+            updateWeekDays()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
     
     // Удаление события
-    func removeEvent(_ event: CalendarEvent) {
-        events.removeAll { $0.id == event.id }
-        updateCalendarDays()
-        updateWeekDays()
+    func removeEvent(_ event: CalendarEvent) async {
+        do {
+            try await repository.deleteEvent(event)
+            events.removeAll { $0.id == event.id }
+            updateCalendarDays()
+            updateWeekDays()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
     
-    // Методы для загрузки разных типов моковых данных
-    func loadWeekendEvents() {
-                    events = CalendarDataMock.generateWeekendEvents()
-        updateCalendarDays()
-        updateWeekDays()
+    // Загрузка событий за неделю
+    func loadWeekEvents() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            events = try await repository.getWeekEvents()
+            updateCalendarDays()
+            updateWeekDays()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
     }
     
-    func loadWorkdayEvents() {
-                    events = CalendarDataMock.generateWorkdayEvents()
-        updateCalendarDays()
-        updateWeekDays()
+    // Загрузка предстоящих событий
+    func loadUpcomingEvents() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            events = try await repository.getUpcomingEvents(limit: 10)
+            updateCalendarDays()
+            updateWeekDays()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
     }
     
-    func loadEmptyEvents() {
-                    events = CalendarDataMock.generateEmptyEvents()
-        updateCalendarDays()
-        updateWeekDays()
+    // Поиск событий
+    func searchEvents(query: String) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            events = try await repository.searchEvents(query: query)
+            updateCalendarDays()
+            updateWeekDays()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
     }
     
     // Метод для обновления событий из ClubEvent
-    func updateEvents(from clubEvents: [ClubEvent]) {
-        events = ClubEventsService.shared.getAllCalendarEvents()
+    func updateEvents(from clubEvents: [ClubEvent]) async {
+        events = await ClubEventsService.shared.getAllCalendarEvents()
         print("DEBUG: CalendarViewModel обновлен, теперь содержит \(events.count) событий")
         updateCalendarDays()
         updateWeekDays()

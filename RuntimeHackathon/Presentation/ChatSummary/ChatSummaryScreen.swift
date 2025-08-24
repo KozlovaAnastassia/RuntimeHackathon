@@ -234,4 +234,5 @@ struct ChatSummaryScreen: View {
 
 #Preview {
     ChatSummaryScreen(messages: ChatDataMock.summaryMessages)
+        .withDataLayer()
 }

@@ -49,15 +49,17 @@ struct CreateEventScreen: View {
     }
     
     private func createEvent() {
-        clubViewModel.createEvent(
-            title: eventTitle,
-            date: eventDate,
-            location: eventLocation,
-            description: eventDescription
-        )
-        
-        onEventCreated()
-        presentationMode.wrappedValue.dismiss()
+        Task {
+            await clubViewModel.createEvent(
+                title: eventTitle,
+                date: eventDate,
+                location: eventLocation,
+                description: eventDescription
+            )
+            
+            onEventCreated()
+            presentationMode.wrappedValue.dismiss()
+        }
     }
 }
 
@@ -66,4 +68,5 @@ struct CreateEventScreen: View {
         clubViewModel: ClubViewModel(clubId: ClubDataMock.testClub.id, isCreator: true),
         onEventCreated: {}
     )
+    .withDataLayer()
 }

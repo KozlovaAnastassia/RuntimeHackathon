@@ -4,16 +4,12 @@ import Foundation
 struct ProfileDataMock {
     // MARK: - Пользователь
     static let sampleUser: User = {
-        // Создаем экземпляр ClubsListViewModel
-        let clubsViewModel = ClubsListViewModel()
-        
-        // Фильтруем клубы где пользователь участник
-        let joinedClubs = clubsViewModel.clubs.filter { $0.isJoined && !$0.isCreator }
-        
-        // Фильтруем клубы где пользователь создатель
-        let createdClubs = clubsViewModel.clubs.filter { $0.isCreator }
+        // Создаем пустые массивы для избежания циклических зависимостей
+        let joinedClubs: [Club] = []
+        let createdClubs: [Club] = []
         
         return User(
+            id: UUID(uuidString: "12345678-1234-1234-1234-123456789012") ?? UUID(),
             name: "Анна Петрова",
             nickname: "anna_dev",
             email: "anna.petrova@example.com",

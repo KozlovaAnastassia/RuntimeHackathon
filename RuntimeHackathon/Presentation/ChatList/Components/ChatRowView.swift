@@ -88,6 +88,7 @@ struct ChatRowView: View {
 #Preview {
     ChatRowView(
         chat: ChatDataMock.testChat,
-        viewModel: ChatDataMock.sampleChatListViewModel
+        viewModel: ChatListViewModel()
     )
+    .withDataLayer()
 }

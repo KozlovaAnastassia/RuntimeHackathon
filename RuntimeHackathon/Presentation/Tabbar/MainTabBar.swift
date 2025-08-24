@@ -23,7 +23,7 @@ struct MainTabBar: View {
                 CalendarScreen()
                     .environmentObject(clubEventsService)
             case 3:
-              ChatListScreen(viewModel: ChatListViewModel(chats: storage.clubs.filter({ $0.isJoined }).map{ $0.chat }))
+              ChatListScreen(viewModel: ChatListViewModel())
             case 4:
                 UserProfileScreen(user: ProfileDataMock.sampleUser)
             default:
@@ -63,6 +63,7 @@ struct MainTabBar: View {
 
 #Preview {
     MainTabBar()
+        .withDataLayer()
 }
 
 

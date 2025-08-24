@@ -28,13 +28,15 @@ struct CalendarScreen: View {
                 // Обновляем события из сервиса
                 .onReceive(clubEventsService.$allClubEvents) { updatedEvents in
                     print("DEBUG: CalendarView получил обновление событий: \(updatedEvents.count) событий")
-                    viewModel.updateEvents(from: clubEventsService.allClubEvents)
+                    Task {
+                        await viewModel.updateEvents(from: clubEventsService.allClubEvents)
+                    }
                 }
                 .onAppear {
                     // Загружаем события при появлении экрана
-                    DispatchQueue.main.async {
-                        clubEventsService.loadAllEvents()
-                        viewModel.updateEvents(from: clubEventsService.allClubEvents)
+                    Task {
+                        await clubEventsService.loadAllEvents()
+                        await viewModel.updateEvents(from: clubEventsService.allClubEvents)
                     }
                 }
                 
@@ -130,4 +132,5 @@ struct CalendarScreen: View {
 
 #Preview {
     CalendarScreen()
+        .withDataLayer()
 }

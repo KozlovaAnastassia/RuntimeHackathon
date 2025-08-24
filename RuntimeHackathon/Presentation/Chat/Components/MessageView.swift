@@ -51,4 +51,5 @@ struct MessageView: View {
         viewModel: ChatViewModel(chatId: "test-chat-id"),
         message: ChatDataMock.sampleMessage
     )
+    .withDataLayer()
 }

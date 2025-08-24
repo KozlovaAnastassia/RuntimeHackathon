@@ -191,4 +191,5 @@ struct DayMiniView: View {
         viewModel: CalendarViewModel(),
         onEventTap: { _ in }
     )
+    .withDataLayer()
 }

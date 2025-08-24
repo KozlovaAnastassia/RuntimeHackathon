@@ -48,7 +48,9 @@ struct ChatScreen: View {
       ChatSummaryScreen(messages: viewModel.messages)
     }
     .onAppear {
-      viewModel.loadMessages()
+      Task {
+        await viewModel.loadMessages()
+      }
     }
   }
 
@@ -104,8 +106,10 @@ struct ChatScreen: View {
         .lineLimit(3...6)
 
       Button(action: {
-        viewModel.sendMessage()
-        isTextFieldFocused = true
+        Task {
+          await viewModel.sendMessage()
+          isTextFieldFocused = true
+        }
       }) {
         Image(systemName: "paperplane.fill")
           .foregroundColor(.white)
@@ -128,6 +132,7 @@ struct ChatScreen: View {
 
 #Preview {
     ChatScreen(viewModel: ChatViewModel(chatId: "test-chat-id"))
+        .withDataLayer()
 }
 
 

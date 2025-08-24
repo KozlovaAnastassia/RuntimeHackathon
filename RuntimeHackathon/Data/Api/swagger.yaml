@@ -1,0 +1,1376 @@
+openapi: 3.0.3
+info:
+  title: RuntimeHackathon API
+  description: API для приложения клубов и сообществ
+  version: 1.0.0
+  contact:
+    name: RuntimeHackathon Team
+    email: support@runtimehackathon.com
+
+servers:
+  - url: https://api.runtimehackathon.com/v1
+    description: Production server
+  - url: https://staging-api.runtimehackathon.com/v1
+    description: Staging server
+
+paths:
+  # Клубы
+  /clubs:
+    get:
+      summary: Получить все клубы
+      description: Возвращает список всех доступных клубов
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Количество элементов на странице
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: category
+          in: query
+          description: Фильтр по категории
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubApiResponse'
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Ошибка сервера
+    
+    post:
+      summary: Создать новый клуб
+      description: Создает новый клуб
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClubRequest'
+      responses:
+        '201':
+          description: Клуб создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubApiResponse'
+        '400':
+          description: Неверные данные
+        '401':
+          description: Не авторизован
+        '403':
+          description: Доступ запрещен
+
+  /clubs/{clubId}:
+    get:
+      summary: Получить клуб по ID
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubApiResponse'
+        '404':
+          description: Клуб не найден
+    
+    put:
+      summary: Обновить клуб
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClubRequest'
+      responses:
+        '200':
+          description: Клуб обновлен
+        '401':
+          description: Не авторизован
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Клуб не найден
+    
+    delete:
+      summary: Удалить клуб
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Клуб удален
+        '401':
+          description: Не авторизован
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Клуб не найден
+
+  /clubs/{clubId}/join:
+    post:
+      summary: Присоединиться к клубу
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinClubRequest'
+      responses:
+        '200':
+          description: Успешно присоединились
+        '401':
+          description: Не авторизован
+        '404':
+          description: Клуб не найден
+
+  /clubs/{clubId}/leave:
+    post:
+      summary: Покинуть клуб
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешно покинули клуб
+        '401':
+          description: Не авторизован
+        '404':
+          description: Клуб не найден
+
+  /clubs/search:
+    get:
+      summary: Поиск клубов
+      parameters:
+        - name: q
+          in: query
+          description: Поисковый запрос
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Результаты поиска
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubApiResponse'
+
+  # Пользователи
+  /users/{userId}:
+    get:
+      summary: Получить пользователя по ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserApiResponse'
+        '404':
+          description: Пользователь не найден
+
+  /users/search:
+    get:
+      summary: Поиск пользователей
+      parameters:
+        - name: q
+          in: query
+          description: Поисковый запрос
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Результаты поиска
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersApiResponse'
+
+  /user/profile:
+    get:
+      summary: Получить профиль пользователя
+      responses:
+        '200':
+          description: Профиль пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserApiResponse'
+        '401':
+          description: Не авторизован
+    
+    put:
+      summary: Обновить профиль пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Профиль обновлен
+        '401':
+          description: Не авторизован
+        '400':
+          description: Неверные данные
+
+  /user/interests:
+    get:
+      summary: Получить интересы пользователя
+      responses:
+        '200':
+          description: Список интересов
+        '401':
+          description: Не авторизован
+    
+    post:
+      summary: Добавить интерес
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddInterestRequest'
+      responses:
+        '201':
+          description: Интерес добавлен
+        '401':
+          description: Не авторизован
+        '400':
+          description: Неверные данные
+
+  /user/interests/{interestId}:
+    delete:
+      summary: Удалить интерес
+      parameters:
+        - name: interestId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Интерес удален
+        '401':
+          description: Не авторизован
+        '404':
+          description: Интерес не найден
+
+  /user/clubs:
+    get:
+      summary: Получить клубы пользователя
+      responses:
+        '200':
+          description: Клубы пользователя
+        '401':
+          description: Не авторизован
+
+  /user/clubs/created:
+    get:
+      summary: Получить созданные клубы
+      responses:
+        '200':
+          description: Созданные клубы
+        '401':
+          description: Не авторизован
+
+  # События
+  /events:
+    get:
+      summary: Получить все события
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Количество элементов на странице
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Список событий
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarEventApiResponse'
+    
+    post:
+      summary: Создать событие
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventRequest'
+      responses:
+        '201':
+          description: Событие создано
+        '401':
+          description: Не авторизован
+        '400':
+          description: Неверные данные
+
+  /events/{eventId}:
+    get:
+      summary: Получить событие по ID
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Событие
+        '404':
+          description: Событие не найдено
+    
+    put:
+      summary: Обновить событие
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEventRequest'
+      responses:
+        '200':
+          description: Событие обновлено
+        '401':
+          description: Не авторизован
+        '404':
+          description: Событие не найдено
+    
+    delete:
+      summary: Удалить событие
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Событие удалено
+        '401':
+          description: Не авторизован
+        '404':
+          description: Событие не найдено
+
+  /events/date:
+    get:
+      summary: Получить события по дате
+      parameters:
+        - name: date
+          in: query
+          description: Дата в формате YYYY-MM-DD
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: События на указанную дату
+
+  /events/range:
+    get:
+      summary: Получить события по диапазону дат
+      parameters:
+        - name: start_date
+          in: query
+          description: Начальная дата
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: Конечная дата
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: События в диапазоне дат
+
+  /events/search:
+    get:
+      summary: Поиск событий
+      parameters:
+        - name: q
+          in: query
+          description: Поисковый запрос
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Результаты поиска
+
+  /events/upcoming:
+    get:
+      summary: Получить предстоящие события
+      parameters:
+        - name: limit
+          in: query
+          description: Количество событий
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Предстоящие события
+
+  # Новости
+  /news:
+    get:
+      summary: Получить все новости
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Количество элементов на странице
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Список новостей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsApiResponse'
+    
+    post:
+      summary: Создать новость
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewsRequest'
+      responses:
+        '201':
+          description: Новость создана
+        '401':
+          description: Не авторизован
+        '400':
+          description: Неверные данные
+
+  /news/search:
+    get:
+      summary: Поиск новостей
+      parameters:
+        - name: q
+          in: query
+          description: Поисковый запрос
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Результаты поиска
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsApiResponse'
+
+  /clubs/{clubId}/news:
+    get:
+      summary: Получить новости клуба
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Количество элементов на странице
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Новости клуба
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsApiResponse'
+        '404':
+          description: Клуб не найден
+    
+    post:
+      summary: Создать новость в клубе
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewsRequest'
+      responses:
+        '201':
+          description: Новость создана
+        '401':
+          description: Не авторизован
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Клуб не найден
+
+  /clubs/{clubId}/news/{newsId}:
+    get:
+      summary: Получить новость клуба по ID
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Новость
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsApiResponse'
+        '404':
+          description: Новость не найдена
+    
+    put:
+      summary: Обновить новость клуба
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNewsRequest'
+      responses:
+        '200':
+          description: Новость обновлена
+        '401':
+          description: Не авторизован
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Новость не найдена
+    
+    delete:
+      summary: Удалить новость клуба
+      parameters:
+        - name: clubId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Новость удалена
+        '401':
+          description: Не авторизован
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Новость не найдена
+
+  # Чаты
+  /chats:
+    get:
+      summary: Получить все чаты пользователя
+      responses:
+        '200':
+          description: Список чатов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatApiResponse'
+        '401':
+          description: Не авторизован
+    
+    post:
+      summary: Создать новый чат
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChatRequest'
+      responses:
+        '201':
+          description: Чат создан
+        '401':
+          description: Не авторизован
+        '400':
+          description: Неверные данные
+
+  /chats/{chatId}:
+    get:
+      summary: Получить чат по ID
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Чат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatApiResponse'
+        '404':
+          description: Чат не найден
+    
+    put:
+      summary: Обновить чат
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChatRequest'
+      responses:
+        '200':
+          description: Чат обновлен
+        '401':
+          description: Не авторизован
+        '404':
+          description: Чат не найден
+    
+    delete:
+      summary: Удалить чат
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Чат удален
+        '401':
+          description: Не авторизован
+        '404':
+          description: Чат не найден
+
+  /chats/search:
+    get:
+      summary: Поиск чатов
+      parameters:
+        - name: q
+          in: query
+          description: Поисковый запрос
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Результаты поиска
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatApiResponse'
+
+  /chats/{chatId}/messages:
+    get:
+      summary: Получить сообщения чата
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Количество сообщений
+          required: false
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Сообщения чата
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageApiResponse'
+        '404':
+          description: Чат не найден
+    
+    post:
+      summary: Отправить сообщение в чат
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '201':
+          description: Сообщение отправлено
+        '401':
+          description: Не авторизован
+        '404':
+          description: Чат не найден
+
+  /chats/{chatId}/read:
+    post:
+      summary: Отметить чат как прочитанный
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Чат отмечен как прочитанный
+        '401':
+          description: Не авторизован
+        '404':
+          description: Чат не найден
+
+components:
+  schemas:
+    ClubApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubApiModel'
+        message:
+          type: string
+          nullable: true
+
+    ClubApiModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        imageName:
+          type: string
+        isJoined:
+          type: boolean
+        localImagePath:
+          type: string
+          nullable: true
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        isCreator:
+          type: boolean
+        chat:
+          $ref: '#/components/schemas/ChatInfoApiModel'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ChatInfoApiModel:
+      type: object
+      properties:
+        chatId:
+          type: string
+        title:
+          type: string
+        unreadCount:
+          type: integer
+        membersCount:
+          type: integer
+        isOnline:
+          type: boolean
+        avatarColor:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageApiModel'
+
+    ChatMessageApiModel:
+      type: object
+      properties:
+        userId:
+          type: string
+        userName:
+          type: string
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        isCurrentUser:
+          type: boolean
+
+    CreateClubRequest:
+      type: object
+      required:
+        - name
+        - imageName
+      properties:
+        name:
+          type: string
+        imageName:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+
+    UpdateClubRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        imageName:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+
+    JoinClubRequest:
+      type: object
+      required:
+        - clubId
+      properties:
+        clubId:
+          type: string
+          format: uuid
+
+    UserApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/UserApiModel'
+        message:
+          type: string
+          nullable: true
+
+    UsersApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserApiModel'
+        message:
+          type: string
+          nullable: true
+
+    UserApiModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        nickname:
+          type: string
+        email:
+          type: string
+          format: email
+        bio:
+          type: string
+          nullable: true
+        avatarURL:
+          type: string
+          nullable: true
+        interests:
+          type: array
+          items:
+            $ref: '#/components/schemas/InterestApiModel'
+        joinedClubs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubApiModel'
+        createdClubs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubApiModel'
+        location:
+          type: string
+          nullable: true
+        joinDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    InterestApiModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          $ref: '#/components/schemas/InterestCategoryApiModel'
+
+    InterestCategoryApiModel:
+      type: object
+      properties:
+        name:
+          type: string
+        emoji:
+          type: string
+        displayName:
+          type: string
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        nickname:
+          type: string
+        bio:
+          type: string
+        location:
+          type: string
+        avatarURL:
+          type: string
+
+    AddInterestRequest:
+      type: object
+      required:
+        - name
+        - categoryName
+      properties:
+        name:
+          type: string
+        categoryName:
+          type: string
+
+    CalendarEventApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarEventApiModel'
+        message:
+          type: string
+          nullable: true
+
+    CalendarEventApiModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        location:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        colorHex:
+          type: string
+        clubName:
+          type: string
+          nullable: true
+
+    CreateEventRequest:
+      type: object
+      required:
+        - title
+        - date
+        - location
+        - description
+      properties:
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        location:
+          type: string
+        description:
+          type: string
+        colorHex:
+          type: string
+        clubName:
+          type: string
+
+    UpdateEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        location:
+          type: string
+        description:
+          type: string
+        colorHex:
+          type: string
+        clubName:
+          type: string
+
+    NewsApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewsApiModel'
+        message:
+          type: string
+          nullable: true
+
+    NewsApiModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        imagesData:
+          type: array
+          items:
+            type: string
+            format: byte
+        createdAt:
+          type: string
+          format: date-time
+        clubId:
+          type: string
+          format: uuid
+        authorId:
+          type: string
+          format: uuid
+
+    CreateNewsRequest:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        imagesData:
+          type: array
+          items:
+            type: string
+            format: byte
+        clubId:
+          type: string
+          format: uuid
+
+    UpdateNewsRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        imagesData:
+          type: array
+          items:
+            type: string
+            format: byte
+
+    ChatApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatApiModel'
+        message:
+          type: string
+          nullable: true
+
+    ChatApiModel:
+      type: object
+      properties:
+        chatId:
+          type: string
+        title:
+          type: string
+        unreadCount:
+          type: integer
+        membersCount:
+          type: integer
+        isOnline:
+          type: boolean
+        avatarColor:
+          type: string
+        lastMessage:
+          type: string
+          nullable: true
+        lastMessageTime:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ChatMessageApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageApiModel'
+        message:
+          type: string
+          nullable: true
+
+    CreateChatRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        membersCount:
+          type: integer
+          default: 1
+        avatarColor:
+          type: string
+          default: "blue"
+
+    UpdateChatRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        isOnline:
+          type: boolean
+        avatarColor:
+          type: string
+
+    SendMessageRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+        userId:
+          type: string
+        userName:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

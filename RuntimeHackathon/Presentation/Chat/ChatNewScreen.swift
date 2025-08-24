@@ -41,4 +41,5 @@ struct ChatNewScreen: View {
 
 #Preview {
     ChatNewScreen()
+        .withDataLayer()
 }

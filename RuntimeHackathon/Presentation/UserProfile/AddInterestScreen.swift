@@ -95,4 +95,5 @@ struct AddInterestScreen: View {
         onAdd: {},
         onCancel: {}
     )
+    .withDataLayer()
 }

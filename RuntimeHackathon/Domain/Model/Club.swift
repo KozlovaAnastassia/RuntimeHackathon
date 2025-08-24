@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct Club: Identifiable, Codable, Hashable {
     let id: UUID
@@ -38,6 +39,20 @@ struct Club: Identifiable, Codable, Hashable {
         self.tags = tags
         self.isCreator = isCreator
       self.chat = chat
+    }
+    
+    // Инициализатор для создания из Core Data сущности
+    init(from entity: UserClubEntity) {
+        self.init(
+            id: UUID(uuidString: entity.id ?? "") ?? UUID(),
+            name: entity.name ?? "",
+            imageName: entity.imageName ?? "",
+            isJoined: entity.isJoined,
+            localImagePath: entity.localImagePath,
+            description: entity.clubDescription ?? "",
+            tags: entity.tags ?? [],
+            isCreator: entity.isCreator
+        )
     }
 
     // Загружает UIImage из локального пути

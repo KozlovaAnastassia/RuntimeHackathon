@@ -7,8 +7,11 @@ class EventDetailViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    init(event: CalendarEvent) {
+    private let repository: CalendarRepository
+    
+    init(event: CalendarEvent, repository: CalendarRepository = DataLayerIntegration.shared.calendarRepository) {
         self.event = event
+        self.repository = repository
         checkRegistrationStatus()
     }
     
@@ -59,9 +62,7 @@ class EventDetailViewModel: ObservableObject {
         errorMessage = nil
         
         do {
-            // Здесь будет API вызов для удаления мероприятия
-            try await Task.sleep(nanoseconds: 1_500_000_000) // Имитация задержки
-            
+            try await repository.deleteEvent(event)
             return true
         } catch {
             errorMessage = "Ошибка при удалении мероприятия: \(error.localizedDescription)"
@@ -75,12 +76,9 @@ class EventDetailViewModel: ObservableObject {
         errorMessage = nil
         
         do {
-            // Здесь будет API вызов для получения актуальной информации
-            try await Task.sleep(nanoseconds: 500_000_000) // Имитация задержки
-            
-            // Обновляем информацию о мероприятии
-            // event = updatedEvent
-            
+            if let updatedEvent = try await repository.getEvent(by: event.id) {
+                event = updatedEvent
+            }
         } catch {
             errorMessage = "Ошибка при обновлении информации: \(error.localizedDescription)"
         }
