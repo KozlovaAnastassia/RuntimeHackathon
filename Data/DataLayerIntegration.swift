@@ -384,7 +384,7 @@ struct ExampleView: View {
 }
 
 // MARK: - Интеграция с основным приложением
-extension RuntimeHackathonApp {
+extension YaClubs {
     func setupDataLayer() {
         // Инициализируем слой данных при запуске приложения
         _ = DataLayerIntegration.shared

@@ -7,13 +7,150 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		5EB00FA02E587E050050D053 /* RuntimeHackathon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RuntimeHackathon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EB00FA02E587E050050D053 /* YaClubs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YaClubs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A580D9EB2EC9B0740047DF2D /* Exceptions for "Data" folder in "YaClubs" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Api/ApiClient.swift,
+				Api/CalendarApiService.swift,
+				Api/ClubApiService.swift,
+				Api/swagger.yaml,
+				Api/UserApiService.swift,
+				Database/CalendarDatabase.swift,
+				Database/ClubDatabase.swift,
+				Database/DatabaseInitializer.swift,
+				Database/DatabaseManager.swift,
+				Database/UserDatabase.swift,
+				DataLayerIntegration.swift,
+				Mock/CalendarDataMock.swift,
+				Mock/CategoryMock.swift,
+				Mock/ChatDataMock.swift,
+				Mock/ClubDataMock.swift,
+				Mock/ContentDataMock.swift,
+				Mock/ProfileDataMock.swift,
+				Mock/UIComponentsMock.swift,
+				README.md,
+				Services/ChatService.swift,
+				Services/ClubEventsService.swift,
+				Services/MediaPicker.swift,
+				Services/YandexGPTService.swift,
+			);
+			target = 5EB00F9F2E587E050050D053 /* YaClubs */;
+		};
+		A580D9ED2EC9B0740047DF2D /* Exceptions for "Presentation" folder in "YaClubs" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Calendar/CalendarDayScreen.swift,
+				Calendar/CalendarEventScreen.swift,
+				Calendar/CalendarEventsListScreen.swift,
+				Calendar/CalendarMonthScreen.swift,
+				Calendar/CalendarScreen.swift,
+				Calendar/CalendarViewModel.swift,
+				Calendar/CalendarWeekScreen.swift,
+				Calendar/CalendarYearScreen.swift,
+				Calendar/Components/CalendarDayView.swift,
+				Calendar/Components/CalendarGridView.swift,
+				Calendar/Components/CalendarHeaderView.swift,
+				Calendar/Components/EventIndicatorView.swift,
+				Calendar/Components/WeekdayHeaderView.swift,
+				Chat/ChatNewScreen.swift,
+				Chat/ChatScreen.swift,
+				Chat/ChatViewModel.swift,
+				Chat/Components/MessageView.swift,
+				ChatList/ChatListScreen.swift,
+				ChatList/ChatListViewModel.swift,
+				ChatList/Components/ChatRowView.swift,
+				ChatSummary/ChatSummaryScreen.swift,
+				ChatSummary/ChatSummaryViewModel.swift,
+				ClubDetail/ClubDetailScreen.swift,
+				ClubDetail/ClubDetailViewModel.swift,
+				ClubDetail/Components/CalendarSectionView.swift,
+				ClubDetail/Components/ClubHeaderSectionView.swift,
+				ClubDetail/Components/ClubInfoSectionView.swift,
+				ClubDetail/Components/CreatorSectionView.swift,
+				ClubDetail/Components/DateFilterSectionView.swift,
+				ClubDetail/Components/ImageCarouselView.swift,
+				ClubDetail/Components/NewsCardView.swift,
+				ClubDetail/Components/NewsFeedSectionView.swift,
+				ClubDetail/CreateEventScreen.swift,
+				ClubDetail/CreateNewsScreen.swift,
+				ClubsList/AddClubScreen.swift,
+				ClubsList/ClubsListScreen.swift,
+				ClubsList/ClubsListViewModel.swift,
+				ClubsList/Components/ChipsView.swift,
+				ClubsList/Components/ClubRowView.swift,
+				EventDetail/Components/EventInfoRowView.swift,
+				EventDetail/EventDetailScreen.swift,
+				EventDetail/EventDetailViewModel.swift,
+				Tabbar/Components/TabBarButtonView.swift,
+				Tabbar/MainTabBar.swift,
+				UserProfile/AddInterestScreen.swift,
+				UserProfile/Components/CreatedClubsSectionView.swift,
+				UserProfile/Components/FlowLayout.swift,
+				UserProfile/Components/InterestsSectionView.swift,
+				UserProfile/Components/InterestStatsView.swift,
+				UserProfile/Components/JoinedClubsSectionView.swift,
+				UserProfile/Components/ProfileClubRowFullView.swift,
+				UserProfile/Components/ProfileClubRowView.swift,
+				UserProfile/Components/ProfileHeaderView.swift,
+				UserProfile/Components/ProfileInfoSectionView.swift,
+				UserProfile/UserProfileScreen.swift,
+				UserProfile/UserProfileViewModel.swift,
+			);
+			target = 5EB00F9F2E587E050050D053 /* YaClubs */;
+		};
+		A580D9F02EC9B0D80047DF2D /* Exceptions for "App" folder in "YaClubs" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				YaClubs.swift,
+			);
+			target = 5EB00F9F2E587E050050D053 /* YaClubs */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		A580D9EC2EC9B0740047DF2D /* Exceptions for "Data" folder in "Compile Sources" phase from "YaClubs" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 5EB00F9C2E587E050050D053 /* Sources */;
+			membershipExceptions = (
+				Database/RuntimeHackathonDB.xcdatamodeld,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5EB00FA22E587E050050D053 /* RuntimeHackathon */ = {
+		A580D91D2EC9B0740047DF2D /* Data */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RuntimeHackathon;
+			exceptions = (
+				A580D9EB2EC9B0740047DF2D /* Exceptions for "Data" folder in "YaClubs" target */,
+				A580D9EC2EC9B0740047DF2D /* Exceptions for "Data" folder in "Compile Sources" phase from "YaClubs" target */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		A580D9382EC9B0740047DF2D /* Domain */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		A580D9822EC9B0740047DF2D /* Presentation */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A580D9ED2EC9B0740047DF2D /* Exceptions for "Presentation" folder in "YaClubs" target */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		A580D9EF2EC9B0D20047DF2D /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A580D9F02EC9B0D80047DF2D /* Exceptions for "App" folder in "YaClubs" target */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +169,10 @@
 		5EB00F972E587E050050D053 = {
 			isa = PBXGroup;
 			children = (
-				5EB00FA22E587E050050D053 /* RuntimeHackathon */,
+				A580D9EF2EC9B0D20047DF2D /* App */,
+				A580D91D2EC9B0740047DF2D /* Data */,
+				A580D9382EC9B0740047DF2D /* Domain */,
+				A580D9822EC9B0740047DF2D /* Presentation */,
 				5EB00FA12E587E050050D053 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +180,7 @@
 		5EB00FA12E587E050050D053 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5EB00FA02E587E050050D053 /* RuntimeHackathon.app */,
+				5EB00FA02E587E050050D053 /* YaClubs.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +188,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5EB00F9F2E587E050050D053 /* RuntimeHackathon */ = {
+		5EB00F9F2E587E050050D053 /* YaClubs */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5EB00FAB2E587E0D0050D053 /* Build configuration list for PBXNativeTarget "RuntimeHackathon" */;
+			buildConfigurationList = 5EB00FAB2E587E0D0050D053 /* Build configuration list for PBXNativeTarget "YaClubs" */;
 			buildPhases = (
 				5EB00F9C2E587E050050D053 /* Sources */,
 				5EB00F9D2E587E050050D053 /* Frameworks */,
@@ -61,13 +201,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5EB00FA22E587E050050D053 /* RuntimeHackathon */,
+				A580D9382EC9B0740047DF2D /* Domain */,
 			);
-			name = RuntimeHackathon;
+			name = YaClubs;
 			packageProductDependencies = (
 			);
 			productName = RuntimeHackathon;
-			productReference = 5EB00FA02E587E050050D053 /* RuntimeHackathon.app */;
+			productReference = 5EB00FA02E587E050050D053 /* YaClubs.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +225,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5EB00F9B2E587E050050D053 /* Build configuration list for PBXProject "RuntimeHackathon" */;
+			buildConfigurationList = 5EB00F9B2E587E050050D053 /* Build configuration list for PBXProject "YaClubs" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +239,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5EB00F9F2E587E050050D053 /* RuntimeHackathon */,
+				5EB00F9F2E587E050050D053 /* YaClubs */,
 			);
 		};
 /* End PBXProject section */
@@ -251,24 +391,29 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5HDD9A94JL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.RuntimeHackathon;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.yaclubs;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -279,31 +424,36 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5HDD9A94JL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.RuntimeHackathon;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.yaclubs;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5EB00F9B2E587E050050D053 /* Build configuration list for PBXProject "RuntimeHackathon" */ = {
+		5EB00F9B2E587E050050D053 /* Build configuration list for PBXProject "YaClubs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5EB00FA92E587E0D0050D053 /* Debug */,
@@ -312,7 +462,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5EB00FAB2E587E0D0050D053 /* Build configuration list for PBXNativeTarget "RuntimeHackathon" */ = {
+		5EB00FAB2E587E0D0050D053 /* Build configuration list for PBXNativeTarget "YaClubs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5EB00FAC2E587E0D0050D053 /* Debug */,
