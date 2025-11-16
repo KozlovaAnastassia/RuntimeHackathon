@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct RuntimeHackathonApp: App {
+struct YaClubs: App {
     var body: some Scene {
         WindowGroup {
           MainTabBar()
